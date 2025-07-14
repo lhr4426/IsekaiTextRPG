@@ -1,16 +1,9 @@
-﻿namespace IsekaiTextRPG
+﻿public class Program
 {
-
-    internal class Program
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello, World!");
-            // Scene Test Code
-
-            SceneManager sceneManager = new SceneManager();
-            sceneManager.Start();
-
-        }
+        GameManager gameManager = new GameManager();
+        gameManager.GameStart();
     }
 }
+
