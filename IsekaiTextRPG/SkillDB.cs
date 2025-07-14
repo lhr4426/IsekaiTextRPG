@@ -1,6 +1,8 @@
-﻿namespace IsekaiTextRPG
+﻿using System;
+using System.Collections.Generic;
+namespace IsekaiTextRPG
 {
-    public enum skillId
+    public enum SkillId
     {
         FireSword = 0,
         IceSpear = 1,
@@ -17,32 +19,76 @@
         public string Description { get; }
         public int ManaCost { get; }
         public int Cooldown { get; }
-
-        public SkillDB()
+        public SkillDB(int id, string name, int damage, int manaCost, int cooldown, string description)
         {
-            Id = default;
-            Name = string.Empty;
-            Damage = 0;
-            ManaCost = 0;
-            Cooldown = 0;
-            Description = string.Empty;
-        }
-        public SkillDB(string name, int damage, int manaCost, string desc)
-        {
+            Id = id;
             Name = name ?? throw new ArgumentNullException(nameof(name));
-            Description = desc ?? throw new ArgumentNullException(nameof(desc));
-            ManaCost = manaCost;
             Damage = damage;
+            ManaCost = manaCost;
+            Cooldown = cooldown;
+            Description = description ?? throw new ArgumentNullException(nameof(description));
         }
-        public IReadOnlyList<SkillDB> Skills { get; } = new List<SkillDB>
+
+        public static class SkillManager
         {
-            new SkillDB("불꽃의 검", 20, 10,"불꽃을 담은 검으로 적에게 큰 피해를 줍니다."),
-            new SkillDB("얼음 창", 20, 10, "얼음으로 만들어진 창을 던져 적을 얼립니다."),
-            new SkillDB("번개 충격", 20, 10, "번개를 소환하여 적에게 강력한 충격을 가합니다."),
-            new SkillDB("대지의 방패", 20, 10, "대지의 힘으로 자신을 보호하는 방패를 생성합니다." ),
-            new SkillDB("바람의 칼날", 20, 10, "바람을 날카롭게 만들어 적을 베어냅니다." )
-        };
+            private static readonly Dictionary<int, SkillDB> _skills = new Dictionary<int, SkillDB>
+            {
+                                                                               
+                {
+                    (int)SkillId.FireSword, 
+                    new SkillDB(
+                        id:(int)SkillId.FireSword, 
+                        name:"불꽃의 검",
+                        damage:20,
+                        manaCost:10,
+                        cooldown:5,
+                        description:"불꽃을 담은 검으로 적에게 큰 피해를 줍니다.")
+                },
+                {
+                   (int)SkillId.IceSpear,                  
+                    new SkillDB(
+                    id:          (int)SkillId.IceSpear,
+                    name:        "얼음 창",
+                    damage:      15,
+                    manaCost:     8,
+                    cooldown:     4,
+                    description: "얼음으로 만들어진 창을 던져 적을 얼립니다.")
+                },
+                {
+                    (int)SkillId.EarthShield,               
+                    new SkillDB(
+                    id:          (int)SkillId.EarthShield,
+                    name:        "대지의 방패",
+                    damage:       0,
+                    manaCost:     5,
+                    cooldown:    10,
+                    description: "대지의 힘으로 자신을 보호하는 방패를 생성합니다.")
+                },
+                {
+                   (int)SkillId.EarthShield,               
+                    new SkillDB(
+                    id:          (int)SkillId.EarthShield,
+                    name:        "대지의 방패",
+                    damage:       0,
+                    manaCost:     5,
+                    cooldown:    10,
+                    description: "대지의 힘으로 자신을 보호하는 방패를 생성합니다.")
+                },
+                {
+                   (int)SkillId.WindBlade,                
+                    new SkillDB(
+                    id:          (int)SkillId.WindBlade,
+                    name:        "바람의 칼날",
+                    damage:      18,
+                    manaCost:     7,
+                    cooldown:     3,
+                    description: "바람을 날카롭게 만들어 적을 베어냅니다.")
+                },        
+            };
+
+            public static IReadOnlyDictionary<int, SkillDB> Skills => _skills;
+
+            public static bool TryGetSkill(int id, out SkillDB? skill) => _skills.TryGetValue(id, out skill);
+        }
     }
-
-
 }
