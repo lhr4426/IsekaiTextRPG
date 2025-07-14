@@ -8,12 +8,12 @@ namespace IsekaiTextRPG
     {
         public static GameManager instance = new GameManager();
 
-        public static PlayerData playerData;
+        public static Player player;
         public string path = "PlayerData.json";//임시
 
         public void NewPlayerData(string playerName)
         {
-            playerData = new PlayerData(playerName);
+            player = new Player(playerName);
             SavePlayerData();
         }
 
@@ -22,7 +22,7 @@ namespace IsekaiTextRPG
             if (File.Exists(path))
             {
                 string json = File.ReadAllText(path);
-                playerData = JsonSerializer.Deserialize<PlayerData>(json);
+                player = JsonSerializer.Deserialize<Player>(json);
             }
             else
             {
@@ -32,14 +32,14 @@ namespace IsekaiTextRPG
 
         public void SavePlayerData() //데이터 저장
         {
-            string json = JsonSerializer.Serialize(playerData, new JsonSerializerOptions { WriteIndented = true });
+            string json = JsonSerializer.Serialize(player, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(path, json);
             Console.WriteLine("플레이어 데이터 저장 완료.");
         }
         public void GameExit()
         {
             Console.WriteLine("게임을 종료합니다.");
-            SavePlayerData()
+            SavePlayerData();
             Environment.Exit(0);
         }
     }
