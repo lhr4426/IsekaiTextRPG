@@ -12,13 +12,13 @@ public class Item
     public int Price { get; }
     public bool IsEquip { get; }
     public string ItemType { get; }
-    public double CriticalRate { get; }      // 치명타 확률 
-    public double CriticalDamage { get; }    // 치명타 데미지 배율 1.6 
-    public double DodgeRate { get; }       // 회피율 (
+    public float CriticalRate { get; }      // 치명타 확률 
+    public float CriticalDamage { get; }    // 치명타 데미지 배율 1.6 
+    public float DodgeRate { get; }       // 회피율 (
 
     public Item(string name, string description, int attack, int defense, int price,
-               bool isEquip, string itemType, double criticalRate = 0,
-               double criticalDamage = 1.6, double DodgeRate = 0)
+               bool isEquip, string itemType, float criticalRate = 0,
+               float criticalDamage = 1.6f, float dodgeRate = 0)
     {
         Name = name;
         Description = description;
@@ -29,7 +29,7 @@ public class Item
         ItemType = itemType;
         CriticalRate = criticalRate;
         CriticalDamage = criticalDamage;
-        DodgeRate = DodgeRate;
+        DodgeRate = dodgeRate;
     }
 
     public override bool Equals(object obj)

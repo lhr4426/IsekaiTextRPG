@@ -16,9 +16,9 @@ public class Player
     public int BaseAttack { get; private set; } = 10;
     public int BaseDefense { get; private set; } = 5;
 
-    public double CriticalRate { get; private set; } = 0.1f;       // 10%
-    public double CriticalDamage { get; private set; } = 1.6f; // 150% 데미지
-    public double DodgeRate { get; private set; } = 0.1f;      // 10%
+    public float CriticalRate { get; private set; } = 0.1f;       // 10%
+    public float CriticalDamage { get; private set; } = 1.6f; // 150% 데미지
+    public float DodgeRate { get; private set; } = 0.1f;      // 10%
 
     public List<Item> Inventory { get; private set; } = new List<Item>();
     public List<Item> EquippedItems { get; private set; } = new List<Item>();
