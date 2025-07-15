@@ -6,13 +6,11 @@ using System.Threading.Tasks;
 
 namespace IsekaiTextRPG
 {
-
     public class Shop : GameScene
     {    // 메뉴 선택을 위한 상수 정의
         private const string MenuOptionBuy = "1";   // 아이템 구매
         private const string MenuOptionSell = "2";  // 아이템 판매
         private const string MenuOptionReturn = "3";// 이전 씬으로 돌아가기
-
         private readonly ItemSystem _itemSystem;// 플레이어의 아이템/골드 관리 시스템
         private readonly List<Item> _shopItems; // 상점에 진열할 아이템 목록
 
@@ -25,12 +23,10 @@ namespace IsekaiTextRPG
             {Item.ItemType.LegArmor,"다리보호구"},
             {Item.ItemType.Usable,"소모품"}
         };
-
         // 생성자: ItemSystem을 주입받고, 상점 아이템 목록을 초기화
         public Shop(ItemSystem itemSystem)
         {
             _itemSystem = itemSystem ?? throw new ArgumentNullException(nameof(itemSystem));
-
             _shopItems = new List<Item>
             {//이름 설명 공격력 방어력 가격 장착가능여부 아이템 타입 치명타 확률 치명타 배율 회피율
                 new Item("칼","기본 검",10, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
@@ -41,10 +37,8 @@ namespace IsekaiTextRPG
                 new Item("마나 물약", "MP +30 회복", 0, 0, 70, false, Item.ItemType.Usable, 0f, 0f, 0f)
             };
         }
-
         // 씬 이름: 상단 헤더에 표시
         public override string SceneName => "상점";
-
         // 씬 시작: 메인 루프에서 화면 갱신, 메뉴 선택, 처리
         public override GameScene? StartScene()
         {
@@ -52,10 +46,8 @@ namespace IsekaiTextRPG
             {
                 Console.Clear();
                 Console.WriteLine($"\t=== {SceneName} ===    소지 골드: {_itemSystem.Gold}\n");
-
                 DisplayItems(); // 아이템 목록 출력
                 DisplayMenu();  // 메뉴 옵션 출력
-
                 var input = Console.ReadLine()?.Trim() ?? string.Empty;
                 switch (input)
                 {
@@ -74,7 +66,6 @@ namespace IsekaiTextRPG
                 }
             }
         }
-
         // 상점에 진열된 아이템 목록을 화면에 출력
         private void DisplayItems()
         {
@@ -95,15 +86,14 @@ namespace IsekaiTextRPG
 
                 // 한 줄로 아이템 정보를 포맷하여 출력
                 Console.WriteLine(
-                    $"{i + 1} | {item.Name} | {typeName} | {item.Description} | " +
-                    $"공격: {item.Attack} | 방어: {item.Defense} | 가격: {item.Price} | " +
-                    $"치명타: {item.CriticalRate:P0} | 배율: {item.CriticalDamage} | 회피: {item.DodgeRate:P0} {status}"
+                    $"{i + 1}|{item.Name}|{typeName}|{item.Description}|" +
+                    $"공격:{item.Attack} 방어:{item.Defense}|가격:{item.Price}|" +
+                    $"치명타:{item.CriticalRate:P0}|배율:{item.CriticalDamage}|회피:{item.DodgeRate:P0} {status}"
                 );
             }
 
             Console.WriteLine();
         }
-
         // 메뉴 옵션(구매/판매/돌아가기) 출력
         private void DisplayMenu()
         {
@@ -112,7 +102,6 @@ namespace IsekaiTextRPG
             Console.WriteLine("3 | 돌아가기");
             Console.Write("\n선택: ");
         }
-
         // 아이템 구매 처리: 번호 입력 → BuyItem 호출 → 결과 메시지
         private void HandleBuy()
         {
@@ -158,7 +147,6 @@ namespace IsekaiTextRPG
             Console.WriteLine("\n아무 키나 눌러 계속...");
             Console.ReadKey();
         }
-
         // 아이템 판매 처리: 이름 입력 → 장착 해제 → SellItem 호출 → 결과 메시지
         private void HandleSell()
         {
