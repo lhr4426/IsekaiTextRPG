@@ -23,7 +23,7 @@ public class SceneManager
         // TODO : 씬 만들기
         
         { SceneType.FirstScene, new FirstScene() },
-        // { SceneType.TownScene, new TownScene() },
+        { SceneType.TownScene, new TownScene() },
         // { SceneType.StatScene, new StatScene() },
         // { SceneType.InvenScene, new InvenScene() },
         // { SceneType.SkillScene, new SkillScene() },
@@ -51,9 +51,9 @@ public class SceneManager
 
     private void SceneSetting()
     {
-        /*
+        
         scenes[SceneType.FirstScene].SetNextScene(scenes[SceneType.TownScene]);
-
+        /*
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.StatScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.InvenScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillScene]);

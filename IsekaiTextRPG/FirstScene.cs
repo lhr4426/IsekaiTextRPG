@@ -20,28 +20,27 @@ public class FirstScene : GameScene
 
         Console.Write(">> ");
 
-        string? str = Console.ReadLine();
-        if(int.TryParse(str, out int index))
-        {
-            switch (index)
-            {
-                case 0:
-                    Console.WriteLine("게임을 종료합니다.");
-                    Console.ReadKey();
-                    return null;                    
-                case 1:
-                    Console.WriteLine("미구현");
-                    Console.ReadKey();
-                    break;
-                case 2:
-                    Console.WriteLine("미구현");
-                    Console.ReadKey();
-                    break;
-                default:
-                    break;
-            }
 
-        }
+        int? index = InputHelper.InputNumber(0, 2);
+
+         switch (index)
+         {
+             case 0:
+                 Console.WriteLine("게임을 종료합니다.");
+                 Console.ReadKey();
+                 return null;                    
+             case 1:
+                 Console.Clear();
+                 return EndScene();
+             case 2:
+                 Console.WriteLine("미구현");
+                 Console.ReadKey();
+                 break;
+             default:
+                 break;
+         }
+
+        
         return this;
     }
 }

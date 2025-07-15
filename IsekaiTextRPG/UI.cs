@@ -12,9 +12,9 @@ public static class UI
     /// </summary>
     /// <param name="title"></param>
     /// <param name="contents"></param>
-    public static void DrawTitledBox(string title, List<string> contents)
+    public static void DrawTitledBox(string title, List<string>? contents)
     {
-        int width = GetMaxWidth(contents);
+        int width = contents == null ? 30 : GetMaxWidth(contents);
 
         string topBorder = "╔" + new string('═', width) + "╗";
         string titleLine = $"║{PadCenter(title, width)}║";
@@ -23,7 +23,34 @@ public static class UI
 
         Console.WriteLine(topBorder);
         Console.WriteLine(titleLine);
-        Console.WriteLine(divider);
+        if (contents != null && contents.Count > 0)
+        {
+            Console.WriteLine(divider);
+            Console.WriteLine($"║{new string(' ', width)}║");
+
+            foreach (string line in contents)
+            {
+                Console.WriteLine($"║{PadCenter(line, width)}║");
+            }
+
+            Console.WriteLine($"║{new string(' ', width)}║");
+            Console.WriteLine(bottomBorder);
+        }
+        else
+        {
+            Console.WriteLine(bottomBorder);
+        }
+
+    }
+
+    public static void DrawBox(List<string> contents)
+    {
+        int width = GetMaxWidth(contents);
+
+        string topBorder = "╔" + new string('═', width) + "╗";
+        string bottomBorder = "╚" + new string('═', width) + "╝";
+
+        Console.WriteLine(topBorder);
         Console.WriteLine($"║{new string(' ', width)}║");
 
         foreach (string line in contents)
