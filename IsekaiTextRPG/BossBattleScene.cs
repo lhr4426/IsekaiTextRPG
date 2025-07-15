@@ -2,22 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class BossBattleScene
+public class BossBattleScene : GameScene
 {
     private Player player;
     private Enemy boss;
     private Random rng = new Random();
 
-    public BossBattleScene(Player player, Enemy boss)
+
+    public override string SceneName => "보스 전투";
+
+    public override GameScene? StartScene()
     {
-        this.player = player ?? throw new ArgumentNullException(nameof(player));
+        this.player = GameManager.player;
         this.boss = boss ?? throw new ArgumentNullException(nameof(boss));
+        return prevScene;
     }
 
+    public BossBattleScene()
+    {
+
+    }
+
+    public BossBattleScene(Enemy boss)
+    {   
+        // this.boss = boss ?? throw new ArgumentNullException(nameof(boss));
+    }
+    
+    
     public void StartBattle()
     {
         Console.Clear();
 
+        /*
         // 보스 ASCII 아트 출력
         if (!string.IsNullOrEmpty(boss.AsciiArt))
         {
@@ -25,6 +41,7 @@ public class BossBattleScene
             Console.WriteLine(boss.AsciiArt);
             Console.ResetColor();
         }
+        */
 
         // 보스 이름 출력 박스
         UI.DrawTitledBox("보스 전투 시작!", new List<string>
@@ -47,15 +64,15 @@ public class BossBattleScene
                     break;
 
                 case "2":
-                    SkillScene.Start(player, boss);
+                    // SkillScene.Start(player, boss);
                     break;
 
                 case "3":
-                    ItemScene.Start(player);
+                    // ItemScene.Start(player);
                     break;
 
                 case "4":
-                    StatScene.Show(player);
+                    GameManager.player.ShowStatus();
                     break;
 
                 case "0":
@@ -222,3 +239,4 @@ public class BossBattleScene
         Console.ReadLine();
     }
 }
+    
