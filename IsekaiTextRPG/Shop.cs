@@ -6,7 +6,34 @@ using System.Threading.Tasks;
 
 namespace IsekaiTextRPG
 {
-    internal class Shop
+    public class Shop : GameScene
     {
+        private readonly ItemSystem _itemSystem;
+        private readonly List<Item> _equipmentShopItems;
+        private readonly List<Item> _consumableShopItems;
+        public Shop(ItemSystem itemSystem)
+        {
+            _itemSystem = itemSystem ?? throw new ArgumentNullException(nameof(itemSystem));
+
+            var allShopItems = new List<Item>
+            {              // 데미지, 방어력, 가격, 착용 가능 여부, 아이템 타입, 치명타 확률, 치명타 데미지 배율, 회피율
+                new Item("장비 이름", "장비 설명", 20, 0, 100, true, "무기", 0.1f, 1.6f, 0),
+                new Item("장비 이름", "장비 설명", 15, 0, 80, true, "무기", 0.05f, 1.5f, 0),
+                new Item("장비 이름", "장비 설명", 0, 0, 120, true, "방어구", 0.15f, 1.7f, 0),
+                new Item("소모품 이름", "소모품 설명", 0, 0, 50, false, "소모품", 0, 0, 0f),
+                new Item("소모품 이름", "소모품 설명", 0, 0, 30, false, "소모품", 0, 0, 0f)
+            };             // 나중에 같이 의견 나눠볼것
+
+            _equipmentShopItems = [.. allShopItems.Where(i => i.IsEquip)];
+            _consumableShopItems = [.. allShopItems.Where(i => !i.IsEquip)];
+        }
+
+        public override string SceneName => "상점";
+
+        public override GameScene? StartScene()
+        {
+            Console.Clear();
+            Console.WriteLine($"\t=== 상점 ===    소지 골드: {_itemSystem.Gold}\n");
+        }
     }
 }
