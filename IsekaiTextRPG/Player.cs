@@ -5,14 +5,17 @@ public class Player
 {
     public enum Jobs
     {
-        // 0 ~ 2 : 전사
-        // 3 ~ 5 : 법사
-        // 6 ~ 8 : 도적
+        // 0 : 환생자
 
-        // % 3 == 0 : 로아
-        // % 3 == 1 : 던파
-        // % 3 == 2 : 메이플
+        // 1 ~ 3 : 전사
+        // 4 ~ 6 : 법사
+        // 7 ~ 9 : 도적
+
+        // % 3 == 1 : 로아
+        // % 3 == 2 : 던파
+        // % 3 == 0 : 메이플 (0 : 환생자 제외)
         
+        Prestige,
         Warlord,
         WeaponMaster,
         Hero,
@@ -28,6 +31,7 @@ public class Player
     {
         return job switch
         {
+            Jobs.Prestige => "환생자",
             Jobs.Warlord => "워로드",
             Jobs.WeaponMaster => "웨폰마스터",
             Jobs.Hero => "히어로",
@@ -46,6 +50,8 @@ public class Player
     public int Level { get; private set; } = 1;
     public int Experience { get; private set; } = 0;
     public int Gold { get; set; } = 1000;
+
+    public Jobs Job { get; set; } = Jobs.Prestige;
 
     public int MaxHP { get; private set; } = 100;
     public int CurrentHP { get; set; } = 100;
