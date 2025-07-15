@@ -40,7 +40,7 @@ public class Item
     public float CriticalDamage { get; }    // 치명타 데미지 배율 1.6 
     public float DodgeRate { get; }       // 회피율 (
 
-    public Item(string name, string description, int attack, int defense, int price,
+    public Item(string name, string description, int attack, int defense,int hp, int mp, int price,
                bool isEquip, ItemType itemType, float criticalRate = 0,
                float criticalDamage = 1.6f, float dodgeRate = 0)
     {
@@ -48,6 +48,8 @@ public class Item
         Description = description;
         Attack = attack;
         Defense = defense;
+        Hp = hp;
+        Mp = mp;
         Price = price;
         IsEquip = isEquip;
         Type = itemType;
