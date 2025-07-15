@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 public static class SkillManager
 {
     // TODO : 스킬마다 직업이랑 레벨 설정 부탁드려요
-    private static readonly Dictionary<int, Skill> _skills = new Dictionary<int, Skill>
+    private static SortedDictionary<int, Skill> _skills = new SortedDictionary<int, Skill>
             {
 
                 {
@@ -52,7 +52,7 @@ public static class SkillManager
                 },
             };
 
-    public static IReadOnlyDictionary<int, Skill> Skills => _skills;
+    public static SortedDictionary<int, Skill> Skills => _skills;
 
     public static bool TryGetSkill(int id, out Skill? skill) => _skills.TryGetValue(id, out skill);
 

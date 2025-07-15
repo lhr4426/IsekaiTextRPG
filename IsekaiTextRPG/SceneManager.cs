@@ -31,7 +31,8 @@ public class SceneManager
         { SceneType.TownScene, new TownScene() },
         { SceneType.StatScene, new StatScene() },
         { SceneType.InvenScene, new InventoryScene() },
-        // { SceneType.SkillScene, new SkillScene() },
+        { SceneType.SkillInvenScene, new SkillInvenScene() },
+        { SceneType.SkillShopScene, new SkillShopScene() },
         // { SceneType.GuildScene, new GuildScene() },
         { SceneType.ShopScene, new ShopScene(ItemSystem) },
         { SceneType.RestScene, new RestScene() },
@@ -64,9 +65,11 @@ public class SceneManager
 
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.StatScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.InvenScene]);
-        // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillScene]);
+        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillInvenScene]);
+
         // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.GuildScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.ShopScene]);
+        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillShopScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.RestScene]);
         // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonEnterScene]);
@@ -77,7 +80,8 @@ public class SceneManager
 
         scenes[SceneType.StatScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.InvenScene].SetPrevScene(scenes[SceneType.TownScene]);
-        // scenes[SceneType.SkillScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.SkillInvenScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.SkillShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         // scenes[SceneType.GuildScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.ShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.RestScene].SetPrevScene(scenes[SceneType.TownScene]);
