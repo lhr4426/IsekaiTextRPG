@@ -16,48 +16,42 @@ public abstract class GameScene
 
     /// <summary>
     /// 실제로 씬 로직이 들어가는 부분입니다.
-    /// 마지막에 EndScene을 호출해 주시면 됩니다.
+    /// 마지막에 return EndScene()을 호출해 주시면 됩니다.
     /// </summary>
     /// <returns></returns>
     public abstract GameScene? StartScene();
 
     public GameScene? EndScene()
     {
+        List<string> options = new();
         foreach (var scene in nextScenes)
         {
-            Console.WriteLine($"{nextScenes.IndexOf(scene) + 1}: {scene.SceneName}");
+            options.Add($"{nextScenes.IndexOf(scene) + 1}: {scene.SceneName}");
         }
-        if (prevScene != null)
-        {
-            Console.WriteLine($"0: {prevScene.SceneName}");
-        }
-        else
-        {
-            Console.WriteLine("0: 게임 종료");
-        }
-        Console.WriteLine("이동할 곳을 선택하세요. (숫자 입력)");
+        options.Add(prevScene != null
+                    ? $"0: {prevScene.SceneName}"
+                    : "0: 게임 종료");
+        options.Add("");
 
         // TODO : 게임 저장 필요
         // GameManager.instance.SavePlayerData();
 
+        UI.DrawBox(options);
+
         Console.Write(">> ");
-        string input = Console.ReadLine()?.Trim() ?? "-1";
-        if (int.TryParse(input, out int nextSceneIdx))
+        int? nextSceneIdx = InputHelper.InputNumber(0, nextScenes.Count);
+        if (nextSceneIdx == 0)
         {
-            if (nextSceneIdx == 0)
-            {
-                return prevScene;
-            }
-            else if (nextSceneIdx > 0 && nextSceneIdx < nextScenes.Count)
-            {
-                return nextScenes[nextSceneIdx - 1];
-            }
-            else return this;
+            return prevScene;
         }
-        else
+        else if (nextSceneIdx > 0 && nextSceneIdx <= nextScenes.Count)
         {
-            return this;
+            return nextScenes[(int)nextSceneIdx - 1];
         }
+        else return this;
+
+
+
     }
 
 }
