@@ -10,20 +10,19 @@ public enum SkillId
 }
 public class SkillDB
 {
-
     public string Name { get; }
     public int Id { get; private set; }
     public int Damage { get; }
     public string Description { get; }
     public int ManaCost { get; }
-    public int Cooldown { get; }
-    public SkillDB(int id, string name, int damage, int manaCost, int cooldown, string description)
+    //public int Cooldown { get; }
+    public SkillDB(int id, string name, int damage, int manaCost, string description)//int cooldown
     {
         Id = id;
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Damage = damage;
         ManaCost = manaCost;
-        Cooldown = cooldown;
+        //Cooldown = cooldown;
         Description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
@@ -39,7 +38,7 @@ public class SkillDB
                         name:"불꽃의 검",
                         damage:20,
                         manaCost:10,
-                        cooldown:5,
+                        //cooldown:5,
                         description:"불꽃을 담은 검으로 적에게 큰 피해를 줍니다.")
                 },
                 {
@@ -49,8 +48,18 @@ public class SkillDB
                     name:        "얼음 창",
                     damage:      15,
                     manaCost:     8,
-                    cooldown:     4,
+                    //cooldown:     4,
                     description: "얼음으로 만들어진 창을 던져 적을 얼립니다.")
+                },
+                {
+                    (int)SkillId.LightningStrike,
+                     new SkillDB(
+                     id:           (int)SkillId.LightningStrike,
+                     name:         "번개의 일격",
+                     damage:       25,
+                     manaCost:     12,
+                     //cooldown:   6,
+                     description:  "하늘에서 번개를 내려쳐 적에게 큰 피해를 줍니다.")
                 },
                 {
                    (int)SkillId.WindBlade,
@@ -59,7 +68,7 @@ public class SkillDB
                     name:        "바람의 칼날",
                     damage:      18,
                     manaCost:     7,
-                    cooldown:     3,
+                    //cooldown:     3,
                     description: "바람을 날카롭게 만들어 적을 베어냅니다.")
                 },
             };
