@@ -14,7 +14,17 @@ public static class UI
     /// <param name="contents"></param>
     public static void DrawTitledBox(string title, List<string>? contents)
     {
-        int width = contents == null ? 30 : GetMaxWidth(contents);
+        List<string> fullStrings = new List<string>();
+        fullStrings.Add(title);
+        if(contents != null)
+        {
+            foreach (var str in contents)
+            {
+                fullStrings.Add(str);
+            }
+        }
+        
+        int width = GetMaxWidth(fullStrings);
 
         string topBorder = "╔" + new string('═', width) + "╗";
         string titleLine = $"║{PadCenter(title, width)}║";
@@ -62,6 +72,25 @@ public static class UI
         Console.WriteLine(bottomBorder);
     }
 
+    public static void DrawLeftAlignedBox(List<string> contents)
+    {
+        int width = GetMaxWidth(contents);
+
+        string topBorder = "╔" + new string('═', width) + "╗";
+        string bottomBorder = "╚" + new string('═', width) + "╝";
+
+        Console.WriteLine(topBorder);
+        Console.WriteLine($"║{new string(' ', width)}║");
+
+        foreach (string line in contents)
+        {
+            Console.WriteLine($"║{PadLeftAlign(line, width)}║");
+        }
+
+        Console.WriteLine($"║{new string(' ', width)}║");
+        Console.WriteLine(bottomBorder);
+    }
+
     private static int GetMaxWidth(List<string> contents)
     {
         int maxWidth = 0;
@@ -82,6 +111,14 @@ public static class UI
         int padRight = padding - padLeft;
         return new string(' ', padLeft) + text + new string(' ', padRight);
     }
+
+    private static string PadLeftAlign(string text, int width)
+    {
+        int displayWidth = GetDisplayWidth(text);
+        int padding = Math.Max(0, width - displayWidth);
+        return text + new string(' ', padding);
+    }
+
 
     private static int GetDisplayWidth(string text)
     {
