@@ -17,7 +17,20 @@ public class BossBattleScene
     public void StartBattle()
     {
         Console.Clear();
-        Console.WriteLine("보스 전투 시작!");
+
+        // 보스 ASCII 아트 출력
+        if (!string.IsNullOrEmpty(boss.AsciiArt))
+        {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.WriteLine(boss.AsciiArt);
+            Console.ResetColor();
+        }
+
+        // 보스 이름 출력 박스
+        UI.DrawTitledBox("보스 전투 시작!", new List<string>
+        {
+            $"{boss.Name} Lv.{boss.Level}"
+        });
 
         while (player.CurrentHP > 0 && boss.CurrentHP > 0)
         {
@@ -88,11 +101,13 @@ public class BossBattleScene
 
     private void PlayerAttack()
     {
-        Console.WriteLine($"\n{player.Name}의 공격!");
+        List<string> logs = new();
+        logs.Add($"{player.Name}의 공격!");
 
         if (boss.TryDodge())
         {
-            Console.WriteLine($"{boss.Name}이(가) 공격을 회피했습니다!");
+            logs.Add($"{boss.Name}이(가) 공격을 회피했습니다!");
+            UI.DrawBox(logs);
             return;
         }
 
@@ -104,23 +119,26 @@ public class BossBattleScene
 
         if (player.IsCriticalHit())
         {
-            Console.WriteLine("★ 치명타! ★");
+            logs.Add("★ 치명타! ★");
             finalDamage = (int)Math.Ceiling(finalDamage * player.CriticalDamage);
         }
 
         int damage = Math.Max(finalDamage - boss.Defense, 0);
         boss.CurrentHP -= damage;
 
-        Console.WriteLine($"{boss.Name}에게 {damage}의 피해를 입혔습니다!");
+        logs.Add($"{boss.Name}에게 {damage}의 피해를 입혔습니다!");
+        UI.DrawBox(logs);
     }
 
     private void EnemyPhase()
     {
-        Console.WriteLine($"\n{boss.Name}의 공격!");
+        List<string> logs = new();
+        logs.Add($"{boss.Name}의 공격!");
 
         if (player.TryDodge())
         {
-            Console.WriteLine($"{player.Name}이(가) 공격을 회피했습니다!");
+            logs.Add($"{player.Name}이(가) 공격을 회피했습니다!");
+            UI.DrawBox(logs);
             return;
         }
 
@@ -130,16 +148,33 @@ public class BossBattleScene
         int beforeHP = player.CurrentHP;
         player.CurrentHP -= damage;
 
-        Console.WriteLine($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
-        Console.WriteLine($"Lv.{player.Level} {player.Name}");
-        Console.WriteLine($"HP {beforeHP} -> {Math.Max(player.CurrentHP, 0)}");
+        logs.Add($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
+        logs.Add($"HP {beforeHP} → {Math.Max(player.CurrentHP, 0)}");
+        UI.DrawBox(logs);
     }
 
     private void ShowBattleUI()
     {
         string bossHP = boss.CurrentHP > 0 ? boss.CurrentHP.ToString() : "Dead";
-        Console.WriteLine($"Lv.{boss.Level} {boss.Name} HP: {bossHP} | 공격력: {boss.Attack} | 방어력: {boss.Defense}");
-        Console.WriteLine("\n1. 공격\n2. 스킬 (스킬 지정화면으로감)\n3. 아이템 사용하기\n4. 나의 현재 스탯 보기\n0. 도망가기");
+
+        List<string> info = new()
+        {
+            $"Lv.{boss.Level} {boss.Name}",
+            $"HP: {bossHP} / {boss.MaxHP}",
+            $"ATK: {boss.Attack} | DEF: {boss.Defense}"
+        };
+
+        List<string> menu = new()
+        {
+            "1. 공격",
+            "2. 스킬 (스킬 지정 화면으로 이동)",
+            "3. 아이템 사용",
+            "4. 나의 현재 스탯 보기",
+            "0. 도망가기"
+        };
+
+        UI.DrawTitledBox("보스 정보", info);
+        UI.DrawBox(menu);
     }
 
     private void ShowResult()
@@ -152,32 +187,35 @@ public class BossBattleScene
             Console.WriteLine("Victory!");
             Console.ResetColor();
 
-            Console.WriteLine($"{boss.Name}을(를) 처치했습니다!");
-
-            Console.WriteLine($"\n[캐릭터 정보]");
-            Console.WriteLine($"Lv.{player.Level} {player.Name}");
-            Console.WriteLine($"HP {player.MaxHP} -> {player.CurrentHP}");
-
-            Console.WriteLine("\n[획득 보상]");
-            Console.WriteLine($"{boss.RewardGold} Gold");
-            Console.WriteLine($"{boss.RewardExp} EXP");
-
             player.Gold += boss.RewardGold;
             player.GainExp(boss.RewardExp);
+            boss.RewardItems?.ForEach(item => player.Inventory.Add(item));
 
-            foreach (var item in boss.RewardItems)
+            List<string> rewardLines = new()
             {
-                if (item != null)
+                $"{boss.Name}을(를) 처치했습니다!",
+                $"획득 골드 : {boss.RewardGold} G",
+                $"획득 경험치 : {boss.RewardExp} EXP",
+            };
+
+            if (boss.RewardItems != null && boss.RewardItems.Count > 0)
+            {
+                rewardLines.Add("획득 아이템:");
+                foreach (var item in boss.RewardItems)
                 {
-                    player.Inventory.Add(item);
-                    Console.WriteLine($"{item.Name}");
+                    rewardLines.Add($"- {item.Name}");
                 }
             }
+
+            UI.DrawTitledBox("보상 획득", rewardLines);
         }
         else
         {
-            Console.WriteLine("You Lose...");
-            Console.WriteLine($"{boss.Name}에게 패배하셨습니다.");
+            UI.DrawTitledBox("패배", new List<string>
+            {
+                "You Lose...",
+                $"{boss.Name}에게 패배하셨습니다."
+            });
         }
 
         Console.WriteLine("\n0. 다음");
