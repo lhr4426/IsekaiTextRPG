@@ -1,6 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
+public enum LearnState
+{
+    NotLearnable,
+    Learnable,
+    Learned
+}
+
 public enum SkillId
 {
     FireSword = 0,
@@ -8,32 +15,43 @@ public enum SkillId
     LightningStrike = 2,
     WindBlade = 3
 }
-public class SkillDB
+public class Skill
 {
     public string Name { get; }
     public int Id { get; private set; }
     public int Damage { get; }
     public string Description { get; }
     public int ManaCost { get; }
-    //public int Cooldown { get; }
-    public SkillDB(int id, string name, int damage, int manaCost, string description)//int cooldown
+    public int Cooldown { get; }
+    
+
+    public LearnState learnState { get; set; }
+
+    public int NeedLevel { get; set; }
+
+    public Player.Jobs NeedJob { get; set; }
+    
+
+    public Skill(int id, string name, int damage, int manaCost, string description)//int cooldown
     {
         Id = id;
         Name = name ?? throw new ArgumentNullException(nameof(name));
         Damage = damage;
         ManaCost = manaCost;
         //Cooldown = cooldown;
+        learnState = LearnState.NotLearnable;
         Description = description ?? throw new ArgumentNullException(nameof(description));
     }
 
+    // TODO : 스킬마다 직업이랑 레벨 설정 부탁드려요
     public static class SkillManager
     {
-        private static readonly Dictionary<int, SkillDB> _skills = new Dictionary<int, SkillDB>
+        private static readonly Dictionary<int, Skill> _skills = new Dictionary<int, Skill>
             {
 
                 {
                     (int)SkillId.FireSword,
-                    new SkillDB(
+                    new Skill(
                         id:(int)SkillId.FireSword,
                         name:"불꽃의 검",
                         damage:20,
@@ -43,7 +61,7 @@ public class SkillDB
                 },
                 {
                    (int)SkillId.IceSpear,
-                    new SkillDB(
+                    new Skill(
                     id:          (int)SkillId.IceSpear,
                     name:        "얼음 창",
                     damage:      15,
@@ -53,7 +71,7 @@ public class SkillDB
                 },
                 {
                     (int)SkillId.LightningStrike,
-                     new SkillDB(
+                     new Skill(
                      id:           (int)SkillId.LightningStrike,
                      name:         "번개의 일격",
                      damage:       25,
@@ -63,7 +81,7 @@ public class SkillDB
                 },
                 {
                    (int)SkillId.WindBlade,
-                    new SkillDB(
+                    new Skill(
                     id:          (int)SkillId.WindBlade,
                     name:        "바람의 칼날",
                     damage:      18,
@@ -73,8 +91,8 @@ public class SkillDB
                 },
             };
 
-        public static IReadOnlyDictionary<int, SkillDB> Skills => _skills;
+        public static IReadOnlyDictionary<int, Skill> Skills => _skills;
 
-        public static bool TryGetSkill(int id, out SkillDB? skill) => _skills.TryGetValue(id, out skill);
+        public static bool TryGetSkill(int id, out Skill? skill) => _skills.TryGetValue(id, out skill);
     }
 }

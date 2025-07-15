@@ -10,22 +10,5 @@ public class StatScene : GameScene
         Console.Clear();
         GameManager.player.ShowStatus();
         return EndScene();
-
-        /*
-        string? str = Console.ReadLine();
-        
-        if (int.TryParse(str, out int index))
-        {
-            switch (index)
-            {
-                case 0: //메인화면으로 이동 처리 예정
-                    return prevScene;
-                default:
-                    return this;
-            }
-
-        }
-        return this;
-        */
     }
 }
