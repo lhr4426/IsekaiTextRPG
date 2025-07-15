@@ -69,7 +69,7 @@ public static class UI
         {
             if(line.Length > maxWidth) maxWidth = line.Length;
         }
-        return maxWidth + 10;
+        return maxWidth + 20;
     }
 
     private static string PadCenter(string text, int width)

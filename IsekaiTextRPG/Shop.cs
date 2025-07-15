@@ -29,12 +29,12 @@ namespace IsekaiTextRPG
             _itemSystem = itemSystem ?? throw new ArgumentNullException(nameof(itemSystem));
             _shopItems = new List<Item>
             {//이름 설명 공격력 방어력 가격 장착가능여부 아이템 타입 치명타 확률 치명타 배율 회피율
-                new Item("칼","기본 검",10, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
-                new Item("가죽 갑옷", "초급 가슴방어구", 0, 5,150, true, Item.ItemType.BodyArmor, 0f, 0f, 1f),
-                new Item("가죽 헬멧", "초급 머리보호구", 0, 3, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 1f),
-                new Item("가죽 바지", "초급 다리보호구", 0, 2, 50, true, Item.ItemType.LegArmor, 0f, 0f, 1f),
-                new Item("체력 물약", "HP +50 회복", 0, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
-                new Item("마나 물약", "MP +30 회복", 0, 0, 70, false, Item.ItemType.Usable, 0f, 0f, 0f)
+                new("칼","기본 검",10, 0, 0, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
+                new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 1f),
+                new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 1f),
+                new("가죽 바지", "초급 다리보호구", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 1f),
+                new("체력 물약", "HP +50 회복", 0, 0, 50, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
+                new("마나 물약", "MP +30 회복", 0, 0, 0, 50,70, false, Item.ItemType.Usable, 0f, 0f, 0f)
             };
         }
         // 씬 이름: 상단 헤더에 표시
@@ -125,6 +125,8 @@ namespace IsekaiTextRPG
                         item.Attack,
                         item.Defense,
                         item.Price,
+                        item.Hp,
+                        item.Mp,
                         item.IsEquip,
                         item.Type,
                         item.CriticalRate,

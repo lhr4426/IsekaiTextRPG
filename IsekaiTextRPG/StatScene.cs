@@ -7,8 +7,11 @@ public class StatScene : GameScene
 
     public override GameScene? StartScene()
     {
+        Console.Clear();
         GameManager.player.ShowStatus();
+        return EndScene();
 
+        /*
         string? str = Console.ReadLine();
         
         if (int.TryParse(str, out int index))
@@ -16,12 +19,13 @@ public class StatScene : GameScene
             switch (index)
             {
                 case 0: //메인화면으로 이동 처리 예정
-                    return null;
+                    return prevScene;
                 default:
-                    break;
+                    return this;
             }
 
         }
         return this;
+        */
     }
 }

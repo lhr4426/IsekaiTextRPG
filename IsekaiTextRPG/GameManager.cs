@@ -5,17 +5,33 @@ using System.Text.Json;
 
 public class GameManager
 {
-    public static GameManager instance = new GameManager();
+    public static GameManager instance;
     public static SceneManager sceneManager = new SceneManager();
 
 
     public static Player player;
-    public string path = "PlayerData.json";//임시
+    public string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PlayerData.json");
 
-    public void NewPlayerData(string playerName)
+    public void NewPlayerData()
     {
-        player = new Player(playerName);
+        Console.WriteLine("플레이어 이름을 설정해 주세요.");
+        Console.Write(">>");
+        string? name = Console.ReadLine();
+        player = new Player(name == null ? "Player" : name);
+        Console.WriteLine($"{name} 님 환영합니다!");
         SavePlayerData();
+    }
+
+    public GameManager()
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            throw new Exception("GameManager Instance는 하나만 존재할 수 있습니다.");
+        }
     }
 
     public void LoadPlayerData() //데이터 로드
@@ -28,6 +44,8 @@ public class GameManager
         else
         {
             Console.WriteLine("저장된 데이터가 없습니다.");
+            Console.WriteLine("새 캐릭터를 생성합니다.");
+            NewPlayerData();
         }
     }
 

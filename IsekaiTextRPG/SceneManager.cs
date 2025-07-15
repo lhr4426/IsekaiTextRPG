@@ -24,12 +24,12 @@ public class SceneManager
         
         { SceneType.FirstScene, new FirstScene() },
         { SceneType.TownScene, new TownScene() },
-        // { SceneType.StatScene, new StatScene() },
-        // { SceneType.InvenScene, new InvenScene() },
+        { SceneType.StatScene, new StatScene() },
+        { SceneType.InvenScene, new InventoryScene() },
         // { SceneType.SkillScene, new SkillScene() },
         // { SceneType.GuildScene, new GuildScene() },
         // { SceneType.ShopScene, new ShopScene() },
-        // { SceneType.RestScene, new RestScene() },
+        { SceneType.RestScene, new RestScene() },
         // { SceneType.DungeonScene, new DungeonScene() }
         
     };
@@ -53,23 +53,23 @@ public class SceneManager
     {
         
         scenes[SceneType.FirstScene].SetNextScene(scenes[SceneType.TownScene]);
-        /*
+        
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.StatScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.InvenScene]);
-        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillScene]);
+        // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillScene]);
         // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.GuildScene]);
-        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.ShopScene]);
+        // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.ShopScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.RestScene]);
-        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonScene]);
+        // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonScene]);
 
         scenes[SceneType.StatScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.InvenScene].SetPrevScene(scenes[SceneType.TownScene]);
-        scenes[SceneType.SkillScene].SetPrevScene(scenes[SceneType.TownScene]);
+        // scenes[SceneType.SkillScene].SetPrevScene(scenes[SceneType.TownScene]);
         // scenes[SceneType.GuildScene].SetPrevScene(scenes[SceneType.TownScene]);
-        scenes[SceneType.ShopScene].SetPrevScene(scenes[SceneType.TownScene]);
+        // scenes[SceneType.ShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.RestScene].SetPrevScene(scenes[SceneType.TownScene]);
-        scenes[SceneType.DungeonScene].SetPrevScene(scenes[SceneType.TownScene]);
-        */
+        // scenes[SceneType.DungeonScene].SetPrevScene(scenes[SceneType.TownScene]);
+        
     }
 
 

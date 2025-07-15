@@ -9,20 +9,25 @@ public class RestScene : GameScene
     public override GameScene? StartScene()
     {
         Console.Clear();
-        Player player = GameManager.Instance.Player;
+        Player player = GameManager.player;
 
-        Console.WriteLine("휴식하기");
-        Console.WriteLine($"{RestCost} G를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G)");
-        Console.WriteLine();
-        Console.WriteLine("1. 휴식하기");
-        Console.WriteLine("0. 나가기");
-        Console.WriteLine();
-        Console.Write("원하시는 행동을 입력해주세요.\n>> ");
-        string? input = Console.ReadLine();
+        List<string> strings = new List<string>()
+        {
+            $"{RestCost} G를 내면 체력을 회복할 수 있습니다. (보유 골드 : {player.Gold} G)",
+            "",
+            "1. 휴식하기",
+            "0. 나가기"
+        };
 
+        UI.DrawTitledBox(SceneName, strings);
+
+        Console.Write(">> ");
+
+        int? input = InputHelper.InputNumber(0, 1);
+        
         switch (input)
         {
-            case "1":
+            case 1:
                 if (player.Gold >= RestCost)
                 {
                     player.Gold -= RestCost;
@@ -41,8 +46,8 @@ public class RestScene : GameScene
                 Console.ReadKey();
                 return this;
 
-            case "0":
-                return SceneManager.Instance.scenes[SceneManager.SceneType.TownScene];
+            case 0:
+                return prevScene;
 
             default:
                 return this;

@@ -30,13 +30,13 @@ public class FirstScene : GameScene
                  Console.ReadKey();
                  return null;                    
              case 1:
-                 Console.Clear();
+                GameManager.instance.LoadPlayerData();
                  return EndScene();
              case 2:
-                 Console.WriteLine("미구현");
-                 Console.ReadKey();
-                 break;
-             default:
+                GameManager.instance.NewPlayerData();
+                Console.ReadKey();
+                return EndScene();
+            default:
                  break;
          }
 

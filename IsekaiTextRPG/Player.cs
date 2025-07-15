@@ -169,18 +169,21 @@ public class Player
         string cdStr = bonusCD > 0 ? $" (+{bonusCD * 100:F1}%)" : "";
         string drStr = bonusDR > 0 ? $" (+{bonusDR * 100:F1}%)" : "";
 
-        Console.WriteLine($"Lv. {Level:D2}");
-        Console.WriteLine($"{Name} ( {JobsKorean(Job)} )");
+        List<string> strings = new List<string>()
+        {
+            $"Lv. {Level:D2}",
+            $"{Name} ( {JobsKorean(Job)} )",
+            $"공격력 : {BaseAttack + bonusAtk}{atkStr}",
+            $"방어력 : {BaseDefense + bonusDef}{defStr}",
+            $"체 력   : {CurrentHP + bonusHp} / {MaxHP + bonusHp}{hpStr}",
+            $"마 나   : {CurrentMP + bonusMp} / {MaxMP + bonusMp}{mpStr}",
+            $"치명타 확률   : {(CriticalRate + bonusCR) * 100:F1}%{crStr}",
+            $"치명타 데미지 : {(CriticalDamage + bonusCD) * 100:F1}%{cdStr}",
+            $"회피율        : {(DodgeRate + bonusDR) * 100:F1}%{drStr}",
+            $"Gold : {Gold} G"
+        };
 
-        Console.WriteLine($"공격력 : {BaseAttack + bonusAtk}{atkStr}");
-        Console.WriteLine($"방어력 : {BaseDefense + bonusDef}{defStr}");
-        Console.WriteLine($"체 력   : {CurrentHP + bonusHp} / {MaxHP + bonusHp}{hpStr}");
-        Console.WriteLine($"마 나   : {CurrentMP + bonusMp} / {MaxMP + bonusMp}{mpStr}");
+        UI.DrawTitledBox("스테이터스", strings);
 
-        Console.WriteLine($"치명타 확률   : {(CriticalRate + bonusCR) * 100:F1}%{crStr}");
-        Console.WriteLine($"치명타 데미지 : {(CriticalDamage + bonusCD) * 100:F1}%{cdStr}");
-        Console.WriteLine($"회피율        : {(DodgeRate + bonusDR) * 100:F1}%{drStr}");
-
-        Console.WriteLine($"Gold : {Gold} G");
     }
 }
