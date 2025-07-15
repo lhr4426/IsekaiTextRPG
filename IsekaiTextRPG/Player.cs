@@ -74,19 +74,19 @@ public class Player
         Name = name;
     }
 
-    // 총 공격력 계산 (기본 + 장착 아이템)
-    public int GetTotalAttack()
-    {
-        int itemBonus = EquippedItems.Sum(item => item.Attack);
-        return BaseAttack + itemBonus;
-    }
+    // // 총 공격력 계산 (기본 + 장착 아이템)
+    // public int GetTotalAttack()
+    // {
+    //     int itemBonus = EquippedItems.Sum(item => item.Attack);
+    //     return BaseAttack + itemBonus;
+    // }
 
-    // 총 방어력 계산 (기본 + 장착 아이템)
-    public int GetTotalDefense()
-    {
-        int itemBonus = EquippedItems.Sum(item => item.Defense);
-        return BaseDefense + itemBonus;
-    }
+    // // 총 방어력 계산 (기본 + 장착 아이템)
+    // public int GetTotalDefense()
+    // {
+    //     int itemBonus = EquippedItems.Sum(item => item.Defense);
+    //     return BaseDefense + itemBonus;
+    // }
 
     // 치명타 여부 판단
     public bool IsCriticalHit()
@@ -151,15 +151,36 @@ public class Player
     // 상태 출력
     public void ShowStatus()
     {
-        int bonusAtk = GetTotalAttack() - BaseAttack;
-        int bonusDef = GetTotalDefense() - BaseDefense;
+        int bonusAtk = EquippedItems.Where(i => i.IsEquip && i.Attack != 0).Sum(i => i.Attack);
+        int bonusDef = EquippedItems.Where(i => i.IsEquip && i.Defense != 0).Sum(i => i.Defense);
+        int bonusHp  = EquippedItems.Where(i => i.IsEquip && i.Hp != 0).Sum(i => i.Hp);
+        int bonusMp  = EquippedItems.Where(i => i.IsEquip && i.Mp != 0).Sum(i => i.Mp);
 
-        Console.WriteLine($"Lv. {Level}");
-        Console.WriteLine($"{Name}");
-        Console.WriteLine($"공격력 : {GetTotalAttack()} {(bonusAtk > 0 ? $"(+{bonusAtk})" : "")}");
-        Console.WriteLine($"방어력 : {GetTotalDefense()} {(bonusDef > 0 ? $"(+{bonusDef})" : "")}");
-        Console.WriteLine($"체 력 : {CurrentHP} / {MaxHP}");
-        Console.WriteLine($"MP : {CurrentMP} / {MaxMP}");
+        float bonusCR = EquippedItems.Where(i => i.IsEquip && i.CriticalRate != 0).Sum(i => i.CriticalRate);
+        float bonusCD = EquippedItems.Where(i => i.IsEquip && i.CriticalDamage != 0).Sum(i => i.CriticalDamage);
+        float bonusDR = EquippedItems.Where(i => i.IsEquip && i.DodgeRate != 0).Sum(i => i.DodgeRate);
+
+        string atkStr = bonusAtk > 0 ? $" (+{bonusAtk})" : "";
+        string defStr = bonusDef > 0 ? $" (+{bonusDef})" : "";
+        string hpStr  = bonusHp > 0 ? $" (+{bonusHp})" : "";
+        string mpStr  = bonusMp > 0 ? $" (+{bonusMp})" : "";
+        
+        string crStr = bonusCR > 0 ? $" (+{bonusCR * 100:F1}%)" : "";
+        string cdStr = bonusCD > 0 ? $" (+{bonusCD * 100:F1}%)" : "";
+        string drStr = bonusDR > 0 ? $" (+{bonusDR * 100:F1}%)" : "";
+
+        Console.WriteLine($"Lv. {Level:D2}");
+        Console.WriteLine($"{Name} ( {JobsKorean(Job)} )");
+
+        Console.WriteLine($"공격력 : {BaseAttack + bonusAtk}{atkStr}");
+        Console.WriteLine($"방어력 : {BaseDefense + bonusDef}{defStr}");
+        Console.WriteLine($"체 력   : {CurrentHP + bonusHp} / {MaxHP + bonusHp}{hpStr}");
+        Console.WriteLine($"마 나   : {CurrentMP + bonusMp} / {MaxMP + bonusMp}{mpStr}");
+
+        Console.WriteLine($"치명타 확률   : {(CriticalRate + bonusCR) * 100:F1}%{crStr}");
+        Console.WriteLine($"치명타 데미지 : {(CriticalDamage + bonusCD) * 100:F1}%{cdStr}");
+        Console.WriteLine($"회피율        : {(DodgeRate + bonusDR) * 100:F1}%{drStr}");
+
         Console.WriteLine($"Gold : {Gold} G");
     }
 }
