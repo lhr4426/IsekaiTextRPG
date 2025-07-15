@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace IsekaiTextRPG
 {
+
     public class Shop : GameScene
     {    // 메뉴 선택을 위한 상수 정의
         private const string MenuOptionBuy = "1";   // 아이템 구매
@@ -90,8 +91,7 @@ namespace IsekaiTextRPG
                 var item = _shopItems[i];
                 var status = _itemSystem.HasItem(item.Name) ? "[구매완료]" : string.Empty;
 
-                // enum을 한글명으로 변환
-                var typeName = _itemTypeNames.TryGetValue(item.Type, out var name) ? name : item.Type.ToString();
+                var typeName = item.Type.ToString();
 
                 // 한 줄로 아이템 정보를 포맷하여 출력
                 Console.WriteLine(
@@ -162,32 +162,40 @@ namespace IsekaiTextRPG
         // 아이템 판매 처리: 이름 입력 → 장착 해제 → SellItem 호출 → 결과 메시지
         private void HandleSell()
         {
-            Console.Write("\n판매할 아이템 이름: ");
-            var name = Console.ReadLine()?.Trim() ?? string.Empty;
+            Console.Clear();
 
-            // 판매 전에 장착 중인 아이템이면 해제
+            // 1) 인벤토리와 골드를 출력
+            _itemSystem.PrintAllItems();
+
+            // 판매할 아이템 이름 입력
+            Console.Write("\n판매할 아이템 이름: ");
+            var itemName = Console.ReadLine()?.Trim() ?? string.Empty;
+
+            // 3) 플레이어가 장착 중인 경우 해제
             var player = GameManager.player;
-            var equippedItem = player.EquippedItems.FirstOrDefault(i => i.Name == name);
+            var equippedItem = player.EquippedItems.FirstOrDefault(i => i.Name == itemName);
             if (equippedItem != null)
             {
                 player.EquippedItems.Remove(equippedItem);
-                Console.WriteLine($"{name}의 장착을 해제했습니다.");
+                Console.WriteLine($"{equippedItem.Name}을(를) 장착 해제했습니다.");
             }
 
-            if (!_itemSystem.HasItem(name))
+            // 4) 실제 판매 호출
+            if (!_itemSystem.HasItem(itemName))
             {
                 Console.WriteLine("판매할 아이템이 없습니다.");
             }
             else
-            { // 판매 시도: 성공하면 골드 증가 및 인벤토리에서 제거
-                var success = _itemSystem.SellItem(name);
+            {
+                // 판매 시도: 성공하면 골드 증가 및 인벤토리에서 제거
+                var success = _itemSystem.SellItem(itemName);
                 Console.WriteLine(
                     success
-                        ? $"{name}을(를) 판매했습니다!"
+                        ? $"{itemName}을(를) 판매했습니다!"
                         : "판매에 실패했습니다."
                 );
             }
-
+            // 5) 판매 후 대기
             Console.WriteLine("\n아무 키나 눌러 계속...");
             Console.ReadKey();
         }
