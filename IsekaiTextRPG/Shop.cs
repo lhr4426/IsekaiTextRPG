@@ -9,24 +9,22 @@ namespace IsekaiTextRPG
     public class Shop : GameScene
     {
         private readonly ItemSystem _itemSystem;
-        private readonly List<Item> _equipmentShopItems;
-        private readonly List<Item> _consumableShopItems;
+        private readonly List<Item> _shopItems;
 
-    }
-      public Shop(ItemSystem itemSystem)
+        public Shop(ItemSystem itemSystem)
         {
             _itemSystem = itemSystem ?? throw new ArgumentNullException(nameof(itemSystem));
 
-            var allShopItems = new List<Item>
-            {
-                new Item("칼", "기본 검",        10, 0,  100, true,  "무기",    0.05f, 1.5f, 0),
-                new Item("가죽 갑옷", "초급 방어구",   0,  5,  150, true,  "방어구", 0.00f, 1.0f, 0),
-                new Item("체력 물약", "HP +50 회복",  0,  0,   50, false, "소모품", 0.00f, 1.0f, 0),
-                new Item("마나 물약", "MP +30 회복",   0,  0,   70, false, "소모품", 0.00f, 1.0f, 0)
-            };
-
-            _equipmentShopItems = allShopItems.Where(i => i.IsEquip).ToList();
-            _consumableShopItems = allShopItems.Where(i => !i.IsEquip).ToList();
+            // 상점 진열용 아이템
+            _shopItems = new List<Item>
+            {  //아이템이름 아이템설명 데미지 방어력 가격 장착 가능여부 아이템종류 치명타확률 치명타데미지배율 회피율
+                new Item("칼", "기본 검", 10, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0),
+                new Item("가죽 갑옷", "초급 가슴방어구", 0, 5, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 1),
+                new Item("가죽 헬멧", "초급 머리보호구", 0, 3, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 1),
+                new Item("가죽 바지", "초급 다리보호구", 0, 2, 50, true, Item.ItemType.LegArmor, 0f, 0f, 1),
+                new Item("체력 물약", "HP +50 회복", 0, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0),
+                new Item("마나 물약", "MP +30 회복", 0, 0, 70, false, Item.ItemType.Usable, 0f, 0f, 0)
+};
         }
 
         public override string SceneName => "상점";
@@ -37,27 +35,35 @@ namespace IsekaiTextRPG
             {
                 Console.Clear();
                 Console.WriteLine($"\t=== {SceneName} ===    소지 골드: {_itemSystem.Gold}\n");
-                Console.WriteLine("1. 장비 구매");
-                Console.WriteLine("2. 소모품 구매");
-                Console.WriteLine("3. 아이템 판매");
-                Console.WriteLine("4. 돌아가기");
-                Console.Write("\n선택: ");
 
-                var choice = Console.ReadLine()?.Trim();
-                switch (choice)
+                // 1) 아이템 목록 표시
+                for (var i = 0; i < _shopItems.Count; i++)
+                {
+                    var item = _shopItems[i];
+                    var status = _itemSystem.HasItem(item.Name) ? "[구매완료]" : "";
+                    Console.WriteLine(
+                        $"{i + 1}. {item.Name} / {item.Description} / " +
+                        $"공격: {item.Attack}, 방어: {item.Defense} {status}"
+                    );
+                }
+
+                // 2) 메뉴
+                Console.WriteLine("\n1. 아이템 구매");
+                Console.WriteLine("2. 아이템 판매");
+                Console.WriteLine("3. 돌아가기");
+                
+
+                var input = Console.ReadLine()?.Trim();
+                switch (input)
                 {
                     case "1":
-                        DisplayAndBuy(_equipmentShopItems, "장비");
+                        HandleBuy();
                         break;
                     case "2":
-                        DisplayAndBuy(_consumableShopItems, "소모품");
-                        break;
-                    case "3":
                         HandleSell();
                         break;
-                    case "0":
-                        EndScene();
-                        break;
+                    case "3":
+                        return EndScene();
                     default:
                         Console.WriteLine("유효한 번호를 입력하세요.");
                         Console.ReadKey();
@@ -66,40 +72,41 @@ namespace IsekaiTextRPG
             }
         }
 
-        private void DisplayAndBuy(List<Item> items, string categoryName)
+        private void HandleBuy()
         {
-            Console.Clear();
-            Console.WriteLine($"\t=== {categoryName} 상점 ===    소지 골드: {_itemSystem.Gold}\n");
-            for (int i = 0; i < items.Count; i++)
-            {
-                var item = items[i];
-                bool owned = _itemSystem.HasItem(item.Name);
-                string status = owned ? "구매완료" : "";
-                Console.WriteLine($"{i + 1}. {item.Name} / {item.Description} / 공격:{item.Attack}, 방어:{item.Defense}, 가격:{item.Price} / {status}");
-            }
-
-            Console.Write($"\n구매할 {categoryName} 번호: ");
-            if (int.TryParse(Console.ReadLine(), out int idx)
+            Console.Write("\n구매할 아이템 번호: ");
+            if (int.TryParse(Console.ReadLine(), out var idx)
                 && idx >= 1
-                && idx <= items.Count)
+                && idx <= _shopItems.Count)
             {
-                var selected = items[idx - 1];
-                bool success = _itemSystem.BuyItem(
-                    selected.Name,
-                    selected.Description,
-                    selected.Attack,
-                    selected.Defense,
-                    selected.Price,
-                    selected.IsEquip,
-                    selected.ItemType,
-                    selected.CriticalRate,
-                    selected.CriticalDamage,
-                    selected.DodgeRate
-                );
+                var item = _shopItems[idx - 1];
 
-                Console.WriteLine(success
-                    ? $"{selected.Name}을(를) 구매했습니다!"
-                    : "구매에 실패했습니다.");
+                if (_itemSystem.HasItem(item.Name))
+                {
+                    Console.WriteLine("이미 구매한 아이템입니다.");
+                }
+                else
+                {
+                    
+                    bool success = _itemSystem.BuyItem(
+                        item.Name,
+                        item.Description,
+                        item.Attack,
+                        item.Defense,
+                        item.Price,
+                        item.IsEquip,
+                        item.Type.ToString(),
+                        item.CriticalRate,
+                        item.CriticalDamage,
+                        item.DodgeRate
+                    );  
+
+                    Console.WriteLine(
+                        success
+                            ? $"{item.Name}을(를) 구매했습니다!"
+                            : "구매에 실패했습니다."
+                    );
+                }
             }
             else
             {
@@ -112,21 +119,29 @@ namespace IsekaiTextRPG
 
         private void HandleSell()
         {
-            Console.Clear();
-            Console.Write("판매할 아이템 이름: ");
-            var name = Console.ReadLine()?.Trim() ?? "";
-
-            // 장착 해제 (ItemSystem에 구현된 경우 호출)
-            if (_itemSystem.IsEquipped(name))
+            Console.Write("\n판매할 아이템 이름: ");
+            var name = Console.ReadLine()?.Trim() ?? string.Empty;
+            var player = GameManager.player;
+            var equipped = player.EquippedItems.FirstOrDefault(i => i.Name == name);
+            if (equipped != null)
             {
-                _itemSystem.UnequipItem(name);
+                player.EquippedItems.Remove(equipped);
                 Console.WriteLine($"{name}의 장착을 해제했습니다.");
             }
 
-            bool success = _itemSystem.SellItem(name);
-            Console.WriteLine(success
-                ? $"{name}을(를) 판매했습니다!"
-                : "판매에 실패했습니다.");
+            if (!_itemSystem.HasItem(name))
+            {
+                Console.WriteLine("판매할 아이템이 없습니다.");
+            }
+            else
+            {
+                var success = _itemSystem.SellItem(name);
+                Console.WriteLine(
+                    success
+                        ? $"{name}을(를) 판매했습니다!"
+                        : "판매에 실패했습니다."
+                );
+            }
 
             Console.WriteLine("\n아무 키나 눌러 계속...");
             Console.ReadKey();
