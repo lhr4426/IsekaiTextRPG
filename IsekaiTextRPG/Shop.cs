@@ -33,7 +33,60 @@ namespace IsekaiTextRPG
         public override GameScene? StartScene()
         {
             Console.Clear();
-            Console.WriteLine($"\t=== 상점 ===    소지 골드: {_itemSystem.Gold}\n");
+            Console.WriteLine($"\t=== 상점 ===    소지 골드: {_itemSystem.Gold}\n"); 
+        }
+
+        private void DisplayAndBuy(List<Item> items, string categoryName)
+        {
+            Console.Clear();
+            Console.WriteLine($"\t=== {categoryName} 상점 ===    소지 골드: {_itemSystem.Gold}\n");
+            for (int i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+                bool owned = _itemSystem.HasItem(item.Name);
+                string status = owned ? "구매완료" : ""; // 아이템 소유 여부에 따라 상태 표시
+                Console.WriteLine($"{i + 1}. {item.Name} / {item.Description} / 공격:{item.Attack}, 방어:{item.Defense}, 가격:{item.Price} / {status}");
+            }
+
+            Console.Write($"\n구매할 {categoryName} 번호: ");
+            if (int.TryParse(Console.ReadLine(), out var idx) && idx >= 1 && idx <= items.Count)
+            {
+                var item = items[idx - 1];
+                if (item.IsEquip || !item.IsEquip)
+                {
+                    bool success = _itemSystem.BuyItem(
+                        name: item.Name,
+                        description: item.Description,
+                        attack: item.Attack,
+                        defense: item.Defense,
+                        price: item.Price,
+                        isEquip: item.IsEquip,
+                        itemType: item.ItemType,
+                        criticalRate: item.CriticalRate,
+                        criticalDamage: item.CriticalDamage,
+                        dodgeRate: item.DodgeRate
+                    );
+                    Console.WriteLine(success ? $"{item.Name}을(를) 구매했습니다!" : "구매에 실패했습니다.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("번호를 입력하세요.");
+            }
+            Console.WriteLine("\n아무 키나 눌러 계속...");
+            Console.ReadKey();
+
+        }
+
+        private void HandleSell()
+        {
+            Console.Clear();
+            Console.Write("판매할 아이템 이름: ");
+            var name = Console.ReadLine()?.Trim() ?? "";
+            bool success = _itemSystem.SellItem(name);
+            Console.WriteLine(success ? "판매 완료!" : "판매 실패 (인벤토리에 없거나 장착 중인 아이템)");
+            Console.WriteLine("\n아무 키나 눌러 계속...");
+            Console.ReadKey();
         }
     }
 }
