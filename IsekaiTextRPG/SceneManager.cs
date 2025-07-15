@@ -44,6 +44,8 @@ public class SceneManager
         {
             throw new InvalidOperationException("SceneManager 인스턴스는 하나만 생성할 수 있습니다.");
         }
+        Console.OutputEncoding = Encoding.UTF8;
+        Console.InputEncoding = Encoding.UTF8;
         SceneSetting();
     }
 
