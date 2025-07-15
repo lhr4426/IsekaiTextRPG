@@ -15,7 +15,7 @@ public class ItemSystem
 
     // 아이템 생성 및 구매
     public bool BuyItem(string name, string description, int attack, int defense,
-                       int price, bool isEquip, string itemType, float criticalRate = 0,
+                       int price, bool isEquip, Item.ItemType itemType, float criticalRate = 0,
                        float criticalDamage = 1.6f, float dodgeRate = 0)
     {
         var newItem = new Item(name, description, attack, defense, price, isEquip,

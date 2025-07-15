@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 public static class UI
 {
     /// <summary>
-    /// 
+    /// 타이틀에 씬 이름 넣고, 
+    /// contents에다가는 원하는 문자열 리스트 넣으시면 알아서 정렬됨
     /// </summary>
     /// <param name="title"></param>
     /// <param name="contents"></param>
@@ -46,8 +47,8 @@ public static class UI
 
     private static string PadCenter(string text, int width)
     {
-        int textWidth = GetDisplayWidth(text); // 한글은 2칸으로 계산
-        int padding = Math.Max(0, width - textWidth);
+        int textWidth = GetDisplayWidth(text); 
+        int padding = Math.Max(0, width - textWidth); // 남는 부분 (패딩)
         int padLeft = padding / 2;
         int padRight = padding - padLeft;
         return new string(' ', padLeft) + text + new string(' ', padRight);
@@ -58,7 +59,7 @@ public static class UI
         int width = 0;
         foreach (char c in text)
         {
-            width += IsFullWidth(c) ? 2 : 1;
+            width += IsFullWidth(c) ? 2 : 1; // 한글은 두 글자로 취급
         }
         return width;
     }
