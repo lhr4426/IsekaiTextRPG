@@ -126,7 +126,7 @@ namespace IsekaiTextRPG
                         item.Defense,
                         item.Price,
                         item.IsEquip,
-                        item.Type.ToString(),
+                        item.Type,
                         item.CriticalRate,
                         item.CriticalDamage,
                         item.DodgeRate
