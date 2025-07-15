@@ -69,6 +69,8 @@ public class Player
     public List<Item> EquippedItems { get; private set; } = new List<Item>();
     public List<Item> ShopItems { get; set; } = new List<Item>();
 
+    public List<Skill> Skill { get; set; } = new List<Skill>();
+
     public Player(string name)
     {
         Name = name;
