@@ -67,9 +67,11 @@ public static class UI
         int maxWidth = 0;
         foreach (string line in contents)
         {
-            if(line.Length > maxWidth) maxWidth = line.Length;
+            int displayWidth = GetDisplayWidth(line);
+            if (displayWidth > maxWidth)
+                maxWidth = displayWidth;
         }
-        return maxWidth + 20;
+        return maxWidth + 4; // 좌우 여유 여백
     }
 
     private static string PadCenter(string text, int width)
