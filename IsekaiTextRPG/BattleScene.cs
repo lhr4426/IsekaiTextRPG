@@ -1,6 +1,6 @@
 public class BattleScene : GameScene
 {
-    public override string SceneName => "전투 씬";
+    public override string SceneName => "전투";
 
     public override GameScene? StartScene()
     {

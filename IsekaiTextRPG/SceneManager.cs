@@ -13,7 +13,8 @@ public class SceneManager
         SkillScene,
         ShopScene,
         RestScene,
-        DungeonScene,
+        DungeonEnterScene,
+        BossDungeonScene,
         LevelDungeonScene,
         BattleScene,
     }
@@ -32,7 +33,8 @@ public class SceneManager
         // { SceneType.GuildScene, new GuildScene() },
         // { SceneType.ShopScene, new ShopScene() },
         { SceneType.RestScene, new RestScene() },
-        // { SceneType.DungeonScene, new DungeonScene() }
+        { SceneType.DungeonEnterScene, new DungeonEnterScene() },
+        { SceneType.BossDungeonScene, new BossDungeonScene() },
         { SceneType.LevelDungeonScene, new LevelDungeonScene() },
         { SceneType.BattleScene, new BattleScene() },
         
@@ -65,7 +67,10 @@ public class SceneManager
         // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.ShopScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.RestScene]);
         // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonScene]);
-        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.LevelDungeonScene]);
+        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonEnterScene]);
+
+        scenes[SceneType.DungeonEnterScene].SetNextScene(scenes[SceneType.LevelDungeonScene]);
+        scenes[SceneType.DungeonEnterScene].SetNextScene(scenes[SceneType.BossDungeonScene]);
         scenes[SceneType.LevelDungeonScene].SetNextScene(scenes[SceneType.BattleScene]);
 
         scenes[SceneType.StatScene].SetPrevScene(scenes[SceneType.TownScene]);
@@ -75,7 +80,9 @@ public class SceneManager
         // scenes[SceneType.ShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.RestScene].SetPrevScene(scenes[SceneType.TownScene]);
         // scenes[SceneType.DungeonScene].SetPrevScene(scenes[SceneType.TownScene]);
-        scenes[SceneType.LevelDungeonScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.DungeonEnterScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.BossDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
+        scenes[SceneType.LevelDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
         scenes[SceneType.BattleScene].SetPrevScene(scenes[SceneType.LevelDungeonScene]);
         
     }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class LevelDungeonScene : GameScene
 {
-    public override string SceneName => "레벨던전";
+    public override string SceneName => "레벨던전 입구";
 
     public override GameScene? StartScene()
     {
