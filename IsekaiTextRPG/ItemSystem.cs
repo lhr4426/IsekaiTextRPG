@@ -14,11 +14,11 @@ public class ItemSystem
     }
 
     // 아이템 생성 및 구매
-    public bool BuyItem(string name, string description, int attack, int defense,
+    public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
                        int price, bool isEquip, Item.ItemType itemType, float criticalRate = 0,
                        float criticalDamage = 1.6f, float dodgeRate = 0)
     {
-        var newItem = new Item(name, description, attack, defense, price, isEquip,
+        var newItem = new Item(name, description, attack, defense,hp,mp, price, isEquip,
                               itemType, criticalRate, criticalDamage, dodgeRate);
 
         if (Gold < price)
