@@ -3,6 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 public class Player
 {
+    public enum Jobs
+    {
+        // 0 ~ 2 : 전사
+        // 3 ~ 5 : 법사
+        // 6 ~ 8 : 도적
+
+        // % 3 == 0 : 로아
+        // % 3 == 1 : 던파
+        // % 3 == 2 : 메이플
+        
+        Warlord,
+        WeaponMaster,
+        Hero,
+        Sorceress,
+        Summoner,
+        ArchMage,
+        Blade,
+        Rogue,
+        NightLord,
+    }
+
+    public string JobsKorean(Jobs job)
+    {
+        return job switch
+        {
+            Jobs.Warlord => "워로드",
+            Jobs.WeaponMaster => "웨폰마스터",
+            Jobs.Hero => "히어로",
+            Jobs.Sorceress => "소서리스",
+            Jobs.Summoner => "소환사",
+            Jobs.ArchMage => "썬콜",
+            Jobs.Blade => "블레이드",
+            Jobs.Rogue => "로그",
+            Jobs.NightLord => "나이트로드",
+            _ => job.ToString()
+        };
+    }
+
+
     public string Name { get; private set; }
     public int Level { get; private set; } = 1;
     public int Experience { get; private set; } = 0;
