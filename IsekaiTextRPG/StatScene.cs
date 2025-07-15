@@ -17,12 +17,12 @@ public class StatScene : GameScene
             .Sum(i => i.Defense);
 
         int bonusHp = GameManager.player.EquippedItems
-            .Where(i => i.IsEquip && i.Type != 0)
-            .Sum(i => i.StatValue);
+            .Where(i => i.IsEquip && i.Hp != 0)
+            .Sum(i => i.Hp);
 
         int bonusMp = GameManager.player.EquippedItems
-            .Where(i => i.IsEquip && i.Type != 0)
-            .Sum(i => i.StatValue);
+            .Where(i => i.IsEquip && i.Mp != 0)
+            .Sum(i => i.Mp);
 
         float bonusCR = GameManager.player.EquippedItems
             .Where(i => i.IsEquip && i.CriticalRate != 0)
