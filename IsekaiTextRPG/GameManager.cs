@@ -13,7 +13,6 @@ public class GameManager
 
     public GameManager()
     {
-        ConfigureConsoleWindow(); // 콘솔 크기 설정
         SkillManager.Initialize(); // 스킬 초기화
 
         if (instance == null)
@@ -23,32 +22,6 @@ public class GameManager
         else
         {
             throw new Exception("GameManager Instance는 하나만 존재할 수 있습니다.");
-        }
-    }
-
-    // 콘솔 크기 조절 메서드
-    public static void ConfigureConsoleWindow()
-    {
-        try
-        {
-            int targetWidth = 120;
-            int targetHeight = 30;
-
-            if (Console.LargestWindowWidth >= targetWidth)
-            {
-                Console.WindowWidth = targetWidth;
-                Console.BufferWidth = targetWidth;
-            }
-
-            if (Console.LargestWindowHeight >= targetHeight)
-            {
-                Console.WindowHeight = targetHeight;
-                Console.BufferHeight = targetHeight;
-            }
-        }
-        catch (IOException)
-        {
-            // 실패해도 무시
         }
     }
 
