@@ -125,9 +125,9 @@ public class ShopScene : GameScene
                     item.Description,
                     item.Attack,
                     item.Defense,
-                    item.Price,
                     item.Hp,
                     item.Mp,
+                    item.Price,
                     item.IsEquip,
                     item.Type,
                     item.CriticalRate,
@@ -140,6 +140,15 @@ public class ShopScene : GameScene
                         ? $"{item.Name}을(를) 구매했습니다!"
                         : "구매에 실패했습니다."
                 );
+
+                if (success)
+                {
+                    // ✅ 인벤토리에 추가
+                    GameManager.player.Inventory.Add(item);
+
+                    // ✅ 플레이어 골드 동기화
+                    GameManager.player.Gold = _itemSystem.Gold;
+                }
             }
         }
         else
@@ -185,6 +194,15 @@ public class ShopScene : GameScene
                     ? $"{itemName}을(를) 판매했습니다!"
                     : "판매에 실패했습니다."
             );
+
+            if (success)
+            {
+                var playerItem = player.Inventory.FirstOrDefault(i => i.Name == itemName);
+                if (playerItem != null)
+                    player.Inventory.Remove(playerItem);
+
+                player.Gold = _itemSystem.Gold;    // ✅ 골드 동기화
+            }
         }
         // 5) 판매 후 대기
         Console.WriteLine("\n아무 키나 눌러 계속...");
