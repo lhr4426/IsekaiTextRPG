@@ -17,6 +17,7 @@ public class Enemy
         Level = level;
         Name = name;
         MaxHP = hp;
+        CurrentHP = MaxHP;
         Attack = attack;
         Defense = defense;
         DodgeRate = dodgeRate;

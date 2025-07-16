@@ -20,10 +20,17 @@ public class SkillInvenScene : GameScene
     {
         List<string> strings = new List<string>();
 
-        foreach(var skill in skills)
+        if (skills != null)
         {
-            strings.Add(skill.ToString());
+            for(int i = 0; i < skills.Count; i++)
+            {
+                strings.Add($"{i+1} : "+skills[i].ToString());
+
+            }
         }
+
+        else { strings.Add("사용 가능한 스킬이 없습니다."); }
+
 
         UI.DrawTitledBox(SceneName, strings);
     }
