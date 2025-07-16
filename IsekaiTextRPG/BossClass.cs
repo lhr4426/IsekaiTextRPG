@@ -24,13 +24,11 @@ namespace IsekaiTextRPG
         public class Boss : Enemy
         {
             private static readonly Random _rng = new Random();
-
             public float DodgeRate { get; } // 회피 확률
             public float CriticalRate { get; } // 치명타 확률
             public float CriticalMultiplier { get; }  // 치명타 배율
             public List<Skill> Skills { get; }  // 보유 스킬 리스트
             private readonly Dictionary<Skill, int> _skillCooldowns; // 스킬 쿨타임 관리 딕셔너리
-
             public Boss(
                 int level, string name, int hp, int attack, int defense,
                 int rewardGold, int rewardExp,
@@ -44,7 +42,6 @@ namespace IsekaiTextRPG
                 Skills = skills.ToList();
                 _skillCooldowns = Skills.ToDictionary(s => s, _ => 0); // 모든 스킬 쿨타임 초기화
             }
-
             private void TickCooldowns() // 턴 시작 시 모든 스킬 쿨타임 1씩 감소
             {
                 foreach (var skill in Skills)
@@ -74,9 +71,7 @@ namespace IsekaiTextRPG
 
                 return damage;// 최종 데미지 반환
             }
-
             private bool IsAttackDodged() => _rng.NextDouble() < DodgeRate;  // 회피 여부 판정
-
             private float CalculateAttackPower() // 공격력 계산 (스킬이 발동하면 스킬, 아니면 기본 공격)
             {
                 var availableSkills = Skills
@@ -92,14 +87,10 @@ namespace IsekaiTextRPG
 
                 return Attack; // 스킬 발동 실패 시 기본 공격
             }
-
             private bool IsCriticalHit() => _rng.NextDouble() < CriticalRate;  // 크리티컬 여부 판정
-
-            
             private int ApplyDefenseReduction(float attackPower, Enemy target) 
                 => Math.Max(0, (int)(attackPower - target.Defense)); // 방어력 차감 후 피해량 계산
         }
-
 
         public static IReadOnlyList<Enemy> GetBossList() => new List<Enemy> 
         {
@@ -195,6 +186,5 @@ namespace IsekaiTextRPG
                     cooldownTurns: 7 // 7턴 쿨다운
                 )
         };
-
     }
 };
