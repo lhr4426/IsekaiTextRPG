@@ -43,14 +43,12 @@ public class InventoryScene : GameScene
                 string stats = item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}";
                 strings.Add($"- {index} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
                 index++;
-
-
             }
 
             var consumables = sortedInventory
                 .Where(i => i.Type == Item.ItemType.Usable)
                 .GroupBy(i => i.Name)
-                .OrderBy(g => g.Key);
+                .OrderBy(g => g.Key);// 소비 아이템은 이름으로 그룹화
             foreach (var g in consumables)
             {
                 var sample = g.First();
@@ -64,9 +62,6 @@ public class InventoryScene : GameScene
                 );
                 index++;
             }
-
-
-
         }
 
         strings.Add("1. 장착/해제 관리");
@@ -84,7 +79,7 @@ public class InventoryScene : GameScene
                 HandleEquip(player,
                     sortedInventory
                         .Where(i => i.IsEquip)      
-                        .ToList()
+                        .ToList() // 장착 가능한 아이템만 필터링
                 );
                 return this;
             case 0:
@@ -106,7 +101,7 @@ public class InventoryScene : GameScene
             .OrderByDescending(item => player.EquippedItems.Contains(item))
             .ThenBy(item => item.Type)
             .ThenBy(item => item.Name)
-            .ToList();
+            .ToList(); // 사용 가능한 아이템만 필터링
 
         List<string> _strings = new();
 
@@ -116,9 +111,10 @@ public class InventoryScene : GameScene
             for (int i = 0; i < usable.Count; i++)
             {
                 var item = usable[i];
-                int count = usable.Skip(i).TakeWhile(x => x.Name == item.Name).Count();
+                int count = usable.Skip(i).TakeWhile(x => x.Name == item.Name).Count();// 중복된 아이템 수
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
                 string stats = item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}";
+                // 중복된 아이템은 하나로 묶어서 표시
                 strings.Add( $"- {displayIndex} {equippedMark}{item.Name,-15} x{count} | " + $"{stats} | {item.Description}");
                 i += count - 1; // 중복된 아이템 수 만큼 건너뜀
                 displayIndex++; 
@@ -130,7 +126,7 @@ public class InventoryScene : GameScene
         }
 
         UI.DrawBox(strings);
-        inven = usable.GroupBy(x => x.Name).Select(g => g.First()).ToList();
+        inven = usable.GroupBy(x => x.Name).Select(g => g.First()).ToList(); 
     }
     
 
@@ -147,7 +143,7 @@ public class InventoryScene : GameScene
             };
 
             
-            for (int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inventory.Count; i++) 
             {
                 var item = inventory[i];
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
