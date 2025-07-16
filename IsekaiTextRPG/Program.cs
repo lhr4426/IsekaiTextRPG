@@ -13,33 +13,31 @@ public class Program
 
         try
         {
-            Console.Title = "이세계 RPG - 크기 조절 시도 중...";
+            // 시스템이 허용하는 최대 콘솔 너비와 높이를 가져옵니다.
+            int maxWindowWidth = Console.LargestWindowWidth;
+            int maxWindowHeight = Console.LargestWindowHeight;
 
-            // SetWindowSize도 MaxValue를 넘으면 안되므로 안전하게 설정합니다.
-            int actualDesiredWidth = Math.Min(desiredWidth, Console.LargestWindowWidth);
-            int actualDesiredHeight = Math.Min(desiredHeight, Console.LargestWindowHeight);
+            // 설정하려는 너비와 높이가 시스템 최대치를 넘지 않도록 제한합니다.
+            int actualSetWidth = Math.Min(desiredWidth, maxWindowWidth);
+            int actualSetHeight = Math.Min(desiredHeight, maxWindowHeight);
 
-            // 중요: 창 크기를 먼저 설정합니다.
-            Console.SetWindowSize(actualDesiredWidth, actualDesiredHeight);
+            // 먼저 콘솔 버퍼 크기를 시스템이 허용하는 최대로 늘려놓습니다.
+            Console.BufferWidth = maxWindowWidth;
+            Console.BufferHeight = maxWindowHeight;
 
-            Console.BufferWidth = actualDesiredWidth;
-            Console.BufferHeight = actualDesiredHeight;
+            // 원하는 '창 크기'를 설정합니다.
+            Console.SetWindowSize(actualSetWidth, actualSetHeight);
 
-            Console.Title = "이세계 RPG - 창 크기 설정 완료!";
+            // 최종적으로 콘솔 창 제목을 설정합니다.
+            Console.Title = "이세계 RPG - 던전 탐험 시작!";
         }
         catch (System.IO.IOException e)
         {
-            Console.WriteLine($"[경고] 콘솔 창 크기를 조정할 수 없습니다 (권한 또는 환경 문제): {e.Message}");
-            Console.WriteLine("계속하려면 아무 키나 누르세요...");
-            Console.ReadKey();
+            
         }
         catch (ArgumentOutOfRangeException e)
         {
-            Console.WriteLine($"[경고] 콘솔 창 크기 설정 값이 유효하지 않습니다: {e.Message}");
-            Console.WriteLine($"현재 시스템에서 허용하는 최대 크기: Width={Console.LargestWindowWidth}, Height={Console.LargestWindowHeight}");
-            Console.WriteLine("설정값을 조정하거나 폰트 크기를 변경해 보세요.");
-            Console.WriteLine("기본 크기로 실행합니다. 계속하려면 아무 키나 누르세요...");
-            Console.ReadKey();
+            
         }
 
         // 게임 매니저 초기화 및 게임 시작 로직
