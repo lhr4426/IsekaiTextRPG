@@ -152,7 +152,7 @@ public class Player
         Console.WriteLine("장착 중인 아이템:");
         foreach (var item in EquippedItems)
         {
-            Console.WriteLine($"- {item.Name} (공격력 +{item.Attack}, 방어력 +{item.Attack})");
+            Console.WriteLine($"- {item.Name} (공격력 +{item.Attack}, 방어력 +{item.Defense})");
         }
     }
 
@@ -193,7 +193,6 @@ public class Player
 
         UI.DrawTitledBox("스테이터스", strings);
 
-    private string skillSavePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
     // 스킬 저장
     public void SaveSkillsToJson()
     {
