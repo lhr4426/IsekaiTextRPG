@@ -17,7 +17,7 @@ public class Player
         // % 3 == 1 : 로아
         // % 3 == 2 : 던파
         // % 3 == 0 : 메이플 (0 : 환생자 제외)
-        
+
         Prestige,
         Warlord,
         WeaponMaster,
@@ -193,12 +193,17 @@ public class Player
 
         UI.DrawTitledBox("스테이터스", strings);
 
-    }
+    private string skillSavePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
     // 스킬 저장
     public void SaveSkillsToJson()
     {
+        var options = new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All)
+        };
         var skillIds = Skill.Select(s => s.Id).ToList();
-        var json = JsonSerializer.Serialize(skillIds, new JsonSerializerOptions { WriteIndented = true });
+        var json = JsonSerializer.Serialize(skillIds, options);
         File.WriteAllText(skillSavePath, json);
     }
 
@@ -214,7 +219,7 @@ public class Player
 
             if (skillIds != null)
             {
-                Skill.Clear(); // 초기화
+                Skill.Clear();
 
                 foreach (int id in skillIds)
                 {
@@ -226,10 +231,9 @@ public class Player
                 }
             }
         }
-
         catch (Exception e)
         {
-            Console.WriteLine($"[ERROR] 스킬 불러오기 실패: {e.Message}");
+            Console.WriteLine($"[ERROR] 플레이어 스킬 불러오기 실패: {e.Message}");
         }
     }
 }
