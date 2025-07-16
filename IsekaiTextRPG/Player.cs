@@ -222,7 +222,7 @@ public class Player
             };
 
             // 스킬 객체가 아닌, 스킬 ID 리스트만 저장
-            var learnedSkillIds = Skill.Select(s => s.Id).ToList();
+            var learnedSkillIds = Skills.Select(s => s.Id).ToList();
 
             string json = JsonSerializer.Serialize(learnedSkillIds, options);
             string path = GetSkillSavePath();
@@ -252,14 +252,14 @@ public class Player
 
             if (skillIds == null) return;
 
-            Skill.Clear();
+            Skills.Clear();
 
             foreach (int id in skillIds)
             {
                 if (SkillManager.TryGetSkill(id, out Skill skill))
                 {
                     skill.learnState = LearnState.Learned; // 배운 상태로 표시
-                    Skill.Add(skill);
+                    Skills.Add(skill);
                 }
             }
         }

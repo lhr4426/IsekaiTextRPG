@@ -94,7 +94,7 @@ public class SkillShopScene : GameScene
         {
             // 스킬 습득 처리
             skill.learnState = LearnState.Learned;
-            GameManager.player.Skill.Add(skill);
+            GameManager.player.Skills.Add(skill);
             strings.Add($"{skill.Name} 스킬을 습득하셨습니다!");
 
             // 변경된 스킬 상태 저장
