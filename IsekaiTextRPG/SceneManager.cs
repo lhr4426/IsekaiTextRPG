@@ -9,6 +9,7 @@ public class SceneManager
         FirstScene,
         TownScene,
         StatScene,
+        JeonJikScene,
         InvenScene,
         SkillInvenScene,
         SkillShopScene,
@@ -31,6 +32,7 @@ public class SceneManager
         { SceneType.FirstScene, new FirstScene() },
         { SceneType.TownScene, new TownScene() },
         { SceneType.StatScene, new StatScene() },
+        { SceneType.JeonJikScene, new JeonJikScene() },
         { SceneType.InvenScene, new InventoryScene() },
         { SceneType.SkillInvenScene, new SkillInvenScene() },
         { SceneType.SkillShopScene, new SkillShopScene() },
@@ -66,6 +68,7 @@ public class SceneManager
         scenes[SceneType.FirstScene].SetNextScene(scenes[SceneType.TownScene]);
 
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.StatScene]);
+        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.JeonJikScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.InvenScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillInvenScene]);
 
@@ -83,6 +86,7 @@ public class SceneManager
 
         scenes[SceneType.StatScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.InvenScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.JeonJikScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.SkillInvenScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.SkillShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         // scenes[SceneType.GuildScene].SetPrevScene(scenes[SceneType.TownScene]);
