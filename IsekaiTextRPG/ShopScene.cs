@@ -42,7 +42,7 @@ public class ShopScene : GameScene
     public override GameScene? StartScene()
     {
         Console.Clear();
-        Console.WriteLine($"\t=== {SceneName} ===    소지 골드: {_itemSystem.Gold}\n");
+        UI.DrawTitledBox($"{SceneName} === 소지 골드: {_itemSystem.Gold}", null);
         DisplayItems(); // 아이템 목록 출력
         DisplayMenu();  // 메뉴 옵션 출력
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
@@ -67,10 +67,13 @@ public class ShopScene : GameScene
     // 상점에 진열된 아이템 목록을 화면에 출력
     private void DisplayItems()
     {
+        List<string> strings = new();
         if (_shopItems.Count == 0)
         {
-            Console.WriteLine("판매할 아이템이 없습니다.\n");
-            Console.WriteLine("아무 키나 눌러 계속...");
+            strings.Add("판매할 아이템이 없습니다.");
+            strings.Add("");
+            strings.Add("아무 키나 눌러 계속...");
+            UI.DrawBox(strings);
             Console.ReadKey();
             return;
         }
@@ -80,25 +83,25 @@ public class ShopScene : GameScene
             var item = _shopItems[i];
             var status = _itemSystem.HasItem(item.Name) ? "[구매완료]" : string.Empty;
 
-            var typeName = item.Type.ToString();
-
             // 한 줄로 아이템 정보를 포맷하여 출력
-            Console.WriteLine(
-                $"{i + 1}|{item.Name}|{typeName}|{item.Description}|" +
-                $"공격:{item.Attack} 방어:{item.Defense}|가격:{item.Price}|" +
-                $"치명타:{item.CriticalRate:P0}|배율:{item.CriticalDamage}|회피:{item.DodgeRate:P0} {status}"
-            );
+            strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |{item.Description}    |" +
+                $"공격:{item.Attack}    |방어:{item.Defense}    |가격:{item.Price}    |" +
+                $"치명타:{item.CriticalRate:P0}    |배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} {status}");
         }
 
-        Console.WriteLine();
+        UI.DrawLeftAlignedBox(strings);
     }
     // 메뉴 옵션(구매/판매/돌아가기) 출력
     private void DisplayMenu()
     {
-        Console.WriteLine("1 | 아이템 구매");
-        Console.WriteLine("2 | 아이템 판매");
-        Console.WriteLine("3 | 돌아가기");
-        Console.Write("\n선택: ");
+        List<string> strings = new();
+
+        strings.Add("1 | 아이템 구매");
+        strings.Add("2 | 아이템 판매");
+        strings.Add("3 | 돌아가기");
+        UI.DrawBox(strings);
+        Console.Write(">> "); 
+
     }
     // 아이템 구매 처리: 번호 입력 → BuyItem 호출 → 결과 메시지
     private void HandleBuy()
