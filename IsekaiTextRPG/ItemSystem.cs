@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Linq;
 public class ItemSystem
 {
     // 아이템 관리 
-    private HashSet<Item> inventory = new HashSet<Item>();
+    private List<Item> inventory = new List<Item>();
     public int Gold { get; private set; }
 
     // 생성자
@@ -27,8 +27,9 @@ public class ItemSystem
             return false;
         }
 
-        if (inventory.Contains(newItem))
-        {
+        if(newItem.Type != Item.ItemType.Usable
+    && inventory.Any(i => i.Name == name))
+{
             Console.WriteLine("이미 소유한 아이템입니다.");
             return false;
         }
@@ -68,34 +69,41 @@ public class ItemSystem
     }
 
     // 아이템 소유 여부 확인
-    public bool HasItem(string name)
+    public bool FineItem(string name)
     {
         return FindItem(name) != null;
     }
 
     // 모든 아이템 출력
-    public void PrintAllItems()
+    public bool HasItem(string name)
     {
-        List<string> strings = new();
-        strings.Add($"현재 골드: {Gold}");
+        return FindItem(name) != null;
+    }
 
-        if (inventory.Count == 0)
-        {
-            strings.Add("아이템이 없습니다.");
-            UI.DrawTitledBox("인벤토리", strings);
-            return;
-        }
+    public List<Item> GetUsableItems()
+    {
+        return inventory
+            .Where(i => i.Type == Item.ItemType.Usable)
+            .ToList();
+    }
 
+    public bool UseConsumable(string name)
+    {
+        var item = inventory.FirstOrDefault(i => i.Name == name);
+        if (item == null) return false;
+        inventory.Remove(item);
+        return true;
+    }
+
+    public void ShowInventory()
+    {
+        var strings = new List<string>();
         foreach (var item in inventory)
-        {
-            strings.Add("");
             strings.Add(item.ToString());
-            strings.Add("-------------------");
-        }
-
         UI.DrawTitledBox("인벤토리", null);
         UI.DrawLeftAlignedBox(strings);
     }
+
 
     // 아이템 정보 가져오기
     public string GetItemInfo(string name)
