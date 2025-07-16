@@ -17,12 +17,34 @@ public static class InputHelper
     /// <returns></returns>
     public static int? InputNumber(int min, int max)
     {
-        string? str = Console.ReadLine();
-        if (int.TryParse(str, out int index))
+        while (true)
         {
-            if (index >= min && index <= max) return index;
-            else return null;
+            string? input = Console.ReadLine()?.Trim();
+
+            if (string.IsNullOrEmpty(input))
+            {
+                Console.WriteLine("⚠ 입력값이 비어 있습니다. 다시 입력해주세요.");
+                Console.Write(">> ");
+                continue;
+            }
+
+            if (int.TryParse(input, out int number))
+            {
+                if (number >= min && number <= max)
+                {
+                    return number;
+                }
+                else
+                {
+                    Console.WriteLine($"⚠ {min} ~ {max} 사이의 숫자를 입력해주세요.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("⚠ 유효한 숫자를 입력해주세요.");
+            }
+
+            Console.Write(">> ");
         }
-        else return null;
     }
 }
