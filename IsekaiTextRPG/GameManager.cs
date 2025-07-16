@@ -24,7 +24,9 @@ public class GameManager
 
     public GameManager()
     {
-        if(instance == null)
+        SkillManager.Initialize();
+
+        if (instance == null)
         {
             instance = this;
         }
@@ -40,6 +42,8 @@ public class GameManager
         {
             string json = File.ReadAllText(path);
             player = JsonSerializer.Deserialize<Player>(json);
+
+            player.LoadSkillsFromJson();
         }
         else
         {
