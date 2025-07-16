@@ -8,8 +8,30 @@ public class GameManager
     public static GameManager instance;
     public static SceneManager sceneManager = new SceneManager();
     public static Player player;
+    public int selectedSlot;
 
-    public string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PlayerData.json");
+
+    private readonly string saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Saves");
+
+    private string GetSlotPath(int slot) => Path.Combine(saveDir, $"slot{slot}.json");
+
+
+    public void NewPlayerData(int slot = 1)
+    {
+        Console.Clear();
+        List<string> strings = new();
+        strings.Add("플레이어 이름을 입력하세요");
+        UI.DrawBox(strings);
+        Console.Write(">> ");
+        string? name = Console.ReadLine();
+        player = new Player(string.IsNullOrWhiteSpace(name) ? "Player" : name);
+
+        strings.Clear();
+        strings.Add($"{player.Name} 님 환영합니다!");
+        UI.DrawBox(strings);
+        SavePlayerData(slot);
+        Console.ReadKey();
+    }
 
     public GameManager()
     {
@@ -18,44 +40,95 @@ public class GameManager
         if (instance == null)
         {
             instance = this;
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
         }
         else
         {
             throw new Exception("GameManager Instance는 하나만 존재할 수 있습니다.");
         }
+
+        Directory.CreateDirectory(saveDir);
     }
 
-    public void NewPlayerData()
+
+    private void OnProcessExit(object? sender, EventArgs e)
     {
-        Console.WriteLine("플레이어 이름을 설정해 주세요.");
-        Console.Write(">> ");
-        string? name = Console.ReadLine();
-        player = new Player(name == null ? "Player" : name);
-        Console.WriteLine($"{player.Name} 님 환영합니다!");
-        SavePlayerData();
+        SavePlayerData(selectedSlot);
     }
 
-    public void LoadPlayerData()
+    public void LoadPlayerData(int slot)
     {
+        List<string> strings = new();
+
+        string path = GetSlotPath(slot);
         if (File.Exists(path))
         {
             string json = File.ReadAllText(path);
             player = JsonSerializer.Deserialize<Player>(json);
-            player.LoadSkillsFromJson(); // 스킬 상태 복구
+            player.LoadSkillsFromJson();
+            strings.Add($"슬롯 {slot}에서 불러오기 완료.");
+            UI.DrawBox(strings);
         }
         else
         {
-            Console.WriteLine("저장된 데이터가 없습니다.");
-            Console.WriteLine("새 캐릭터를 생성합니다.");
-            NewPlayerData();
+            strings.Add($"슬롯 {slot}에 저장된 데이터가 없습니다. 새로 생성합니다.");
+            UI.DrawBox(strings);
+            Console.ReadKey();
+            NewPlayerData(slot);
         }
+        selectedSlot = slot;
+        Console.ReadKey();
     }
 
-    public void SavePlayerData()
+    public void ShowSaveSlots()
     {
+        Console.Clear();
+        List<string> strings = new();
+
+        for (int i = 1; i <= 4; i++)
+        {
+            string path = GetSlotPath(i);
+            if (File.Exists(path))
+            {
+                string json = File.ReadAllText(path);
+                Player? p = JsonSerializer.Deserialize<Player>(json);
+                strings.Add($"{i}. {p?.Name} (Lv.{p?.Level}) - {Player.JobsKorean((Player.Jobs)p?.Job)}");
+            }
+            else
+            {
+                strings.Add($"{i}. [빈 슬롯]");
+            }
+        }
+        UI.DrawTitledBox("저장 슬롯", null);
+        UI.DrawLeftAlignedBox(strings);
+    }
+
+
+    public void SavePlayerData(int slot)
+    {
+        List<string> strings = new();
         string json = JsonSerializer.Serialize(player, new JsonSerializerOptions { WriteIndented = true });
-        File.WriteAllText(path, json);
-        Console.WriteLine("플레이어 데이터 저장 완료.");
+        File.WriteAllText(GetSlotPath(slot), json);
+        strings.Add($"슬롯 {slot}에 저장 완료!");
+        UI.DrawBox(strings);
+        Console.ReadKey();
+    }
+
+    public void DeleteSlot(int slot)
+    {
+        List<string> strings = new();
+        string path = GetSlotPath(slot);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            strings.Add($"슬롯 {slot} 삭제 완료.");
+        }
+        else
+        {
+            strings.Add($"슬롯 {slot}에 저장된 데이터가 없습니다.");
+        }
+        UI.DrawBox(strings);
+        Console.ReadKey();
     }
 
     public void GameStart()
@@ -66,7 +139,6 @@ public class GameManager
     public void GameExit()
     {
         Console.WriteLine("게임을 종료합니다.");
-        SavePlayerData();
         Environment.Exit(0);
     }
 }
