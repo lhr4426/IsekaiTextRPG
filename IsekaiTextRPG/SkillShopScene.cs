@@ -47,9 +47,12 @@ public class SkillShopScene : GameScene
     private void SetUpdate()
     {
         OnSkilltreeUpdated = null; // 기존 구독 초기화
-        foreach (var skill in skills)
+        if (skills != null)
         {
-            OnSkilltreeUpdated += skill.Value.UpdateLearnState;
+            foreach (var skill in skills)
+            {
+                OnSkilltreeUpdated += skill.Value.UpdateLearnState;
+            }
         }
         OnSkilltreeUpdated?.Invoke();
     }
@@ -59,16 +62,19 @@ public class SkillShopScene : GameScene
     {
         List<string> strings = new List<string>();
 
-        foreach (var skill in skills)
+        if (skills != null)
         {
-            List<string> itemStrings = skill.Value.ToShopString();
-
-            foreach (var str in itemStrings)
+            foreach (var skill in skills)
             {
-                strings.Add(str);
-            }
+                List<string> itemStrings = skill.Value.ToShopString();
 
-            strings.Add(""); // 스킬 간 구분용 빈 줄 추가
+                foreach (var str in itemStrings)
+                {
+                    strings.Add(str);
+                }
+
+                strings.Add(""); // 스킬 간 구분용 빈 줄 추가
+            }
         }
 
         UI.DrawLeftAlignedBox(strings);
