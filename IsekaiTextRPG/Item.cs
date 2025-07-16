@@ -69,10 +69,10 @@ public class Item
 
     public override string ToString()
     {
-        return $"{Name} ({TypeKorean(Type)}) - {Description}\n" +
-               $"공격력: {Attack}, 방어력: {Defense}\n" +
-               $"치명타 확률: {CriticalRate * 100:F1}%, 치명타 데미지: {CriticalDamage * 100:F1}%\n" +
-               $"회피율: {DodgeRate * 100:F1}%\n" +
+        return $"{Name} ({TypeKorean(Type)}) - {Description}   |" +
+               $"공격력: {Attack}, 방어력: {Defense}    |" +
+               $"치명타 확률: {CriticalRate * 100:F1}%, 치명타 데미지: {CriticalDamage * 100:F1}%    |" +
+               $"회피율: {DodgeRate * 100:F1}%    |" +
                $"가격: {Price} 골드, 착용 가능: {(IsEquip ? "예" : "아니오")}";
     }
 
