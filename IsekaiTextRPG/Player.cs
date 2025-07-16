@@ -213,37 +213,53 @@ public class Player
     // 현재 보유한 스킬 리스트를 JSON 파일로 저장
     public void SaveSkillsToJson()
     {
-        var options = new JsonSerializerOptions
+        try
         {
-            WriteIndented = true,
-            Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All)
-        };
-        var skillIds = Skills.Select(s => s.Id).ToList();
-        var json = JsonSerializer.Serialize(skillIds, options);
-        File.WriteAllText(SkillSavePath, json);
+            var options = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.Create(System.Text.Unicode.UnicodeRanges.All)
+            };
+
+            // 스킬 객체가 아닌, 스킬 ID 리스트만 저장
+            var learnedSkillIds = Skill.Select(s => s.Id).ToList();
+
+            string json = JsonSerializer.Serialize(learnedSkillIds, options);
+            string path = GetSkillSavePath();
+
+            File.WriteAllText(path, json);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"[ERROR] 플레이어 스킬 저장 실패: {e.Message}");
+        }
     }
 
     // JSON 파일에서 스킬 리스트를 불러와 세팅 (초기화 포함)
     public void LoadSkillsFromJson()
     {
-        if (!File.Exists(SkillSavePath)) return;
+        string path = GetSkillSavePath();
+
+        if (!File.Exists(path))
+        {
+            return; // 저장된 파일 없으면 종료
+        }
 
         try
         {
-            string json = File.ReadAllText(SkillSavePath);
+            string json = File.ReadAllText(path);
             var skillIds = JsonSerializer.Deserialize<List<int>>(json);
 
-            if (skillIds != null)
-            {
-                Skills.Clear();
+            if (skillIds == null) return;
 
-                foreach (int id in skillIds)
+            Skill.Clear();
+
+            foreach (int id in skillIds)
+            {
+                if (SkillManager.TryGetSkill(id, out Skill skill))
                 {
-                    if (SkillManager.TryGetSkill(id, out var skill))
-                    {
-                        skill.learnState = LearnState.Learned;
-                        Skills.Add(skill);
-                    }
+                    skill.learnState = LearnState.Learned; // 배운 상태로 표시
+                    Skill.Add(skill);
                 }
             }
         }
@@ -251,5 +267,11 @@ public class Player
         {
             Console.WriteLine($"[ERROR] 플레이어 스킬 불러오기 실패: {e.Message}");
         }
+    }
+
+    // JSON 저장 경로 반환 (플레이어 이름별 파일 구분용)
+    private string GetSkillSavePath()
+    {
+        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
     }
 }
