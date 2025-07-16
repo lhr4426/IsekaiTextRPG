@@ -14,8 +14,11 @@ public enum SkillId
     FireSword = 0,
     IceSpear = 1,
     LightningStrike = 2,
-    WindBlade = 3
+    WindBlade = 3,
+    EarthQuake = 4,
+    ShadowStep = 5
 }
+
 public class Skill
 {
     public string Name { get; }
@@ -30,8 +33,7 @@ public class Skill
 
     public int NeedLevel { get; set; }
 
-    public Player.Jobs NeedJob { get; set; }
-    
+    public List<Player.Jobs> NeedJob { get; set; }
 
     public Skill(int id, string name, int damage, int manaCost, string description)//int cooldown
     {
@@ -42,24 +44,24 @@ public class Skill
         //Cooldown = cooldown;
         learnState = LearnState.NotLearnable;
         Description = description ?? throw new ArgumentNullException(nameof(description));
+        // 여러 직업을 담을 수 있도록 초기화
+        NeedJob = new List<Player.Jobs>();
     }
 
     public void UpdateLearnState()
     {
         if (learnState == LearnState.Learned) return;
 
-        if (learnState == LearnState.Learnable &&
-            (NeedJob != GameManager.player.Job ||
-            NeedLevel > GameManager.player.Level))
-        {
-            learnState = LearnState.NotLearnable;
-        }
+        // 직업 조건을 '리스트에 포함되어 있는지'로 확인
+        bool canLearn = NeedJob.Contains(GameManager.player.Job) && NeedLevel <= GameManager.player.Level;
 
-        if (learnState == LearnState.NotLearnable &&
-            NeedJob == GameManager.player.Job && 
-            NeedLevel <= GameManager.player.Level) 
+        if (canLearn)
         {
             learnState = LearnState.Learnable;
+        }
+        else
+        {
+            learnState = LearnState.NotLearnable;
         }
     }
 
@@ -92,9 +94,13 @@ public class Skill
         
         sb.Clear();
         sb.Append($"필요 레벨 : {NeedLevel}    |");
-        sb.Append($"필요 직업 : {GameManager.player.JobsKorean(NeedJob)}    |");
+
+        // 여러 직업을 예쁘게 출력하도록 변경 (예: 워로드, 웨폰마스터, 히어로)
+        var jobNames = NeedJob.Select(job => GameManager.player.JobsKorean(job));
+        sb.Append($"필요 직업 : {string.Join(", ", jobNames)}     | ");
+
         switch (learnState)
-        {   
+        {
             case LearnState.NotLearnable:
                 sb.Append("배울 수 없음");
                 break;
@@ -105,6 +111,7 @@ public class Skill
                 sb.Append("배움");
                 break;
         }
+
         strings.Add(sb.ToString());
 
         return strings;

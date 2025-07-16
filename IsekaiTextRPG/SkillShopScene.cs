@@ -6,12 +6,11 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-
 public class SkillShopScene : GameScene
 {
     private event Action? OnSkilltreeUpdated;
 
-    string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SkilltreeData.json");
+    // string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "SkilltreeData.json");
     SortedDictionary<int, Skill> skills = SkillManager.Skills;
 
     public override string SceneName => "스킬 상점";
@@ -49,6 +48,7 @@ public class SkillShopScene : GameScene
         foreach (var skill in skills)
         {
             List<string> itemStrings = skill.Value.ToShopString();
+
             foreach(var str in itemStrings) {
                 strings.Add(str);
             }
@@ -68,11 +68,17 @@ public class SkillShopScene : GameScene
             skills[idx].learnState = LearnState.Learned;
             GameManager.player.Skill.Add(skills[idx]);
             strings.Add($"{skills[idx].Name} 스킬을 습득하셨습니다!");
+
+            // 스킬 상태가 변경되었으므로 파일에 저장합니다.
+            SkillManager.SaveSkills();
+            GameManager.player.SaveSkillsToJson(); // 플레이어가 배운 스킬도 저장
         }
+
         else if (skills[idx].learnState == LearnState.NotLearnable)
         {
             strings.Add($"스킬을 습득하기 위한 조건을 만족하지 않습니다.");
         }
+
         else
         {
             strings.Add("이미 해당 스킬을 습득하였습니다.");
@@ -80,4 +86,3 @@ public class SkillShopScene : GameScene
         UI.DrawBox(strings);
     }
 }
-
