@@ -12,7 +12,6 @@ namespace IsekaiTextRPG
             public int AdditiveBonus { get; }
             public double Chance { get; }
             public int CooldownTurns { get; }
-
             public Skill(string name, float multiplicativeFactor, int additiveBonus, double chance, int cooldownTurns)
             {
                 Name = name;
@@ -75,6 +74,11 @@ namespace IsekaiTextRPG
                     calculatedAttack = Attack * skill.MultiplicativeFactor + skill.AdditiveBonus;
                     skillCooldowns[skill] = skill.CooldownTurns; // 스킬 쿨다운 설정
 
+                }
+                else
+                {
+                    // 3) 스킬이 없으면 기본 공격력 사용
+                    calculatedAttack = Attack;
                 }
 
                 if (rng.NextDouble() < CriticalRate)
