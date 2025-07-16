@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualBasic;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
@@ -36,13 +37,36 @@ public class InventoryScene : GameScene
         else
         {
             int index = 1;
-            foreach (var item in sortedInventory)
+            foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable))
             {
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
                 string stats = item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}";
                 strings.Add($"- {index} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
                 index++;
+
+
             }
+
+            var consumables = sortedInventory
+                .Where(i => i.Type == Item.ItemType.Usable)
+                .GroupBy(i => i.Name)
+                .OrderBy(g => g.Key);
+            foreach (var g in consumables)
+            {
+                var sample = g.First();
+                string equippedMark = player.EquippedItems.Contains(sample) ? "[E]" : "   ";
+                string stats = sample.Attack > 0
+                    ? $"공격력 +{sample.Attack}"
+                    : $"방어력 +{sample.Defense}";
+                strings.Add(
+                    $"- {index} {equippedMark}{sample.Name,-15} x{g.Count()} | " +
+                    $"{stats} | {sample.Description}"
+                );
+                index++;
+            }
+
+
+
         }
 
         strings.Add("1. 장착/해제 관리");
@@ -56,8 +80,12 @@ public class InventoryScene : GameScene
 
         switch (input)
         {
-            case 1:
-                HandleEquip(player, sortedInventory);
+            case 1: 
+                HandleEquip(player,
+                    sortedInventory
+                        .Where(i => i.IsEquip)      
+                        .ToList()
+                );
                 return this;
             case 0:
                 return prevScene;
@@ -73,19 +101,27 @@ public class InventoryScene : GameScene
         Player player = GameManager.player;
         List<string> strings = new();
 
-        var inventory = player.Inventory
-            .Where(item => item.Type == Item.ItemType.Usable) // Usable 아이템만
-            .OrderBy(item => item.Name)                       // 이름순
+        var usable = player.Inventory
+            .Where(item => item.Type == Item.ItemType.Usable)
+            .OrderByDescending(item => player.EquippedItems.Contains(item))
+            .ThenBy(item => item.Type)
+            .ThenBy(item => item.Name)
             .ToList();
 
-        if(inventory.Count > 0)
+        List<string> _strings = new();
+
+        if (usable.Count > 0)
         {
-            for (int i = 0; i < inventory.Count; i++)
+            int displayIndex = 1;
+            for (int i = 0; i < usable.Count; i++)
             {
-                var item = inventory[i];
+                var item = usable[i];
+                int count = usable.Skip(i).TakeWhile(x => x.Name == item.Name).Count();
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
                 string stats = item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}";
-                strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
+                strings.Add( $"- {displayIndex} {equippedMark}{item.Name,-15} x{count} | " + $"{stats} | {item.Description}");
+                i += count - 1; // 중복된 아이템 수 만큼 건너뜀
+                displayIndex++; 
             }
         }
         else
@@ -94,7 +130,7 @@ public class InventoryScene : GameScene
         }
 
         UI.DrawBox(strings);
-        inven = inventory;
+        inven = usable.GroupBy(x => x.Name).Select(g => g.First()).ToList();
     }
     
 

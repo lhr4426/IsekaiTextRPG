@@ -17,7 +17,7 @@ public class ItemSystem
     // 아이템 생성 및 구매
     public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
                        int price, bool isEquip, Item.ItemType itemType, float criticalRate = 0,
-                       float criticalDamage = 1.6f, float dodgeRate = 0, bool suppressMessage = false)
+                       float criticalDamage = 1.6f, float dodgeRate = 0, bool suppressMessage = false) 
     {
         var newItem = new Item(name, description, attack, defense,hp,mp, price, isEquip,
                               itemType, criticalRate, criticalDamage, dodgeRate);
@@ -30,7 +30,7 @@ public class ItemSystem
 
         if(newItem.Type != Item.ItemType.Usable
     && inventory.Any(i => i.Name == name))
-{
+        {
             Console.WriteLine("이미 소유한 아이템입니다.");
             return false;
         }
