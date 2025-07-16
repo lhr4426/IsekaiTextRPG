@@ -12,6 +12,9 @@ public class BattleScene : GameScene
         Console.Clear();
         Console.WriteLine("전투를 마주쳤습니다!\n");
 
+        BattleLogger.Init();//로그 초기화
+        BattleLogger.Log("전투 시작");
+
         enemies = Enemy.GenerateEnemies();
         while (GameManager.player.CurrentHP > 0 && enemies.Any(e => e.CurrentHP > 0))
         {
@@ -60,7 +63,8 @@ public class BattleScene : GameScene
 
                     if (target.TryDodge())
                     {
-                        Console.WriteLine($"{target.Name}이(가) 공격을 회피했습니다!");
+                        Console.WriteLine($"{target.Name}이(가) {GameManager.player.Name}의 공격을 회피했습니다!");
+                        BattleLogger.Log($"{target.Name}이(가) {GameManager.player.Name}의 공격을 회피했습니다!");
                     }
                     else
                     {
@@ -73,16 +77,19 @@ public class BattleScene : GameScene
                         if (GameManager.player.IsCriticalHit())
                         {
                             Console.WriteLine("★ 치명타 발동! ★");
+                            BattleLogger.Log("★ 치명타 발동! ★");
                             finalDamage = (int)(finalDamage * GameManager.player.CriticalDamage);
                         }
 
                         int damage = Math.Max(finalDamage - target.Defense, 0);
                         target.CurrentHP -= damage;
                         Console.WriteLine($"{target.Name}에게 {damage}의 피해를 입혔습니다!");
+                        BattleLogger.Log($"{target.Name}에게 {damage}의 피해를 입혔습니다!");
 
                         if (target.CurrentHP <= 0)
                         {
                             Console.WriteLine($"{target.Name}이(가) 쓰러졌습니다!");
+                            BattleLogger.Log($"{target.Name}이(가) 쓰러졌습니다!");
                         }
                     }
 
@@ -111,6 +118,7 @@ public class BattleScene : GameScene
                     if (input?.ToLower() == "y")
                     {
                         Console.WriteLine("당신은 도망쳤습니다.");
+                        BattleLogger.Log("당신은 도망쳤습니다.");
                         Console.ReadKey();
                         return prevScene;
                     }
@@ -133,12 +141,14 @@ public class BattleScene : GameScene
                     if (GameManager.player.TryDodge())
                     {
                         Console.WriteLine($"{GameManager.player.Name}이(가) {enemy.Name}의 공격을 회피했습니다!");
+                        BattleLogger.Log($"{GameManager.player.Name}이(가) {enemy.Name}의 공격을 회피했습니다!");
                         continue;
                     }
 
                     int damage = Math.Max(enemy.Attack - GameManager.player.BaseDefense, 0);
                     GameManager.player.CurrentHP -= damage;
                     Console.WriteLine($"{enemy.Name}의 공격! {damage}의 피해를 입었습니다.");
+                    BattleLogger.Log($"{enemy.Name}의 공격! {damage}의 피해를 입었습니다.");
                 }
                 Console.ReadKey();
             }
@@ -149,15 +159,14 @@ public class BattleScene : GameScene
         if (GameManager.player.CurrentHP <= 0)
         {
             Console.WriteLine("당신은 쓰러졌습니다... 게임 오버.");
+            BattleLogger.Log("당신은 쓰러졌습니다... 게임 오버.");
         }
         else
         {
-            Console.WriteLine("모든 적을 처치했습니다!");
             ShowResult();
         }
 
         Console.WriteLine("\n0. 다음");
-        Console.ReadLine();
 
         return prevScene;
     }
@@ -199,7 +208,7 @@ public class BattleScene : GameScene
                     rewardLines.Add($"- {item.Name}");
                 }
             }
-
+            BattleLogger.Log(string.Join("\n", rewardLines));
             UI.DrawTitledBox("보상 획득", rewardLines);
         }
         else
