@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.Json;
+
 public class Player
 {
     public enum Jobs
@@ -71,9 +74,12 @@ public class Player
 
     public List<Skill> Skill { get; set; } = new List<Skill>();
 
+    private string skillSavePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
+
     public Player(string name)
     {
         Name = name;
+        LoadSkillsFromJson(); // 시작 시 스킬 불러오기
     }
 
     // // 총 공격력 계산 (기본 + 장착 아이템)
@@ -155,8 +161,8 @@ public class Player
     {
         int bonusAtk = EquippedItems.Where(i => i.IsEquip && i.Attack != 0).Sum(i => i.Attack);
         int bonusDef = EquippedItems.Where(i => i.IsEquip && i.Defense != 0).Sum(i => i.Defense);
-        int bonusHp  = EquippedItems.Where(i => i.IsEquip && i.Hp != 0).Sum(i => i.Hp);
-        int bonusMp  = EquippedItems.Where(i => i.IsEquip && i.Mp != 0).Sum(i => i.Mp);
+        int bonusHp = EquippedItems.Where(i => i.IsEquip && i.Hp != 0).Sum(i => i.Hp);
+        int bonusMp = EquippedItems.Where(i => i.IsEquip && i.Mp != 0).Sum(i => i.Mp);
 
         float bonusCR = EquippedItems.Where(i => i.IsEquip && i.CriticalRate != 0).Sum(i => i.CriticalRate);
         float bonusCD = EquippedItems.Where(i => i.IsEquip && i.CriticalDamage != 0).Sum(i => i.CriticalDamage);
@@ -164,9 +170,9 @@ public class Player
 
         string atkStr = bonusAtk > 0 ? $" (+{bonusAtk})" : "";
         string defStr = bonusDef > 0 ? $" (+{bonusDef})" : "";
-        string hpStr  = bonusHp > 0 ? $" (+{bonusHp})" : "";
-        string mpStr  = bonusMp > 0 ? $" (+{bonusMp})" : "";
-        
+        string hpStr = bonusHp > 0 ? $" (+{bonusHp})" : "";
+        string mpStr = bonusMp > 0 ? $" (+{bonusMp})" : "";
+
         string crStr = bonusCR > 0 ? $" (+{bonusCR * 100:F1}%)" : "";
         string cdStr = bonusCD > 0 ? $" (+{bonusCD * 100:F1}%)" : "";
         string drStr = bonusDR > 0 ? $" (+{bonusDR * 100:F1}%)" : "";
@@ -187,5 +193,43 @@ public class Player
 
         UI.DrawTitledBox("스테이터스", strings);
 
+    }
+    // 스킬 저장
+    public void SaveSkillsToJson()
+    {
+        var skillIds = Skill.Select(s => s.Id).ToList();
+        var json = JsonSerializer.Serialize(skillIds, new JsonSerializerOptions { WriteIndented = true });
+        File.WriteAllText(skillSavePath, json);
+    }
+
+    // 스킬 불러오기
+    public void LoadSkillsFromJson()
+    {
+        if (!File.Exists(skillSavePath)) return;
+
+        try
+        {
+            string json = File.ReadAllText(skillSavePath);
+            var skillIds = JsonSerializer.Deserialize<List<int>>(json);
+
+            if (skillIds != null)
+            {
+                Skill.Clear(); // 초기화
+
+                foreach (int id in skillIds)
+                {
+                    if (SkillManager.TryGetSkill(id, out var skill))
+                    {
+                        skill.learnState = LearnState.Learned;
+                        Skill.Add(skill);
+                    }
+                }
+            }
+        }
+
+        catch (Exception e)
+        {
+            Console.WriteLine($"[ERROR] 스킬 불러오기 실패: {e.Message}");
+        }
     }
 }
