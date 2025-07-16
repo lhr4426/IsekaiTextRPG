@@ -135,7 +135,7 @@ public class ShopScene : GameScene
             {       // 아이템 구매 반복
                 for (int i = 0; i < quantity; i++)
                 {
-                    bool ok = _itemSystem.BuyItem(
+                    if (!_itemSystem.BuyItem(
                       item.Name,
                       item.Description,
                       item.Attack,
@@ -147,11 +147,12 @@ public class ShopScene : GameScene
                       item.Type,
                       item.CriticalRate,
                       item.CriticalDamage,
-                      item.DodgeRate
-                    );
-                    if (!ok) break;
-                    GameManager.player.Inventory.Add(item); // 플레이어 인벤토리에 아이템 추가
-                    new Item(
+                      item.DodgeRate,
+                      suppressMessage: true))
+                    {
+                        break; // 골드 부족 시 반복 중단
+                    }
+                    GameManager.player.Inventory.Add(new Item( // 플레이어 인벤토리에 아이템 추가
                         item.Name,
                         item.Description,
                         item.Attack,
@@ -164,8 +165,8 @@ public class ShopScene : GameScene
                         item.CriticalRate,
                         item.CriticalDamage,
                         item.DodgeRate
-                    );
-                    purchased++;
+                    ));
+                    purchased++; // 구매한 개수 증가
                 }
                 GameManager.player.Gold = _itemSystem.Gold; // 플레이어 골드 업데이트
                 if (purchased > 0)

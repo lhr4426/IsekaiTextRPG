@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 public class ItemSystem
 {
@@ -16,7 +17,7 @@ public class ItemSystem
     // 아이템 생성 및 구매
     public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
                        int price, bool isEquip, Item.ItemType itemType, float criticalRate = 0,
-                       float criticalDamage = 1.6f, float dodgeRate = 0)
+                       float criticalDamage = 1.6f, float dodgeRate = 0, bool suppressMessage = false)
     {
         var newItem = new Item(name, description, attack, defense,hp,mp, price, isEquip,
                               itemType, criticalRate, criticalDamage, dodgeRate);
@@ -35,8 +36,10 @@ public class ItemSystem
         }
 
         Gold -= price;
+        if (!suppressMessage)
+            Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {Gold}");
         inventory.Add(newItem);
-        Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {Gold}");
+        
         return true;
     }
 
