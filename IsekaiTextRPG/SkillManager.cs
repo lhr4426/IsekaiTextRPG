@@ -77,6 +77,7 @@ public static class SkillManager
                     name: "불꽃의 검",
                     damage: 20,
                     manaCost: 10,
+                    cooldown: 20,
                     description: "불꽃을 담은 검으로 적에게 큰 피해를 줍니다.")
                 {
                     NeedLevel = 5,
@@ -88,8 +89,9 @@ public static class SkillManager
                 new Skill(
                     id: (int)SkillId.EarthQuake,
                     name: "대지의 분노",
-                    damage: 30,
-                    manaCost: 15,
+                    damage: 50,
+                    manaCost: 40,
+                    cooldown: 60,
                     description: "대지를 흔들어 적에게 큰 피해를 줍니다.")
                 {
                     NeedLevel = 10,
@@ -101,8 +103,9 @@ public static class SkillManager
                 new Skill(
                     id: (int)SkillId.IceSpear,
                     name: "얼음 창",
-                    damage: 15,
-                    manaCost: 8,
+                    damage: 20,
+                    manaCost: 10,
+                    cooldown: 20,
                     description: "얼음으로 만들어진 창을 던져 적을 얼립니다.")
                 {
                     NeedLevel = 5,
@@ -114,8 +117,9 @@ public static class SkillManager
                 new Skill(
                     id: (int)SkillId.LightningStrike,
                     name: "번개의 일격",
-                    damage: 25,
-                    manaCost: 12,
+                    damage: 55,
+                    manaCost: 40,
+                    cooldown: 60,
                     description: "하늘에서 번개를 내려쳐 적에게 큰 피해를 줍니다.")
                 {
                     NeedLevel = 10,
@@ -127,8 +131,9 @@ public static class SkillManager
                 new Skill(
                     id: (int)SkillId.WindBlade,
                     name: "바람의 칼날",
-                    damage: 18,
-                    manaCost: 7,
+                    damage: 20,
+                    manaCost: 10,
+                    cooldown: 20,
                     description: "바람을 날카롭게 만들어 적을 베어냅니다.")
                 {
                     NeedLevel = 5,
@@ -139,10 +144,11 @@ public static class SkillManager
                 (int)SkillId.ShadowStep,
                 new Skill(
                     id: (int)SkillId.ShadowStep,
-                    name: "그림자 걸음",
-                    damage: 5,
-                    manaCost: 5,
-                    description: "그림자의 힘을 빌려 빠르게 적 뒤로 이동합니다.")
+                    name: "그림자 도약",
+                    damage: 55,
+                    manaCost: 40,
+                    cooldown: 60,
+                    description: "그림자의 힘을 빌려 빠르게 적 뒤로 이동하고 적에게 큰 피해를 입힙니다.")
                 {
                     NeedLevel = 3,
                     NeedJobs = new List<Player.Jobs> { Player.Jobs.Blade, Player.Jobs.Rogue, Player.Jobs.NightLord }
