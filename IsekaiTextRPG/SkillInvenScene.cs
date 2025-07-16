@@ -11,7 +11,7 @@ public class SkillInvenScene : GameScene
 
     public override GameScene? StartScene()
     {
-        skills = GameManager.player.Skill;
+        skills = GameManager.player.Skills;
         PrintSkills();
         return EndScene();
     }

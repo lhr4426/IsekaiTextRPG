@@ -34,7 +34,7 @@ namespace IsekaiTextRPG
                 int rewardGold, int rewardExp,
                 float dodgeRate, float criticalRate, float criticalMultiplier,
                 IEnumerable<Skill> skills
-            ) : base(level, name, hp, attack, defense, rewardGold, rewardExp)
+            ) : base(level, name, hp, attack, defense, dodgeRate, rewardGold, rewardExp)
             {
                 DodgeRate = dodgeRate;
                 CriticalRate = criticalRate;

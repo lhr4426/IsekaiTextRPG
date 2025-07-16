@@ -94,7 +94,7 @@ public class Skill
         sb.Append($"필요 레벨: {NeedLevel}    |");
 
         // 직업 이름은 한국어로 변환해서 출력
-        var jobNames = NeedJobs.Select(job => GameManager.player.JobsKorean(job));
+        var jobNames = NeedJobs.Select(job => Player.JobsKorean(job));
         sb.Append($"필요 직업: {string.Join(", ", jobNames)}    | ");
 
         switch (learnState)
