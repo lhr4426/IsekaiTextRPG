@@ -181,9 +181,9 @@ public class BossBattleScene : GameScene
             
 
             List<string> strings = new();
-            if (inven[(int)input].Hp > 0)
+            if (inven[(int)input - 1].Hp > 0)
             {
-                int healHp = inven[(int)input].Hp;
+                int healHp = inven[(int)input - 1].Hp;
                 Player player = GameManager.player;
                 healHp = player.CurrentHP + healHp > player.MaxHP ?
                     player.MaxHP - player.CurrentHP :
@@ -194,9 +194,9 @@ public class BossBattleScene : GameScene
                 isUsed = true;
             }
 
-            if (inven[(int)input].Mp > 0)
+            if (inven[(int)input - 1].Mp > 0)
             {
-                int healMp = inven[(int)input].Mp;
+                int healMp = inven[(int)input - 1].Mp;
                 Player player = GameManager.player;
                 healMp = player.CurrentHP + healMp > player.MaxHP ?
                     player.MaxHP - player.CurrentHP :
