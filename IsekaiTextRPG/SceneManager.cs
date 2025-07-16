@@ -17,7 +17,7 @@ public class SceneManager
         DungeonEnterScene,
         BossDungeonScene,
         LevelDungeonScene,
-        BattleScene,
+        NormalBattleScene,
         BossBattleScene,
     }
 
@@ -40,7 +40,7 @@ public class SceneManager
         { SceneType.DungeonEnterScene, new DungeonEnterScene() },
         { SceneType.BossDungeonScene, new BossDungeonScene() },
         { SceneType.LevelDungeonScene, new LevelDungeonScene() },
-        { SceneType.BattleScene, new BattleScene() },
+        { SceneType.NormalBattleScene, new NormalBattleScene() },
         { SceneType.BossBattleScene, new BossBattleScene() },
 
     };
@@ -78,7 +78,7 @@ public class SceneManager
 
         scenes[SceneType.DungeonEnterScene].SetNextScene(scenes[SceneType.LevelDungeonScene]);
         scenes[SceneType.DungeonEnterScene].SetNextScene(scenes[SceneType.BossDungeonScene]);
-        scenes[SceneType.LevelDungeonScene].SetNextScene(scenes[SceneType.BattleScene]);
+        scenes[SceneType.LevelDungeonScene].SetNextScene(scenes[SceneType.NormalBattleScene]);
         scenes[SceneType.BossDungeonScene].SetNextScene(scenes[SceneType.BossBattleScene]);
 
         scenes[SceneType.StatScene].SetPrevScene(scenes[SceneType.TownScene]);
@@ -92,7 +92,7 @@ public class SceneManager
         scenes[SceneType.DungeonEnterScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.BossDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
         scenes[SceneType.LevelDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
-        scenes[SceneType.BattleScene].SetPrevScene(scenes[SceneType.LevelDungeonScene]);
+        scenes[SceneType.NormalBattleScene].SetPrevScene(scenes[SceneType.LevelDungeonScene]);
         scenes[SceneType.BossBattleScene].SetPrevScene(scenes[SceneType.BossDungeonScene]);
 
     }
