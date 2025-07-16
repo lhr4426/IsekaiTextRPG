@@ -5,76 +5,89 @@ namespace IsekaiTextRPG
 {
     public static class BossClass
     {
+        public class Skill
+        {
+            public string Name { get; }
+            public float MultiplicativeFactor { get; }
+            public int AdditiveBonus { get; }
+            public double Chance { get; }
+            public int CooldownTurns { get; }
+
+            public Skill(string name, float multiplicativeFactor, int additiveBonus, double chance, int cooldownTurns)
+            {
+                Name = name;
+                MultiplicativeFactor = multiplicativeFactor;
+                AdditiveBonus = additiveBonus;
+                Chance = chance;
+                CooldownTurns = cooldownTurns;
+            }
+        }
+
+        // 2) 보스 클래스: 회피 → 스킬/기본 공격 → 크리티컬 → 방어력 차감 순으로 계산
         public class Boss : Enemy
         {
             private static readonly Random rng = new Random();
+
             public float DodgeRate { get; }
             public float CriticalRate { get; }
-            public float CriticalDamageMultiplier { get; }
-            public List<BossSkill> Skills { get; }
+            public float CriticalMultiplier { get; }
+            public List<Skill> Skills { get; }
             private readonly Dictionary<Skill, int> skillCooldowns;
 
             public Boss(
-                int level,
-                string name,
-                int hp,
-                int attack,
-                int defense,
-                int rewardGold,
-                int rewardExp,
-                float dodgeRate,
-                float criticalRate,
-                float criticalDamageMultiplier,
-                IEnumerable<BossSkill> skills
+                int level, string name, int hp, int attack, int defense,
+                int rewardGold, int rewardExp,
+                float dodgeRate, float criticalRate, float criticalMultiplier,
+                IEnumerable<Skill> skills
             ) : base(level, name, hp, attack, defense, rewardGold, rewardExp)
             {
                 DodgeRate = dodgeRate;
                 CriticalRate = criticalRate;
-                CriticalDamageMultiplier = criticalDamageMultiplier;
+                CriticalMultiplier = criticalMultiplier;
                 Skills = skills.ToList();
-                skillCooldowns = Skills.ToDictionary(sk => sk, sk => 0);
-
+                skillCooldowns = Skills.ToDictionary(s => s, _ => 0);
             }
 
+            // 매 턴 쿨다운 감소
             private void TickCooldowns()
             {
-                foreach (var sk in Skills.ToList())
-                {
+                foreach (var sk in Skills)
                     if (skillCooldowns[sk] > 0)
-                    {
                         skillCooldowns[sk]--;
-                    }
-                }
             }
-
-            public int PerformAction(Player target, out string description)
+            //공격연산: 회피 → 스킬/기본 공격 → 크리티컬 → 최종공격력 - 상대방어력 = 최종피해량
+            public int PerformAttack(Enemy target)
             {
                 TickCooldowns();
-                if (target.TryDodge())
+                if (rng.NextDouble() < DodgeRate)
                 {
-                    description = $"{Name} → {target.Name}: 회피!";
-                    return 0; // 공격이 피함
+                    return 0; // 공격 회피
                 }
 
+                float calculatedAttack = Attack;
                 var available = Skills
-                    .Where(s => skillCooldowns[s] <= 0 && rng.NextDouble() < s.Chance)
+                    .Where(s => skillCooldowns[s] == 0 && rng.NextDouble() < s.Chance)
                     .ToList();
-                if (available.Any)
+
+                if (available.Any())
                 {
                     var skill = available[rng.Next(available.Count)];
-                    int dmg = skill.Execute(this, target);
-                    skillCooldowns[skill] = (int)skill.Cooldown; // 쿨다운 설정
-                    if (dmg > 0)
-                        desription = $"{Name}의 {skill.Name} 이 {target.Name}에게 {dmg}의 피해를 입힘!";
-                    else
-                        desription = $"{Name}의 {skill.Name} 이 실패!";
-                    return dmg;
+                    calculatedAttack = Attack * skill.MultiplicativeFactor + skill.AdditiveBonus;
+                    skillCooldowns[skill] = skill.CooldownTurns; // 스킬 쿨다운 설정
+
                 }
 
-                bool isCrit = rng.NextDouble() < CriticalRate;
-                int baseDmg = Attack;
-                int finalDmg = isCrit ? (int)(baseDmg * CriticalDamageMultiplier) : baseDmg;
+                if (rng.NextDouble() < CriticalRate)
+                {
+                    calculatedAttack *= CriticalMultiplier; // 크리티컬 공격
+                }
+
+                int damage = Math.Max(0, (int)(calculatedAttack - target.Defense));
+                target.CurrentHP -= damage;
+                return damage;
             }
+
+
             public static IReadOnlyList<Enemy> GetBossList() => new List<Enemy>
             {
                 new Boss(
@@ -87,7 +100,8 @@ namespace IsekaiTextRPG
                     rewardExp: 9999999,
                     dodgeRate: 0.10f,               // 10% 회피율
                     criticalRate: 0.20f,            // 20% 크리티컬 확률
-                    criticalDamageMultiplier: 1.50f// 150% 크리티컬 데미지 
+                    criticalMultiplier: 1.50f,      // 150% 크리티컬 데미지 
+                    skills: PinkBeanSkills
                 ),
                 new Boss(
                     level: 9999999,
@@ -99,7 +113,8 @@ namespace IsekaiTextRPG
                     rewardExp: 9999999,
                     dodgeRate: 0.05f,
                     criticalRate: 0.15f,
-                    criticalDamageMultiplier: 1.40f
+                    criticalMultiplier: 1.40f,
+                    skills: KuxseitanSkills
                 ),
                 new Boss(
                     level: 9999999,
@@ -111,35 +126,63 @@ namespace IsekaiTextRPG
                     rewardExp: 9999999,
                     dodgeRate: 0.07f,
                     criticalRate: 0.18f,
-                    criticalDamageMultiplier: 1.60f
+                    criticalMultiplier: 1.60f,
+                    skills: AntonSkills
                 )
             };
-            public class BossSkill
+           
+            private static readonly List<Skill> PinkBeanSkills = new List<Skill>
             {
-                public string Name { get; }
-                public int Damage { get; }
-                public double Chance { get; }
-                public float Cooldown { get; }
-                public string Description { get; }
-                public Func<Boss, Player, int> Execute { get; }
-
-                public BossSkill(
-                    string name,
-                    int damage,
-                    double chance,
-                    float cooldown,
-                    string description,
-                    Func<Boss, Player, int> execute
+                new Skill(
+                    name: "스킬이름",
+                    multiplicativeFactor: 1.2f, // 공격력 20% 증가
+                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가    
+                    chance: 0.25, // 25% 확률로 발동
+                    cooldownTurns: 3 // 3턴 쿨다운
+                ),
+                new Skill(
+                    name: "스킬이름2",
+                    multiplicativeFactor: 1.5f, // 공격력 50% 증가
+                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.15, // 15% 확률로 발동
+                    cooldownTurns: 5 // 5턴 쿨다운
                 )
-                {
-                    Name = name;
-                    Damage = damage;
-                    Chance = chance;
-                    Cooldown = cooldown;
-                    Description = description;
-                    Execute = execute;
-                }
-            }
+            };
+            private static readonly List<Skill> KuxseitanSkills = new List<Skill>
+            {
+                new Skill(
+                    name: "스킬이름3",
+                    multiplicativeFactor: 1.3f, // 공격력 30% 증가
+                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.20, // 20% 확률로 발동
+                    cooldownTurns: 4 // 4턴 쿨다운
+                ),
+                new Skill(
+                    name: "스킬이름4",
+                    multiplicativeFactor: 1.6f, // 공격력 60% 증가
+                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.10, // 10% 확률로 발동
+                    cooldownTurns: 6 // 6턴 쿨다운
+                )
+            };
+            private static readonly List<Skill> AntonSkills = new List<Skill>
+            {
+                new Skill(
+                    name: "스킬이름5",
+                    multiplicativeFactor: 1.4f, // 공격력 40% 증가
+                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.30, // 30% 확률로 발동
+                    cooldownTurns: 2 // 2턴 쿨다운
+                ),
+                new Skill(
+                    name: "스킬이름6",
+                    multiplicativeFactor: 1.7f, // 공격력 70% 증가
+                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.05, // 5% 확률로 발동
+                    cooldownTurns: 7 // 7턴 쿨다운
+                )
+            };
+
         }
     } 
 }
