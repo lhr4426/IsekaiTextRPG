@@ -76,20 +76,25 @@ public class ItemSystem
     // 모든 아이템 출력
     public void PrintAllItems()
     {
-        Console.WriteLine("===== 인벤토리 =====");
-        Console.WriteLine($"현재 골드: {Gold}");
+        List<string> strings = new();
+        strings.Add($"현재 골드: {Gold}");
 
         if (inventory.Count == 0)
         {
-            Console.WriteLine("아이템이 없습니다.");
+            strings.Add("아이템이 없습니다.");
+            UI.DrawTitledBox("인벤토리", strings);
             return;
         }
 
         foreach (var item in inventory)
         {
-            Console.WriteLine("\n" + item);
-            Console.WriteLine("-------------------");
+            strings.Add("");
+            strings.Add(item.ToString());
+            strings.Add("-------------------");
         }
+
+        UI.DrawTitledBox("인벤토리", null);
+        UI.DrawLeftAlignedBox(strings);
     }
 
     // 아이템 정보 가져오기
