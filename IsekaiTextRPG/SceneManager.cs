@@ -93,7 +93,7 @@ public class SceneManager
         scenes[SceneType.BossDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
         scenes[SceneType.LevelDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
         scenes[SceneType.BattleScene].SetPrevScene(scenes[SceneType.LevelDungeonScene]);
-        scenes[SceneType.BossBattleScene].SetNextScene(scenes[SceneType.BossDungeonScene]);
+        scenes[SceneType.BossBattleScene].SetPrevScene(scenes[SceneType.BossDungeonScene]);
 
     }
 

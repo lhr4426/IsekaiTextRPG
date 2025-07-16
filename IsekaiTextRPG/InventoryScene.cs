@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 public class InventoryScene : GameScene
 {
@@ -63,6 +66,35 @@ public class InventoryScene : GameScene
                 return this;
 
         }
+    }
+
+    public void PrintUsableItems(out List<Item> inven)
+    {
+        Player player = GameManager.player;
+        List<string> strings = new();
+
+        var inventory = player.Inventory
+            .Where(item => item.Type == Item.ItemType.Usable) // Usable 아이템만
+            .OrderBy(item => item.Name)                       // 이름순
+            .ToList();
+
+        if(inventory.Count > 0)
+        {
+            for (int i = 0; i < inventory.Count; i++)
+            {
+                var item = inventory[i];
+                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
+                string stats = item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}";
+                strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
+            }
+        }
+        else
+        {
+            strings.Add("사용 가능한 아이템이 없습니다.");
+        }
+
+        UI.DrawBox(strings);
+        inven = inventory;
     }
     
 

@@ -14,7 +14,8 @@ public class BossBattleScene : GameScene
     public override GameScene? StartScene()
     {
         this.player = GameManager.player;
-        this.boss = boss ?? throw new ArgumentNullException(nameof(boss));
+        this.boss = boss ?? new Enemy(1, "test", 9999, 5, 5, 0, 100, 20); // test;
+        StartBattle();
         return prevScene;
     }
 
@@ -51,48 +52,9 @@ public class BossBattleScene : GameScene
 
         while (player.CurrentHP > 0 && boss.CurrentHP > 0)
         {
-            ShowBattleUI();
+            
 
-            Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
-            string? input = Console.ReadLine();
-            Console.Clear();
-
-            switch (input)
-            {
-                case "1":
-                    PlayerAttack();
-                    break;
-
-                case "2":
-                    // SkillScene.Start(player, boss);
-                    break;
-
-                case "3":
-                    // ItemScene.Start(player);
-                    break;
-
-                case "4":
-                    GameManager.player.ShowStatus();
-                    break;
-
-                case "0":
-                    Console.Write("정말 도망가시겠습니까? (Y/N): ");
-                    string? confirm = Console.ReadLine()?.Trim().ToUpper();
-                    if (confirm == "Y")
-                    {
-                        Console.WriteLine("도망쳤습니다. 보스에게서 탈출합니다!");
-                        return;
-                    }
-                    else
-                    {
-                        Console.WriteLine("도망을 취소했습니다.");
-                        break;
-                    }
-
-                default:
-                    Console.WriteLine("잘못된 입력입니다.");
-                    continue;
-            }
+            if (!PlayerPhase()) return;
 
             if (boss.CurrentHP <= 0)
             {
@@ -114,9 +76,145 @@ public class BossBattleScene : GameScene
         }
 
         ShowResult();
+        return;
     }
 
-    private void PlayerAttack()
+
+    /// <summary>
+    /// 사용자가 도망가면 return false, 도망가지 않으면 true
+    /// </summary>
+    /// <returns></returns>
+    private bool PlayerPhase()
+    {
+        bool doSomething = false;
+        while(!doSomething)
+        {
+            Console.Clear();
+            ShowBattleUI();
+            Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
+            int? input = InputHelper.InputNumber(0, 4);
+            
+            switch (input)
+            {
+                case 1:
+                    PlayerAttack(null);
+                    doSomething = true;
+                    break;
+
+                case 2:
+                    SkillInvenScene skillScene = (SkillInvenScene)SceneManager.Instance.scenes[SceneManager.SceneType.SkillInvenScene];
+                    skillScene.PrintSkills();
+                    if (UseSkill()) doSomething = true;
+                    break;
+
+                case 3:
+                    // TODO : 아이템 사용 필요
+                    InventoryScene invenScene = (InventoryScene)SceneManager.Instance.scenes[SceneManager.SceneType.InvenScene];
+                    invenScene.PrintUsableItems(out List<Item> inven);
+                    if (UseItem(inven)) doSomething = true;
+                    break;
+
+                case 4:
+                    GameManager.player.ShowStatus();
+                    Console.ReadKey();
+                    break;
+
+                case 0:
+                    Console.Write("정말 도망가시겠습니까? (Y/N): ");
+                    string? confirm = Console.ReadLine()?.Trim().ToUpper();
+                    if (confirm == "Y")
+                    {
+                        Console.WriteLine("도망쳤습니다. 보스에게서 탈출합니다!");
+                        return false;
+                    }
+                    else
+                    {
+                        Console.WriteLine("도망을 취소했습니다.");
+                        break;
+                    }
+
+                default:
+                    Console.WriteLine("잘못된 입력입니다.");
+                    continue;
+            }
+        }
+        Console.ReadKey();
+        return true;
+    }
+
+
+
+    /// <summary>
+    /// 스킬 사용 성공했으면 true,
+    /// 아니면 false
+    /// </summary>
+    /// <returns></returns>
+    private bool UseSkill()
+    {
+        List<Skill> skills = GameManager.player.Skills;
+        int? input = InputHelper.InputNumber(0, skills.Count);
+        bool isUsed = false;
+        if (input == null) return false;
+        if (input == 0) return false;
+        if (input > 0 && input < skills.Count)
+        {
+            PlayerAttack(skills[(int)input - 1]);
+            isUsed = true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 아이템 사용 성공했으면 true,
+    /// 아니면 false
+    /// </summary>
+    /// <param name="inven"></param>
+    /// <returns></returns>
+    private bool UseItem(List<Item> inven)
+    {
+        int? input = InputHelper.InputNumber(0, inven.Count);
+        bool isUsed = false;
+        if (input == null) return false;
+        if (input == 0) return false;
+        if (input > 0 && input <= inven.Count)
+        {
+            
+
+            List<string> strings = new();
+            if (inven[(int)input].Hp > 0)
+            {
+                int healHp = inven[(int)input].Hp;
+                Player player = GameManager.player;
+                healHp = player.CurrentHP + healHp > player.MaxHP ?
+                    player.MaxHP - player.CurrentHP :
+                    healHp;
+
+                strings.Add($"체력이 {healHp} 회복되었습니다.");
+                GameManager.player.CurrentHP += healHp;
+                isUsed = true;
+            }
+
+            if (inven[(int)input].Mp > 0)
+            {
+                int healMp = inven[(int)input].Mp;
+                Player player = GameManager.player;
+                healMp = player.CurrentHP + healMp > player.MaxHP ?
+                    player.MaxHP - player.CurrentHP :
+                    healMp;
+
+                strings.Add($"마나가 {healMp} 회복되었습니다.");
+                GameManager.player.CurrentMP += healMp;
+                isUsed = true;
+            }
+
+            UI.DrawBox(strings);
+        }
+        return isUsed;
+    }
+     
+
+
+    private void PlayerAttack(Skill? skill)
     {
         List<string> logs = new();
         logs.Add($"{player.Name}의 공격!");
@@ -129,6 +227,7 @@ public class BossBattleScene : GameScene
         }
 
         int baseDamage = player.BaseAttack + player.EquippedItems.Sum(i => i.Attack);
+        if (skill != null) baseDamage += skill.Damage;
         float variance = (float)Math.Ceiling(baseDamage * 0.1f);
         int min = (int)(baseDamage - variance);
         int max = (int)(baseDamage + variance + 1);
@@ -168,6 +267,7 @@ public class BossBattleScene : GameScene
         logs.Add($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
         logs.Add($"HP {beforeHP} → {Math.Max(player.CurrentHP, 0)}");
         UI.DrawBox(logs);
+        Console.ReadKey();
     }
 
     private void ShowBattleUI()

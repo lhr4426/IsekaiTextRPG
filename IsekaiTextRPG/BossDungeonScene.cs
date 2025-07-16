@@ -13,8 +13,8 @@ public class BossDungeonScene : GameScene
     public override GameScene? StartScene()
     {
         Console.Clear();
-        return HandleBossMenu();
-        // return EndScene();
+        // return HandleBossMenu();
+        return EndScene();
     }
 
     private GameScene? HandleBossMenu() // 보스 던전 메뉴 처리
