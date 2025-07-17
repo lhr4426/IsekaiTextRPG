@@ -77,15 +77,15 @@ public class Player
     public Jobs Job { get; set; } = Jobs.Prestige;
 
     // 최대 및 현재 체력
-    public int MaxHP { get; set; } = 10;
-    public int CurrentHP { get; set; } = 10;
+    public int MaxHP { get; set; } = 100;
+    public int CurrentHP { get; set; } = 100;
     // 최대 및 현재 마나
     public int MaxMP { get; set; } = 50;
     public int CurrentMP { get; set; } = 50;
 
     // 기본 공격력 및 방어력
     public int BaseAttack { get; set; } = 10;
-    public int BaseDefense { get; set; } = 5;
+    public int BaseDefense { get; set; } = 10;
 
     // 치명타 확률, 치명타 피해 배율, 회피 확률
     public float CriticalRate { get; set; } = 0.1f;       // 10%

@@ -28,6 +28,8 @@ namespace IsekaiTextRPG
             public float CriticalRate { get; } // 치명타 확률
             public float CriticalMultiplier { get; }  // 치명타 배율
             public List<Skill> Skills { get; }  // 보유 스킬 리스트
+            private Skill? _lastUsedSkill;// 마지막 사용한 스킬 
+            public string? LastUsedSkillName => _lastUsedSkill?.Name;
             private readonly Dictionary<Skill, int> _skillCooldowns; // 스킬 쿨타임 관리 딕셔너리
             public Boss(
                 int level, string name, int hp, int attack, int defense,
@@ -61,7 +63,11 @@ namespace IsekaiTextRPG
                 TickCooldowns();
 
                 if (IsAttackDodged())
-                    return 0;// 회피 시 공격 무효
+                {
+                    _lastUsedSkill = null;                       
+                    return 0;
+                }
+
 
                 float attackPower = CalculateAttackPower();
 
@@ -79,7 +85,10 @@ namespace IsekaiTextRPG
                 TickCooldowns();
 
                 if (IsAttackDodged())
+                {
+                    _lastUsedSkill = null;     
                     return 0;
+                }
 
                 float attackPower = CalculateAttackPower();
 
@@ -103,6 +112,7 @@ namespace IsekaiTextRPG
                 {
                     var skill = availableSkills[_rng.Next(availableSkills.Count)];
                     _skillCooldowns[skill] = skill.CooldownTurns; // 쿨타임 설정
+                    _lastUsedSkill = skill; // 마지막 사용한 스킬 저장
                     return Attack * skill.MultiplicativeFactor + skill.AdditiveBonus;
                 }
 
@@ -116,11 +126,11 @@ namespace IsekaiTextRPG
         public static IReadOnlyList<Enemy> GetBossList() => new List<Enemy> 
         {
                 new Boss(
-                    level: 9999999,                 // 레벨
+                    level: 999,                 // 레벨
                     name: "핑크빈",                 // 보스 이름
-                    hp: 9999999,                    // 최대 HP
-                    attack: 9999999,                // 공격력
-                    defense: 9999999,               // 방어력
+                    hp: 999999,                    // 최대 HP
+                    attack: 9,                // 공격력
+                    defense: 9,               // 방어력
                     rewardGold: 9999999,            // 보상 골드
                     rewardExp: 9999999,             // 보상 경험치
                     dodgeRate: 0.10f,               // 10% 회피율

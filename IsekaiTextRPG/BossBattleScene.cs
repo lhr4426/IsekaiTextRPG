@@ -57,7 +57,16 @@ public class BossBattleScene : BattleBase
         if (boss is BossClass.Boss bossEnemy)
         {
             int damage = bossEnemy.PerformAttack(player);
-            BattleLogger.Log($"{boss.Name}이(가) {player.Name}에게 {damage}의 피해를 주었다!");
+
+            
+            List<string> logs = new()
+        {
+            $"{boss.Name}의 공격!",
+            $"{player.Name}이(가) {damage}의 피해를 입었습니다!"
+        };
+            UI.DrawBox(logs);              
+            logs.ForEach(BattleLogger.Log); 
+        
         }
         else
         {
