@@ -91,6 +91,13 @@ public class BattleBase : GameScene
             used = true;
         }
 
+        if (used && selected.Type == Item.ItemType.Usable)
+        {
+            player.Inventory.Remove(selected);
+            int remaining = player.Inventory.Count(i => i.Name == selected.Name);
+            Console.WriteLine($"{selected.Name}을(를) 사용했습니다. 남은 개수: {remaining}개.");
+        }
+
         UI.DrawBox(logs);
         logs.ForEach(BattleLogger.Log);
         return used;

@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 public class ItemSystem
 {
     // 아이템 관리 
-    private HashSet<Item> inventory = new HashSet<Item>();
+    private List<Item> inventory = new List<Item>();
     public int Gold { get; private set; }
 
     // 생성자
@@ -16,7 +17,7 @@ public class ItemSystem
     // 아이템 생성 및 구매
     public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
                        int price, bool isEquip, Item.ItemType itemType, float criticalRate = 0,
-                       float criticalDamage = 1.6f, float dodgeRate = 0)
+                       float criticalDamage = 1.6f, float dodgeRate = 0, bool suppressMessage = false) 
     {
         var newItem = new Item(name, description, attack, defense,hp,mp, price, isEquip,
                               itemType, criticalRate, criticalDamage, dodgeRate);
@@ -27,15 +28,18 @@ public class ItemSystem
             return false;
         }
 
-        if (inventory.Contains(newItem))
+        if(newItem.Type != Item.ItemType.Usable
+    && inventory.Any(i => i.Name == name))
         {
             Console.WriteLine("이미 소유한 아이템입니다.");
             return false;
         }
 
         Gold -= price;
+        if (!suppressMessage)
+            Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {Gold}");
         inventory.Add(newItem);
-        Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {Gold}");
+        
         return true;
     }
 
@@ -68,34 +72,60 @@ public class ItemSystem
     }
 
     // 아이템 소유 여부 확인
-    public bool HasItem(string name)
+    public bool FineItem(string name)
     {
         return FindItem(name) != null;
     }
 
     // 모든 아이템 출력
-    public void PrintAllItems()
+    public bool HasItem(string name)
     {
-        List<string> strings = new();
-        strings.Add($"현재 골드: {Gold}");
-
-        if (inventory.Count == 0)
-        {
-            strings.Add("아이템이 없습니다.");
-            UI.DrawTitledBox("인벤토리", strings);
-            return;
-        }
-
-        foreach (var item in inventory)
-        {
-            strings.Add("");
-            strings.Add(item.ToString());
-            strings.Add("-------------------");
-        }
-
-        UI.DrawTitledBox("인벤토리", null);
-        UI.DrawLeftAlignedBox(strings);
+        return FindItem(name) != null;
     }
+
+    public List<Item> GetUsableItems()
+    {
+        return inventory
+            .Where(i => i.Type == Item.ItemType.Usable)
+            .ToList();
+    }
+
+    public bool UseConsumable(string name)
+    {
+        var item = inventory.FirstOrDefault(i => i.Name == name);
+        if (item == null) return false;
+        inventory.Remove(item);
+        return true;
+    }
+
+    public void ShowInventory()
+    {
+        var lines = new List<string>
+        {
+            "인벤토리",
+            $"보유 골드: {Gold}",
+            "",
+            "[아이템 목록]"
+        };
+
+        int index = 1;
+        foreach (var eq in inventory.Where(i => i.Type != Item.ItemType.Usable))
+        {
+            lines.Add($"- {index} {eq.Name} | 방어력 +{eq.Defense} | {eq.Description}");
+            index++;
+        }
+        
+        foreach (var grp in inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name))
+        {
+            var sample = grp.First();
+            lines.Add($"- {index} {sample.Name} x{grp.Count()} | 방어력 +{sample.Defense} | {sample.Description}");
+            index++;
+        }
+
+        UI.DrawTitledBox("인벤토리", lines);
+
+    }
+
 
     // 아이템 정보 가져오기
     public string GetItemInfo(string name)
