@@ -87,9 +87,10 @@ public class ShopScene : GameScene
                          ? "[구매완료]" : string.Empty;
 
             // 한 줄로 아이템 정보를 포맷하여 출력
-            strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |{item.Description}    |" +
+            strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |" +
                 $"공격:{item.Attack}    |방어:{item.Defense}    |가격:{item.Price}    |" +
-                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} {status}");
+                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} |    {item.Description} {status} ");
+
         }
 
         UI.DrawLeftAlignedBox(strings);
@@ -254,6 +255,9 @@ public class ShopScene : GameScene
                     qty = 1;
                 qty = Math.Min(qty, invItems.Count);
 
+                if (!ConfirmSell(itemName, qty))  
+                    return;
+
                 int sold = 0;
                 for (int i = 0; i < qty; i++)
                 {
@@ -270,6 +274,9 @@ public class ShopScene : GameScene
             }
             else
             {
+                if (!ConfirmSell(itemName))
+                    return;
+
                 bool success = _itemSystem.SellItem(itemName);
                 if (success)
                 {
@@ -283,5 +290,12 @@ public class ShopScene : GameScene
         // 5) 판매 후 대기
         Console.WriteLine("\n아무 키나 눌러 계속...");
         Console.ReadKey();
+    }
+
+    private bool ConfirmSell(string itemName, int quantity = 1)
+    {
+        Console.WriteLine($"\n[{itemName} x{quantity}] 정말 판매하시겠습니까? (Y/N)");
+        var confirm = Console.ReadLine()?.Trim().ToUpper();
+        return confirm == "Y";
     }
 }

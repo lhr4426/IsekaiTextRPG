@@ -49,12 +49,8 @@
             {
                 var sample = g.First();
                 string equippedMark = player.EquippedItems.Contains(sample) ? "[E]" : "   ";
-                string stats = sample.Attack > 0
-                    ? $"공격력 +{sample.Attack}"
-                    : $"방어력 +{sample.Defense}";
                 strings.Add(
-                    $"- {index} {equippedMark}{sample.Name,-15} x{g.Count()} | " +
-                    $"{stats} | {sample.Description}"
+                    $"- {index} {equippedMark}{sample.Name,-15} x{g.Count()} | " +$" {sample.Description}"
                 );
                 index++;
             }
