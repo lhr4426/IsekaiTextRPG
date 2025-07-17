@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-public class BossBattleScene : GameScene
+public class BossBattleScene : BattleBase
 {
     private Player player;
     private Enemy boss;
@@ -27,11 +27,11 @@ public class BossBattleScene : GameScene
 
         while (player.CurrentHP > 0 && boss.CurrentHP > 0)
         {
-            bool continueBattle = BattleBase.PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true);
+            bool continueBattle = this.PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true);
             if (!continueBattle) return prevScene;
             if (boss.CurrentHP <= 0) break;
 
-            BattleBase.EnemyAttack(boss, player);
+            EnemyAttack(boss, player);
             Console.ReadKey();
 
             if (player.CurrentHP <= 0)
@@ -41,7 +41,7 @@ public class BossBattleScene : GameScene
             }
         }
 
-        BattleBase.DrawBattleResult(boss, player);
+        DrawBattleResult(boss, player);
         Console.WriteLine("\n0. 다음");
         Console.ReadLine();
         return prevScene;

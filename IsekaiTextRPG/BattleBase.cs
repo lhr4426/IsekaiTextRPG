@@ -2,11 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public static class BattleBase
+public class BattleBase : GameScene
 {
-    private static Random rng = new Random();
+    private  Random rng = new Random();
 
-    public static void PlayerAttack(Player player, Enemy target, Skill? skill = null)
+    public override string SceneName => throw new NotImplementedException();
+
+    public void PlayerAttack(Player player, Enemy target, Skill? skill = null)
     {
         List<string> logs = new() { $"{player.Name}의 공격!" };
 
@@ -41,7 +43,7 @@ public static class BattleBase
         logs.ForEach(BattleLogger.Log);
     }
 
-    public static void EnemyAttack(Enemy enemy, Player player)
+    public void EnemyAttack(Enemy enemy, Player player)
     {
         List<string> logs = new() { $"{enemy.Name}의 공격!" };
 
@@ -64,7 +66,7 @@ public static class BattleBase
         logs.ForEach(BattleLogger.Log);
     }
 
-    public static bool UseItem(List<Item> inven, Player player)
+    public bool UseItem(List<Item> inven, Player player)
     {
         int? input = InputHelper.InputNumber(0, inven.Count);
         if (input == null || input == 0 || input > inven.Count) return false;
@@ -94,7 +96,7 @@ public static class BattleBase
         return used;
     }
 
-    public static void DrawBattleResult(Enemy boss, Player player)//보스용 결과출력
+    public void DrawBattleResult(Enemy boss, Player player)//보스용 결과출력
     {
         if (boss.CurrentHP <= 0)
         {
@@ -141,7 +143,7 @@ public static class BattleBase
         }
     }
 
-    public static void DrawBattleResult(List<Enemy> enemies, Player player)//일반몹용 결과 출력
+    public void DrawBattleResult(List<Enemy> enemies, Player player)//일반몹용 결과 출력
     {
         Console.Clear();
         bool allDefeated = enemies.All(e => e.CurrentHP <= 0);
@@ -196,7 +198,7 @@ public static class BattleBase
             });
         }
     }
-    public static void ShowNormalBattleUI(Player player, List<Enemy> enemies)
+    public void ShowNormalBattleUI(Player player, List<Enemy> enemies)
     {
         List<string> info = new()
         {
@@ -223,7 +225,7 @@ public static class BattleBase
     }
 
 
-    public static void ShowBossBattleUI(Player player, Enemy boss)
+    public void ShowBossBattleUI(Player player, Enemy boss)
     {
         string hpText = boss.CurrentHP > 0 ? boss.CurrentHP.ToString() : "Dead";
 
@@ -252,7 +254,7 @@ public static class BattleBase
         UI.DrawBox(menu);
         UI.DrawTitledBox("플레이어 정보", playerInfo);
     }
-    public static bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle)
+    public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle)
     {
         while (true)
         {
@@ -371,4 +373,8 @@ public static class BattleBase
         }
     }
 
+    public override GameScene? StartScene()
+    {
+        throw new NotImplementedException();
+    }
 }

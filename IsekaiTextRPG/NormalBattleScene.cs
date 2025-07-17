@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class NormalBattleScene : GameScene
+public class NormalBattleScene : BattleBase
 {
     public override string SceneName => "일반 전투";
 
@@ -21,12 +21,12 @@ public class NormalBattleScene : GameScene
         {
             Console.Clear();
 
-            bool continueBattle = BattleBase.PlayerPhase(player, enemies, isBossBattle: false);
+            bool continueBattle = PlayerPhase(player, enemies, isBossBattle: false);
             if (!continueBattle) return prevScene;
 
             foreach (var enemy in enemies.Where(e => e.CurrentHP > 0))
             {
-                BattleBase.EnemyAttack(enemy, player);
+                EnemyAttack(enemy, player);
             }
 
             Console.ReadKey();
@@ -41,7 +41,7 @@ public class NormalBattleScene : GameScene
         }
         else
         {
-            BattleBase.DrawBattleResult(enemies, player);
+            DrawBattleResult(enemies, player);
         }
 
         Console.WriteLine("\n0. 다음");
