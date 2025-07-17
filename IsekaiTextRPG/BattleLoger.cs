@@ -101,7 +101,7 @@ public static class BattleLogger
                         }
                     }
                 }
-                Console.WriteLine("[BattleLogger] 로그 뷰어 창이 성공적으로 종료되었습니다.");
+                // Console.WriteLine("[BattleLogger] 로그 뷰어 창이 성공적으로 종료되었습니다.");
             }
             catch (Exception e)
             {
@@ -130,7 +130,7 @@ public static class BattleLogger
                         Console.WriteLine($"[BattleLogger] 잔여 프로세스 (ID로) 종료 실패: {ex.Message}");
                     }
                 }
-                Console.WriteLine("[BattleLogger] 로그 뷰어 창이 성공적으로 종료되었습니다. (ID 기반)");
+                // Console.WriteLine("[BattleLogger] 로그 뷰어 창이 성공적으로 종료되었습니다. (ID 기반)");
             }
             catch (Exception e)
             {
