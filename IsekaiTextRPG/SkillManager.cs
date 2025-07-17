@@ -256,7 +256,7 @@ public static class SkillManager
                     description: "Ready to Die.....")
                 {
                     NeedLevel = 30,
-                    NeedJobs = new List<Player.Jobs> { Player.Jobs.NightLord, Player.Jobs.Blade, Player.Jobs.Rogue, Player.Jobs.NightLord }
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.NightLord, Player.Jobs.Blade, Player.Jobs.Rogue }
                 }
             }
         };
