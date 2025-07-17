@@ -76,11 +76,13 @@ public class Enemy
 
         List<Enemy> monsterPresets = new List<Enemy>()
         {
-            new Enemy(1, "슬라임", 10, 5, 1, 0.05f, 30, 10),
-            new Enemy(2, "고블린", 10, 7, 2, 0.03f, 50, 20),
-            new Enemy(3, "늑대", 10, 9, 3, 0.08f, 70, 30),
-            new Enemy(4, "좀비", 10, 8, 4, 0.01f, 60, 25),
-            new Enemy(5, "오크", 30, 12, 5, 0.02f, 100, 40)
+            // 레벨, 이름, 최대 HP, 공격력, 방어력, 회피율, 보상 골드, 보상 경험치
+            new Enemy(1, "달팽이", 10, 5, 1, 0.05f, 30, 10),
+            new Enemy(2, "주황버섯", 10, 7, 2, 0.03f, 50, 20),
+            new Enemy(3, "모코코", 10, 9, 3, 0.08f, 70, 30),
+            new Enemy(4, "두키", 10, 8, 4, 0.01f, 60, 25),
+            new Enemy(5, "단진", 15, 12, 5, 0.02f, 100, 40),
+            new Enemy(6, "븝미", 20, 15, 6, 0.04f, 150, 60),
         };
 
         int count = random.Next(1, 5);
