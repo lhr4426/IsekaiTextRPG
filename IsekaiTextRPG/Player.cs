@@ -112,20 +112,6 @@ public class Player
         LoadSkillsFromJson();
     }
 
-    // // 총 공격력 계산 (기본 + 장착 아이템)
-    // public int GetTotalAttack()
-    // {
-    //     int itemBonus = EquippedItems.Sum(item => item.Attack);
-    //     return BaseAttack + itemBonus;
-    // }
-
-    // // 총 방어력 계산 (기본 + 장착 아이템)
-    // public int GetTotalDefense()
-    // {
-    //     int itemBonus = EquippedItems.Sum(item => item.Defense);
-    //     return BaseDefense + itemBonus;
-    // }
-
     // 치명타 발생 여부 판단 (랜덤)
     public bool IsCriticalHit()
     {
@@ -212,6 +198,7 @@ public class Player
         List<string> strings = new List<string>()
         {
             $"Lv. {Level:D2}",
+            $"경험치 : {Experience} / {Level * 100}",
             $"{Name} ( {JobsKorean(Job)} )",
             $"공격력 : {BaseAttack + bonusAtk}{atkStr}",
             $"방어력 : {BaseDefense + bonusDef}{defStr}",
