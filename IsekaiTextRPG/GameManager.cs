@@ -56,6 +56,7 @@ public class GameManager
     public GameManager()
     {
         SkillManager.Initialize(); // 스킬 초기화
+        QuestManager.Initialize(); // 퀘스트 초기화
 
         if (instance == null)
         {
