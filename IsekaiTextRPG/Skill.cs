@@ -17,7 +17,10 @@ public enum SkillId
     IceSpear = 2,
     LightningStrike = 3,
     WindBlade = 4,
-    ShadowStep = 5
+    ShadowStep = 5,
+    FocusEvasion = 6,
+    GuardianLightning = 7,
+    PhantomBladeDance = 8,
 }
 
 public class Skill

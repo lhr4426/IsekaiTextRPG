@@ -22,6 +22,19 @@ public static class SkillManager
     {
         _skills = new SortedDictionary<int, Skill>
         {
+            {(int)SkillId.FocusEvasion,
+                new Skill(
+                    id: (int)SkillId.FocusEvasion,
+                    name: "돌던지기",
+                    damage: 10,
+                    manaCost: 0,
+                    cooldown: 5,
+                    description: "매우큰 짱돌을 던집니다.")
+                {
+                    NeedLevel = 0,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Prestige} 
+                }
+            },
             {
                 (int)SkillId.FireSword,
                 new Skill(
@@ -105,7 +118,37 @@ public static class SkillManager
                     NeedLevel = 3,
                     NeedJobs = new List<Player.Jobs> { Player.Jobs.Blade, Player.Jobs.Rogue, Player.Jobs.NightLord }
                 }
+            },
+            {
+                (int)SkillId.GuardianLightning,
+                new Skill(
+                    id: (int)SkillId.GuardianLightning,
+                    name: "가디언의 낙뢰",
+                    damage: 40,
+                    manaCost: 40,
+                    cooldown: 20,
+                    description: "하늘에서 낙뢰를 떨어뜨립니다")
+                {
+                    NeedLevel = 15,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Warlord }
+                }
+            },
+            {
+                (int)SkillId.PhantomBladeDance,
+                new Skill(
+                    id: (int)SkillId.PhantomBladeDance,
+                    name: "환영검무",
+                    damage: 100,
+                    manaCost: 100,
+                    cooldown: 120,
+                    description: "환영의 칼날로 적을 마구베어버립니다.")
+                { 
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.WeaponMaster }
+                }
             }
+
+
         };
     }
 
