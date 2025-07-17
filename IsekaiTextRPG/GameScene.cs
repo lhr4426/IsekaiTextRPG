@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,17 +27,14 @@ public abstract class GameScene
         List<string> options = new();
         foreach (var scene in nextScenes)
         {
-            options.Add($"{nextScenes.IndexOf(scene) + 1}: {scene.SceneName}");
+            options.Add($" {nextScenes.IndexOf(scene) + 1}: {scene.SceneName}");
         }
         options.Add(prevScene != null
-                    ? $"0: {prevScene.SceneName}"
-                    : "0: 게임 종료");
+                    ? $" 0: {prevScene.SceneName}"
+                    : " 0: 게임 종료");
         options.Add("");
 
-        // TODO : 게임 저장 필요
-        // GameManager.instance.SavePlayerData();
-
-        UI.DrawBox(options);
+        UI.DrawLeftAlignedBox(options);
 
         Console.Write(">> ");
         int? nextSceneIdx = InputHelper.InputNumber(0, nextScenes.Count);

@@ -16,6 +16,7 @@ public class SkillShopScene : GameScene
     // 씬 시작 시 실행되는 메서드
     public override GameScene? StartScene()
     {
+        Console.Clear();
         CheckDidYouLearn();
         // 스킬 상태 업데이트용 이벤트 설정 및 실행
         SetUpdate();
@@ -131,5 +132,6 @@ public class SkillShopScene : GameScene
         }
 
         UI.DrawBox(strings);
+        Console.ReadKey();
     }
 }

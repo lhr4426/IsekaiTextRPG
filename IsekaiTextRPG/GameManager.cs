@@ -48,10 +48,98 @@ public class GameManager
         while (true);
     
         player = new Player(name);
+        Tutorial();
+        // TODO : 튜토리얼 부분으로 대체 예정
+        /*
         var welcome = new List<string> { $"{player.Name} 님 환영합니다!" };
         UI.DrawBox(welcome);
+        */
         SavePlayerData(slot);
         QuestManager.UpdateLevelQuestProgress(player.Level);
+    }
+
+    private void Tutorial()
+    {
+        Console.Clear();
+        List<string> strings = new List<string>()
+        {
+        $"{GameManager.player.Name}은(는) 로아, 메이플, 던파를 쉬지않고 돌려가면서 플레이 하는 심각한 게임 중독자입니다.",
+        "특히, 레이드가 업데이트 되는 날이면 레@불과 몬@터를 먹어가며 몸을 혹사시켰습니다."
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            $"오늘도 {GameManager.player.Name}은(는) 그런 중독자 라이프를 즐기고 있었습니다.",
+            "그러나... 뒤바뀐 생활 패턴과 카페인 과다는 상상치 못한 결과를 초래했습니다."
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            $"{GameManager.player.Name}은(는) 눈앞이 깜깜해졌습니다."
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            "시간이 얼마나 지났을까요?",
+            "무거웠던 눈꺼풀이 가벼워지기 시작합니다.",
+            "그리고... 낯선 누군가의 목소리가 들리기 시작합니다."
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            "\" 이봐! 지금 그렇게 누워있을 시간이 없다고! 어서 일어나! \" ",
+            "저 사람은 누군데 저렇게 소리를 지르는 걸까요?",
+            "아니, 그나저나 여긴 지금 어딜까요...?",
+            "군데군데 묘하게 익숙한 느낌이 듭니다..."
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            "주변을 둘러보니, 아까 소리지른 것으로 추정되는 사람과 슬라임, 고블린이... 어?",
+            "메이플과 던파에서 보던 몬스터가 보입니다...?",
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            "\" 지금 몬스터들 안보여!? 에휴... 이래서 환생자들은 못 써먹겠다니까... \"",
+            "\" 빨리 일어나. 저 옆에 보이는 마을로 곧장 뛰어. 가서 퀘스트 게시판이나 확인해 봐. \"",
+            "\" 매번 귀찮게 구는구만... \"",
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
+
+        Console.Clear();
+        strings.Clear();
+        strings = new List<string>()
+        {
+            "당신은 저 성질 더러워보이는 사람의 발언에 정신을 차리고 옆을 확인해 봅니다.",
+        };
+        UI.TypeWriter(UI.DrawBox(strings, true));
+        Console.ReadKey();
     }
 
     public GameManager()
@@ -115,11 +203,11 @@ public class GameManager
             {
                 string json = File.ReadAllText(path);
                 Player? p = JsonSerializer.Deserialize<Player>(json);
-                strings.Add($"{i}. {p?.Name} (Lv.{p?.Level}) - {Player.JobsKorean((Player.Jobs)p?.Job)}");
+                strings.Add($" {i}. {p?.Name} (Lv.{p?.Level}) - {Player.JobsKorean((Player.Jobs)p?.Job)}");
             }
             else
             {
-                strings.Add($"{i}. [빈 슬롯]");
+                strings.Add($" {i}. [빈 슬롯]");
             }
         }
         UI.DrawTitledBox("저장 슬롯", null);

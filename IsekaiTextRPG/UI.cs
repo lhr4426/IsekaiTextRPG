@@ -72,6 +72,32 @@ public static class UI
         Console.WriteLine(bottomBorder);
     }
 
+    public static List<string> DrawBox(List<string> contents, bool retuner)
+    {
+        if (retuner)
+        {
+            int width = GetMaxWidth(contents);
+
+            List<string> strings = new List<string>();
+
+            string topBorder = "╔" + new string('═', width) + "╗";
+            string bottomBorder = "╚" + new string('═', width) + "╝";
+
+            strings.Add(topBorder);
+            strings.Add($"║{new string(' ', width)}║");
+
+            foreach (string line in contents)
+            {
+                strings.Add($"║{PadCenter(line, width)}║");
+            }
+
+            strings.Add($"║{new string(' ', width)}║");
+            strings.Add(bottomBorder);
+            return strings;
+        }
+        else return new List<string>();
+    }
+
     public static void DrawLeftAlignedBox(List<string> contents)
     {
         int width = GetMaxWidth(contents);
@@ -147,6 +173,31 @@ public static class UI
             (c >= 0xFF01 && c <= 0xFF60) ||
             (c >= 0xFFE0 && c <= 0xFFE6)
         );
+    }
+
+    public static void TypeWriter(List<string> texts, int delay = 5)
+    {
+        bool skip = false;
+
+        foreach(string text in texts)
+        {
+            foreach (char c in text)
+            {
+                // 키가 눌렸는지 확인
+                if (Console.KeyAvailable)
+                {
+                    skip = true;
+                    Console.ReadKey(true); // 키를 읽어서 버퍼에서 제거
+                }
+
+                Console.Write(c);
+
+                // skip이 false일 때만 딜레이
+                if (!skip)
+                    Thread.Sleep(delay);
+            }
+            Console.WriteLine();
+        }
     }
 }
 
