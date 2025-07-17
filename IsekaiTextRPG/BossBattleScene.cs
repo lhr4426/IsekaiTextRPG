@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IsekaiTextRPG;
+using System;
 using System.Collections.Generic;
 
 public class BossBattleScene : BattleBase
@@ -8,13 +9,15 @@ public class BossBattleScene : BattleBase
 
     public override string SceneName => "보스 전투";
 
-    public BossBattleScene() { }
-
+    public BossBattleScene() { } 
+    public BossBattleScene(Enemy boss)// 생성자에서 보스 객체를 받음
+    {
+        this.boss = boss;
+    }
     public override GameScene? StartScene()
     {
         Console.Clear();
         player = GameManager.player;
-        boss ??= new Enemy(1, "임시 Boss", 10, 10, 5, 0, 10, 50);
 
         if (boss.CurrentHP <= 0)
         {
@@ -31,7 +34,7 @@ public class BossBattleScene : BattleBase
             if (!continueBattle) return prevScene;
             if (boss.CurrentHP <= 0) break;
 
-            EnemyAttack(boss, player);
+            BossAttackPhase();
             Console.ReadKey();
 
             if (player.CurrentHP <= 0)
@@ -47,5 +50,18 @@ public class BossBattleScene : BattleBase
         Console.WriteLine("\n0. 다음");
         Console.ReadLine();
         return prevScene;
+    }
+
+    private void BossAttackPhase() 
+    {
+        if (boss is BossClass.Boss bossEnemy)
+        {
+            int damage = bossEnemy.PerformAttack(player);
+            BattleLogger.Log($"{boss.Name}이(가) {player.Name}에게 {damage}의 피해를 주었다!");
+        }
+        else
+        {
+            EnemyAttack(boss, player); 
+        }
     }
 }

@@ -36,11 +36,11 @@ public class BossDungeonScene : GameScene
         switch (input)
         {
             case 1:
-                return new BossBattleScene(BossClass.GetBossList()[1]);
+                return new BossBattleScene(BossClass.GetBossList()[0]);
             case 2:
-                return new BossBattleScene(BossClass.GetBossList()[2]);
+                return new BossBattleScene(BossClass.GetBossList()[1]);
             case 3:
-                return new BossBattleScene(BossClass.GetBossList()[3]);
+                return new BossBattleScene(BossClass.GetBossList()[2]);
             case 0:
                 return prevScene;
             default:
@@ -50,4 +50,4 @@ public class BossDungeonScene : GameScene
         }
     }
 }
-}
+

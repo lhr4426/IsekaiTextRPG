@@ -73,6 +73,25 @@ namespace IsekaiTextRPG
 
                 return damage;// 최종 데미지 반환
             }
+
+            public int PerformAttack(Player target)
+            {
+                TickCooldowns();
+
+                if (IsAttackDodged())
+                    return 0;
+
+                float attackPower = CalculateAttackPower();
+
+                if (IsCriticalHit())
+                    attackPower *= CriticalMultiplier;
+
+                int damage = Math.Max(0, (int)(attackPower - target.BaseDefense));
+                target.CurrentHP -= damage;
+
+                return damage;
+            }
+
             private bool IsAttackDodged() => _rng.NextDouble() < DodgeRate;  // 회피 여부 판정
             private float CalculateAttackPower() // 공격력 계산 (스킬이 발동하면 스킬, 아니면 기본 공격)
             {
