@@ -123,7 +123,7 @@ public class ShopScene : GameScene
                 int quantity = 1;
                 if (item.Type == Item.ItemType.Usable)
                 {
-                    Console.WriteLine("구매할 개수:");
+                    Console.Write("구매할 개수:");
                     if (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 1)
                     {
                         quantity = 1;
