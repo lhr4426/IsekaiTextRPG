@@ -21,6 +21,14 @@ public enum SkillId
     FocusEvasion = 6,
     GuardianLightning = 7,
     PhantomBladeDance = 8,
+    ComboDeathFault = 9,
+    Doomsday = 10,
+    AncientSpear = 11,
+    Blizzard = 12,
+    BladeArts = 13,
+    NovaRemnant = 14,
+    QuadrupleThrow = 15,
+    ReadytoDie = 16
 }
 
 public class Skill

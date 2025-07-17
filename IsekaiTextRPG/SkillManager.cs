@@ -32,7 +32,7 @@ public static class SkillManager
                     description: "매우큰 짱돌을 던집니다.")
                 {
                     NeedLevel = 0,
-                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Prestige} 
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Prestige}
                 }
             },
             {
@@ -129,7 +129,7 @@ public static class SkillManager
                     cooldown: 20,
                     description: "하늘에서 낙뢰를 떨어뜨립니다")
                 {
-                    NeedLevel = 15,
+                    NeedLevel = 20,
                     NeedJobs = new List<Player.Jobs> { Player.Jobs.Warlord }
                 }
             },
@@ -142,13 +142,123 @@ public static class SkillManager
                     manaCost: 100,
                     cooldown: 120,
                     description: "환영의 칼날로 적을 마구베어버립니다.")
-                { 
+                {
                     NeedLevel = 20,
                     NeedJobs = new List<Player.Jobs> { Player.Jobs.WeaponMaster }
                 }
+            },
+            {
+                (int)SkillId.ComboDeathFault,
+                new Skill(
+                    id: (int)SkillId.ComboDeathFault,
+                    name: "콤보 데스폴트",
+                    damage: 150,
+                    manaCost: 150,
+                    cooldown: 180,
+                    description: "검으로 공간을 가릅니다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Hero }
+                }
+            },
+            {
+                (int)SkillId.Doomsday,
+                new Skill(
+                    id: (int)SkillId.Doomsday,
+                    name: "종말의 날",
+                    damage: 200,
+                    manaCost: 300,
+                    cooldown: 180,
+                    description: "매우 거대한 운석을 떨어뜨립니다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Sorceress }
+                }
+            },
+            {
+                (int)SkillId.AncientSpear,
+                new Skill(
+                    id: (int)SkillId.AncientSpear,
+                    name: "고대의 창",
+                    damage: 200,
+                    manaCost: 300,
+                    cooldown: 180,
+                    description: "고대의 힘을 담은 창을 소환하여 떨어뜨립니다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Summoner }
+                }
+            },
+            {
+                (int)SkillId.Blizzard,
+                new Skill(
+                    id: (int)SkillId.Blizzard,
+                    name: "블리자드",
+                    damage: 200,
+                    manaCost: 300,
+                    cooldown: 180,
+                    description: "하늘로부터 얼음의 창을 떨어뜨립니다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.ArchMage }
+                }
+            },
+            {
+                (int)SkillId.BladeArts,
+                new Skill(
+                    id: (int)SkillId.BladeArts,
+                    name: "블레이드아츠",
+                    damage: 500,
+                    manaCost: 1000,
+                    cooldown: 300,
+                    description: "여러검술을 합친 단한번의 일격입니다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Blade }
+                }
+            },
+            {
+                (int)SkillId.NovaRemnant,
+                new Skill(
+                    id: (int)SkillId.NovaRemnant,
+                    name: "노바 램넌트",
+                    damage: 300,
+                    manaCost: 200,
+                    cooldown: 140,
+                    description: "한줄기의 빛이되어 강력한 내려찍기공격을 한다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Rogue }
+                }
+            },
+            {
+                (int)SkillId.QuadrupleThrow,
+                new Skill(
+                    id: (int)SkillId.QuadrupleThrow,
+                    name: "쿼드러플 스로우",
+                    damage: 180,
+                    manaCost: 50,
+                    cooldown: 60,
+                    description: "4개의 표창을 연속으로 던진다.")
+                {
+                    NeedLevel = 20,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.NightLord }
+                }
+            },
+            {
+                (int)SkillId.ReadytoDie,
+                new Skill(
+                    id: (int)SkillId.ReadytoDie,
+                    name: "Ready to Die",
+                    damage: 1000,
+                    manaCost: 500,
+                    cooldown: 600,
+                    description: "Ready to Die.....")
+                {
+                    NeedLevel = 30,
+                    NeedJobs = new List<Player.Jobs> { Player.Jobs.NightLord, Player.Jobs.Blade, Player.Jobs.Rogue, Player.Jobs.NightLord }
+                }
             }
-
-
         };
     }
 
