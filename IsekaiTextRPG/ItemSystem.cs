@@ -100,11 +100,30 @@ public class ItemSystem
 
     public void ShowInventory()
     {
-        var strings = new List<string>();
-        foreach (var item in inventory)
-            strings.Add(item.ToString());
-        UI.DrawTitledBox("인벤토리", null);
-        UI.DrawLeftAlignedBox(strings);
+        var lines = new List<string>
+        {
+            "인벤토리",
+            $"보유 골드: {Gold}",
+            "",
+            "[아이템 목록]"
+        };
+
+        int index = 1;
+        foreach (var eq in inventory.Where(i => i.Type != Item.ItemType.Usable))
+        {
+            lines.Add($"- {index} {eq.Name} | 방어력 +{eq.Defense} | {eq.Description}");
+            index++;
+        }
+        
+        foreach (var grp in inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name))
+        {
+            var sample = grp.First();
+            lines.Add($"- {index} {sample.Name} x{grp.Count()} | 방어력 +{sample.Defense} | {sample.Description}");
+            index++;
+        }
+
+        UI.DrawTitledBox("인벤토리", lines);
+
     }
 
 

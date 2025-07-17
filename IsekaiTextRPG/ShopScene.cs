@@ -192,9 +192,34 @@ public class ShopScene : GameScene
         // 1) 인벤토리와 골드를 출력
         _itemSystem.ShowInventory();
 
+
         // 판매할 아이템 이름 입력
         Console.Write("\n판매할 아이템 이름: ");
-        var itemName = Console.ReadLine()?.Trim() ?? string.Empty;
+        
+        var input = Console.ReadLine()?.Trim() ?? string.Empty;
+        var itemName = input;
+        if (int.TryParse(input, out int sel))
+        {
+            var inv = GameManager.player.Inventory;
+            var names = inv
+            .Where(i => i.Type != Item.ItemType.Usable)
+            .Select(i => i.Name)
+            .ToList();
+
+            names.AddRange(inv
+            .Where(i => i.Type == Item.ItemType.Usable)
+            .GroupBy(i => i.Name)
+            .Select(g => g.Key));
+
+            if (sel >= 1 && sel <= names.Count)
+                itemName = names[sel - 1];  
+            else
+                itemName = input;
+        }
+        else
+        {
+            itemName = input;          
+        }
 
         // 3) 플레이어가 장착 중인 경우 해제
         var player = GameManager.player;
@@ -212,21 +237,39 @@ public class ShopScene : GameScene
         }
         else
         {
-            // 판매 시도: 성공하면 골드 증가 및 인벤토리에서 제거
-            var success = _itemSystem.SellItem(itemName);
-            Console.WriteLine(
-                success
-                    ? $"{itemName}을(를) 판매했습니다!"
-                    : "판매에 실패했습니다."
-            );
-
-            if (success)
+            var invItems = player.Inventory.Where(i => i.Name == itemName).ToList();
+            if (invItems.First().Type == Item.ItemType.Usable)
             {
-                var playerItem = player.Inventory.FirstOrDefault(i => i.Name == itemName);
-                if (playerItem != null)
-                    player.Inventory.Remove(playerItem);
+                Console.Write("판매할 개수: ");
+                var qtyInput = Console.ReadLine()?.Trim() ?? string.Empty;
+                if (!int.TryParse(qtyInput, out int qty) || qty < 1)
+                    qty = 1;
+                qty = Math.Min(qty, invItems.Count);
 
-                player.Gold = _itemSystem.Gold; 
+                int sold = 0;
+                for (int i = 0; i < qty; i++)
+                {
+                    if (_itemSystem.SellItem(itemName))
+                    {
+                        var toRemove = player.Inventory.FirstOrDefault(x => x.Name == itemName);
+                        if (toRemove != null)
+                            player.Inventory.Remove(toRemove);
+                        sold++;
+                    }
+                    else break;
+                }
+                Console.WriteLine($"{itemName} x{sold} 판매 완료! 현재 골드: {_itemSystem.Gold}");
+            }
+            else
+            {
+                bool success = _itemSystem.SellItem(itemName);
+                if (success)
+                {
+                    var playerItem = player.Inventory.FirstOrDefault(i => i.Name == itemName);
+                    if (playerItem != null)
+                        player.Inventory.Remove(playerItem);
+                    player.Gold = _itemSystem.Gold;
+                }
             }
         }
         // 5) 판매 후 대기
