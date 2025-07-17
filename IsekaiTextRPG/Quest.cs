@@ -1,74 +1,56 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
-public enum QuestType
+// 퀘스트의 상태를 나타내는 열거형
+public enum QuestState
 {
-    MonsterHunt,
-    Gathering,
-    Delivery
+    NotStarted, // 아직 시작 안 함
+    InProgress, // 진행 중
+    Completed,  // 완료됨 (보상 받기 전)
+    Rewarded    // 보상까지 받은 최종 완료
 }
 
 public class Quest
 {
-    public string Name { get; private set; }
-    public string Description { get; private set; }
-    public QuestType Type { get; private set; }
-    public string CompletionCondition { get; private set; }
-    public List<Reward> Rewards { get; private set; }
-    public bool IsAccepted { get; set; }
-    public bool IsCompleted { get; set; }
-    public bool IsRewarded { get; set; }
+    public int Id { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public QuestState State { get; set; }
 
-    public string TargetMonster { get; private set; }
+    // 퀘스트 목표
+    public string ObjectiveDescription { get; set; } // 예: "미니언 5마리 처치"
     public int RequiredCount { get; set; }
     public int CurrentCount { get; set; }
 
-    public Quest(string name, string description, QuestType type, string condition, List<Reward> rewards, string targetMonster = "", int requiredCount = 0)
-    {
-        Name = name;
-        Description = description;
-        Type = type;
-        CompletionCondition = condition;
-        Rewards = rewards;
-        IsAccepted = false;
-        IsCompleted = false;
-        IsRewarded = false;
+    // 퀘스트 보상
+    public int RewardGold { get; set; }
+    public string? RewardItem { get; set; } // 아이템 이름으로 보상
 
-        TargetMonster = targetMonster;
+    public Quest(int id, string title, string description, string objective, int requiredCount, int rewardGold, string? rewardItem = null)
+    {
+        Id = id;
+        Title = title;
+        Description = description;
+        State = QuestState.NotStarted;
+        ObjectiveDescription = objective;
         RequiredCount = requiredCount;
         CurrentCount = 0;
+        RewardGold = rewardGold;
+        RewardItem = rewardItem;
     }
 
-    public class Reward
+    // 복사 생성자: 플레이어가 퀘스트를 받을 때 원본은 그대로 두고 복사본을 만들어 전달하기 위함
+    public Quest(Quest original)
     {
-        public string ItemName { get; private set; }
-        public int Quantity { get; private set; }
-
-        public Reward(string itemName, int quantity)
-        {
-            ItemName = itemName;
-            Quantity = quantity;
-        }
-    }
-
-    public void UpdateProgress(string monsterName)
-    {
-        if (IsAccepted && !IsCompleted && Type == QuestType.MonsterHunt && TargetMonster == monsterName)
-        {
-            CurrentCount++;
-            if (CurrentCount >= RequiredCount)
-            {
-                IsCompleted = true;
-            }
-        }
-    }
-
-    public string GetProgressString()
-    {
-        if (Type == QuestType.MonsterHunt)
-        {
-            return $" - {TargetMonster} {CurrentCount}/{RequiredCount}";
-        }
-        return "";
+        Id = original.Id;
+        Title = original.Title;
+        Description = original.Description;
+        State = original.State;
+        ObjectiveDescription = original.ObjectiveDescription;
+        RequiredCount = original.RequiredCount;
+        CurrentCount = original.CurrentCount;
+        RewardGold = original.RewardGold;
+        RewardItem = original.RewardItem;
     }
 }
