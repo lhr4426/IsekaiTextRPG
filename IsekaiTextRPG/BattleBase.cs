@@ -75,6 +75,7 @@ public class BattleBase : GameScene
 
     public bool UseItem(List<Item> inven, Player player)
     {
+        Console.Write("사용할 아이템의 번호를 선택하세요 ( 0: 취소 ) >> ");
         int? input = InputHelper.InputNumber(0, inven.Count);
         if (input == null || input == 0 || input > inven.Count) return false;
 
@@ -302,15 +303,19 @@ public class BattleBase : GameScene
                     }
                     else
                     {
-                        Console.WriteLine("공격할 대상을 선택하세요:");
+                        List<string> strings = new();
+                        
                         List<Enemy> alive = enemies.Where(e => e.CurrentHP > 0).ToList();
                         for (int i = 0; i < alive.Count; i++)
                         {
-                            Console.WriteLine($"{i + 1}. {alive[i].Name} (HP: {alive[i].CurrentHP}/{alive[i].MaxHP})");
+                            strings.Add($"{i + 1}. {alive[i].Name} (HP: {alive[i].CurrentHP}/{alive[i].MaxHP})");
                         }
 
-                        int? targetInput = InputHelper.InputNumber(1, alive.Count);
-                        if (targetInput == null) break;
+                        UI.DrawLeftAlignedBox(strings);
+                        Console.Write("공격할 대상의 번호를 선택하세요 (0 : 취소) >> ");
+
+                        int? targetInput = InputHelper.InputNumber(0, alive.Count);
+                        if (targetInput == null || targetInput == 0) break;
 
                         Enemy target = alive[(int)targetInput - 1];
                         BattleLogger.Log($"{player.Name}이(가) {target.Name}을(를) 공격합니다.");
@@ -324,6 +329,8 @@ public class BattleBase : GameScene
 
                     List<Skill> skills = player.Skills;
                     Skill? selectedSkill = null;
+
+                    Console.Write("사용할 스킬의 번호를 입력하세요 (0 : 취소) >> ");
 
                     int? skillInput = InputHelper.InputNumber(0, skills.Count);
                     if (skillInput == null || skillInput == 0 || skillInput > skills.Count) break;
@@ -345,15 +352,19 @@ public class BattleBase : GameScene
                     }
                     else
                     {
-                        Console.WriteLine("스킬 사용할 대상을 선택하세요:");
+                        List<string> strings = new();
                         List<Enemy> alive = enemies.Where(e => e.CurrentHP > 0).ToList();
                         for (int i = 0; i < alive.Count; i++)
                         {
-                            Console.WriteLine($"{i + 1}. {alive[i].Name} (HP: {alive[i].CurrentHP}/{alive[i].MaxHP})");
+                            strings.Add($"{i + 1}. {alive[i].Name} (HP: {alive[i].CurrentHP}/{alive[i].MaxHP})");
                         }
 
-                        int? targetInput = InputHelper.InputNumber(1, alive.Count);
-                        if (targetInput == null) break;
+                        UI.DrawLeftAlignedBox(strings);
+
+                        Console.Write("스킬 사용할 대상의 번호를 선택하세요 (0 : 취소) >> ");
+                        int? targetInput = InputHelper.InputNumber(0, alive.Count);
+
+                        if (targetInput == null || targetInput == 0) break;
 
                         Enemy target = alive[(int)targetInput - 1];
                         BattleLogger.Log($"{player.Name}이(가) 스킬 [{selectedSkill.Name}] 사용을 시도합니다.");
@@ -374,6 +385,7 @@ public class BattleBase : GameScene
 
                 case 4:
                     player.ShowStatus();
+                    Console.WriteLine("아무 키나 입력하여 돌아가기");
                     Console.ReadKey();
                     break;
 
