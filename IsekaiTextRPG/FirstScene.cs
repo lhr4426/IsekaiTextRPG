@@ -54,11 +54,12 @@ public class FirstScene : GameScene
             else 
             {
                 List<string> strings = new();
-                strings.Add($"{slotSelect} 번째 슬롯 선택됨");
-                strings.Add("1. 선택한 데이터로 플레이");
-                strings.Add("2. 선택한 데이터 삭제");
-                strings.Add("0. 뒤로가기");
+                strings.Add($" {slotSelect} 번째 슬롯 선택됨");
+                strings.Add(" 1. 선택한 데이터로 플레이");
+                strings.Add(" 2. 선택한 데이터 삭제");
+                strings.Add(" 0. 뒤로가기");
                 UI.DrawLeftAlignedBox(strings);
+                Console.Write(">> ");
                 int? input = InputHelper.InputNumber(0, 2);
                 if (input == null || input == 0) continue;
                 if (input == 1)
