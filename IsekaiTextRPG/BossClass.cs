@@ -50,11 +50,8 @@ namespace IsekaiTextRPG
             {
                 foreach (var skill in Skills)
                 {
-                    Console.WriteLine($"[DEBUG] {Name}의 쿨타임 체크");
                     if (_skillCooldowns[skill] > 0)
                     {
-                        Console.WriteLine($"[DEBUG] {Name}의 쿨타임 체크");
-                        Console.WriteLine($"[DEBUG] {skill.Name} 남은 쿨타임: {_skillCooldowns[skill]}");
                         _skillCooldowns[skill]--;
                     }
                 }
@@ -121,7 +118,6 @@ namespace IsekaiTextRPG
                 }
 
                 _lastUsedSkill = null;
-                Console.WriteLine($"[DEBUG] {Name} 기본 공격!");
                 return Attack; // 스킬 발동 실패 시 기본 공격
             }
             private bool IsCriticalHit() => _rng.NextDouble() < CriticalRate;  // 크리티컬 여부 판정
