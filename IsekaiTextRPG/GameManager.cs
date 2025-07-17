@@ -4,14 +4,14 @@ using System.IO;
 using System.Text.Json;
 
 public class GameManager
-{
-    public static GameManager instance;
+    {
+        public static GameManager instance;
     public static SceneManager sceneManager = new SceneManager();
     public static Player player;
     public int selectedSlot;
 
 
-    private readonly string saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Saves");
+    public readonly string saveDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Saves");
 
     private string GetSlotPath(int slot) => Path.Combine(saveDir, $"slot{slot}.json");
 

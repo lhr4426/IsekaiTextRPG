@@ -285,6 +285,6 @@ public class Player
     // JSON 저장 경로 반환 (플레이어 이름별 파일 구분용)
     private string GetSkillSavePath()
     {
-        return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
+        return Path.Combine(GameManager.instance.saveDir, $"Skills_{GameManager.instance.selectedSlot}.json");
     }
 }
