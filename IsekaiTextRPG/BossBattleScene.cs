@@ -17,6 +17,7 @@ public class BossBattleScene : BattleBase
     public override GameScene? StartScene()
     {
         prevScene = SceneManager.Instance.scenes[SceneManager.SceneType.BossDungeonScene];
+        CooldownSetting();
 
         Console.Clear();
         player = GameManager.player;
