@@ -1,2 +1,256 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram /> 
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BattleBase" Collapsed="true">
+    <Position X="1.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAYAAAAAAAhAAAIIAAAAAgAEABCAAAAAAAggAAg=</HashCode>
+      <FileName>BattleBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BattleLogger" Collapsed="true">
+    <Position X="34.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>gAAAAAAAAAAAAAEAAAAAAAAAAAgAAAAAECACAAAAAAQ=</HashCode>
+      <FileName>BattleLoger.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossBattleScene" Collapsed="true">
+    <Position X="0.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAICAAAAAABAAAAAAEAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>BossBattleScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BossDungeonScene" Collapsed="true">
+    <Position X="18.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAAAAAAAAAAAAAAAIAAAAAAAAAAAA=</HashCode>
+      <FileName>BossDungeonScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DungeonEnterScene" Collapsed="true">
+    <Position X="23" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAABAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DungeonEnterScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Enemy" Collapsed="true">
+    <Position X="38" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIEAAAIAIAEEAQAAIAgAAABAAAAJgAAAAI=</HashCode>
+      <FileName>Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FirstScene" Collapsed="true">
+    <Position X="5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIACAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FirstScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameManager" Collapsed="true">
+    <Position X="39.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACggACACAAIBAAAAAAAEBAAAABEAAAhAAAAAE=</HashCode>
+      <FileName>GameManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameScene" Collapsed="true">
+    <Position X="16.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAIAAAABAABAAAAAAAAAAAAAAAAABAAABAAAAAE=</HashCode>
+      <FileName>GameScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InputHelper" Collapsed="true">
+    <Position X="34.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>InputHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="InventoryScene" Collapsed="true">
+    <Position X="25.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAhAAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>InventoryScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Item" Collapsed="true">
+    <Position X="36.25" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAQAgAAAUgAAEAAQAAIAAAIEABQAAAgAAQgA=</HashCode>
+      <FileName>Item.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ItemSystem" Collapsed="true">
+    <Position X="38" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgEiAAAABAAAAAgAAAAAAAAAAMAAAAAAAAAAAAQ=</HashCode>
+      <FileName>ItemSystem.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JeonJikScene" Collapsed="true">
+    <Position X="7.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIIAAAAAAABAAgAAAAAAAIAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>JeonJikScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LevelDungeonScene" Collapsed="true">
+    <Position X="14" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LevelDungeonScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NormalBattleScene" Collapsed="true">
+    <Position X="2.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NormalBattleScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Player" Collapsed="true">
+    <Position X="39.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EBGAAACAAgIAEIAAIIGEMQQBABADAAEBAAABogAQSAE=</HashCode>
+      <FileName>Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Program" Collapsed="true">
+    <Position X="34.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Quest" Collapsed="true">
+    <Position X="36.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAgAEEAAAAAAAAAEAAAAAAAgQAABAAgAAA=</HashCode>
+      <FileName>Quest.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QuestManager" Collapsed="true">
+    <Position X="38" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAEABAQAAIAAAAAAQAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>QuestManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="QuestScene" Collapsed="true">
+    <Position X="27.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAgAAAAAAAAABAAACAAQCAAAAAAAA=</HashCode>
+      <FileName>QuestScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestScene" Collapsed="true">
+    <Position X="29.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAAAAAIAAAAAAABAAAACAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>RestScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SceneManager" Collapsed="true">
+    <Position X="39.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgACAAAAAAAAAAAIAAAAAAAAAAQAAAAAAAAgA=</HashCode>
+      <FileName>SceneManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ShopScene" Collapsed="true">
+    <Position X="9.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAIBBAAAAAAIgAFAAAAQAAgAAQAQAABA=</HashCode>
+      <FileName>ShopScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Skill" Collapsed="true">
+    <Position X="34.5" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgCBACAAAAgACAEAAAAAAQAQAAAAAAgAAAAAgAAAEA=</HashCode>
+      <FileName>Skill.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SkillInvenScene" Collapsed="true">
+    <Position X="32" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABIAAAAAAABAAAAAAAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>SkillInvenScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SkillManager" Collapsed="true">
+    <Position X="36.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAQAABAAAAAAAAAAAAAAAEEAAAAAAAAA=</HashCode>
+      <FileName>SkillManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="SkillShopScene" Collapsed="true">
+    <Position X="11.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABIAAAAAAABAAgBAAAAAAAIAAAAAAAQABAAAAAA=</HashCode>
+      <FileName>SkillShopScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="StatScene" Collapsed="true">
+    <Position X="16.25" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>StatScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TownScene" Collapsed="true">
+    <Position X="20.75" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TownScene.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="UI" Collapsed="true">
+    <Position X="38" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAJAAgAQEAAAAAAAAAAAAAAAAAAAAAAAAgCAAAAAAAA=</HashCode>
+      <FileName>UI.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="IsekaiTextRPG.BossClass" Collapsed="true">
+    <Position X="36.25" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAIAAAAAAAAAAAAAAAAAIAAQ=</HashCode>
+      <FileName>BossClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="QuestType" Collapsed="true">
+    <Position X="38" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAgAAAAAAAAAAAAEAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Quest.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="QuestState" Collapsed="true">
+    <Position X="36.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAIAAAAAAAAAAAAAAACAAAAAABAAAAA=</HashCode>
+      <FileName>Quest.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="LearnState" Collapsed="true">
+    <Position X="34.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAgAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>Skill.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="SkillId" Collapsed="true">
+    <Position X="39.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAgAAACAAACAAAAAAAAAAACAAABAAAAAAAA=</HashCode>
+      <FileName>Skill.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="맑은 고딕" Size="9" />
+</ClassDiagram>
