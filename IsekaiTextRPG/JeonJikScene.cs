@@ -38,17 +38,18 @@
         if (input > 0 && input < JobsArray.Length)
         {
             var job = (Player.Jobs)JobsArray.GetValue((int)input);
-            if(CanChangeClass(job))
+            if (CanChangeClass(job))
             {
                 strings.Add($"{Player.JobsKorean(job)} 직업으로 전직하였습니다!");
                 GameManager.player.Job = job;
+                UI.DrawBox(strings);
+                Console.ReadKey();
+                return prevScene;
             }
             else
             {
                 strings.Add($"{Player.JobsKorean(job)} 직업으로 전직하기 위한 아이템이 없습니다.");
             }
-            UI.DrawBox(strings);
-            Console.ReadKey();
             return this;
         }
         return this;
