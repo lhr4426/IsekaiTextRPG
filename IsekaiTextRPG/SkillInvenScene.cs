@@ -20,7 +20,7 @@ public class SkillInvenScene : GameScene
     {
         List<string> strings = new List<string>();
         skills = GameManager.player.Skills;
-        if (skills != null)
+        if (skills != null && skills.Count > 0)
         {
             for(int i = 0; i < skills.Count; i++)
             {

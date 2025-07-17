@@ -1,12 +1,35 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static IsekaiTextRPG.BossClass;
 
 public class BattleBase : GameScene
 {
     private  Random rng = new Random();
 
+    public Dictionary<Skill, int> playerCooldowns = new Dictionary<Skill, int>();
+
     public override string SceneName => throw new NotImplementedException();
+
+    public void CooldownSetting()
+    {
+        foreach(var skill in GameManager.player.Skills)
+        {
+            playerCooldowns[skill] = 0;
+        }
+    }
+
+    public void TickCooldowns()
+    {
+        foreach (var skill in playerCooldowns)
+        {
+            if (playerCooldowns[skill.Key] > 0)
+            {
+                playerCooldowns[skill.Key]--;
+            }
+        }
+    }
+
 
     public void PlayerAttack(Player player, Enemy target, Skill? skill = null)
     {
@@ -342,6 +365,17 @@ public class BattleBase : GameScene
                         UI.DrawBox(new List<string> { "스킬을 사용하기 위한 마나가 부족합니다." });
                         Console.ReadKey();
                         break;
+                    }
+
+                    if (playerCooldowns[selectedSkill] != 0)
+                    {
+                        UI.DrawBox(new List<string> { $"{selectedSkill.Name} 스킬은 {playerCooldowns[selectedSkill]} 턴 이후에 사용 가능합니다." });
+                        Console.ReadKey();
+                        break;
+                    }
+                    else
+                    {
+                        playerCooldowns[selectedSkill] = selectedSkill.Cooldown;
                     }
 
                     if (enemies.Count == 1)
