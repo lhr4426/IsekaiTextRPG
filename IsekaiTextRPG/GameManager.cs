@@ -51,6 +51,7 @@ public class GameManager
         var welcome = new List<string> { $"{player.Name} 님 환영합니다!" };
         UI.DrawBox(welcome);
         SavePlayerData(slot);
+        QuestManager.UpdateLevelQuestProgress(player.Level);
     }
 
     public GameManager()
@@ -89,6 +90,7 @@ public class GameManager
             player.LoadSkillsFromJson();
             strings.Add($"슬롯 {slot}에서 불러오기 완료.");
             UI.DrawBox(strings);
+            QuestManager.UpdateLevelQuestProgress(player.Level);
         }
         else
         {

@@ -52,12 +52,36 @@ public static class QuestManager
         return masterQuests.Values.Select(q => new Quest(q)).ToList();
     }
 
+    public static void UpdateEquipmentQuestProgress() // 장착 여부만 확인하므로 별도 매개변수 불필요
+    {
+        // GameManager.player가 null인지 먼저 확인하여 NullReferenceException을 방지합니다.
+        if (GameManager.player == null)
+        {
+            return;
+        }
+
+        foreach (var quest in GameManager.player.InProgressQuests)
+        {
+            // 퀘스트가 진행 중이고, 목표가 "장비 장착"이며, 아직 완료되지 않았을 경우
+            if (quest.State == QuestState.InProgress && quest.ObjectiveDescription == "장비 장착")
+            {
+                // 플레이어가 하나라도 장비를 장착하고 있다면 퀘스트 완료
+                // 플레이어의 Equipment 목록에 아이템이 하나라도 있다면 됩니다.
+                if (GameManager.player.EquippedItems.Count > 0)
+                {
+                    quest.CurrentCount = 1; // 장착했으니 1로 설정 (requiredCount가 1일 경우)
+                    quest.State = QuestState.Completed;
+                    Console.WriteLine($"[퀘스트 완료] '{quest.Title}' 퀘스트를 완료했습니다!");
+                }
+            }
+        }
+    }
+
     // 레벨 퀘스트 진행도를 업데이트하는 함수를 추가
     public static void UpdateLevelQuestProgress(int currentLevel)
     {
         if (GameManager.player == null)
         {
-            Console.WriteLine("[경고] QuestManager: 플레이어 객체가 아직 초기화되지 않았습니다. 레벨 퀘스트 업데이트를 건너뜀.");
             return;
         }
 
@@ -117,7 +141,6 @@ public static class QuestManager
 
         if (GameManager.player == null) // Null 체크 추가
         {
-            Console.WriteLine("[경고] QuestManager: 플레이어 객체가 아직 초기화되지 않아 퀘스트를 제안할 수 없습니다.");
             return;
         }
 
