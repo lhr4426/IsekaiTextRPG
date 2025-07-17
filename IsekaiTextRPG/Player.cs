@@ -76,8 +76,8 @@ public class Player
     public Jobs Job { get; set; } = Jobs.Prestige;
 
     // 최대 및 현재 체력
-    public int MaxHP { get; private set; } = 100;
-    public int CurrentHP { get; set; } = 100;
+    public int MaxHP { get; private set; } = 10;
+    public int CurrentHP { get; set; } = 10;
     // 최대 및 현재 마나
     public int MaxMP { get; private set; } = 50;
     public int CurrentMP { get; set; } = 50;
@@ -151,7 +151,9 @@ public class Player
     {
         Level++;
         MaxHP += 20;
+        CurrentHP = MaxHP;
         MaxMP += 10;
+        CurrentMP = MaxMP;
         BaseAttack += 2;
         BaseDefense += 1;
         CriticalRate += 0.01f;      // 1% 증가

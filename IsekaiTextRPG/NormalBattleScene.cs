@@ -36,8 +36,9 @@ public class NormalBattleScene : BattleBase
 
         if (player.CurrentHP <= 0)
         {
-            BattleLogger.Log("당신은 쓰러졌습니다... 게임 오버.");
-            Console.WriteLine("당신은 쓰러졌습니다... 게임 오버.");
+            player.CurrentHP = 1;
+            DefeatMsg();
+            return SceneManager.Instance.scenes[SceneManager.SceneType.TownScene];
         }
         else
         {
