@@ -21,7 +21,11 @@ public class BattleBase : GameScene
         }
 
         int baseDamage = player.BaseAttack + player.EquippedItems.Sum(i => i.Attack);
-        if (skill != null) baseDamage += skill.Damage;
+        if (skill != null)
+        {
+            baseDamage += skill.Damage;
+            player.CurrentMP -= skill.ManaCost;
+        }
 
         int finalDamage = rng.Next((int)(baseDamage * 0.9f), (int)(baseDamage * 1.1f) + 1);
 
@@ -319,10 +323,19 @@ public class BattleBase : GameScene
                     skillScene.PrintSkills();
 
                     List<Skill> skills = player.Skills;
+                    Skill? selectedSkill = null;
+
                     int? skillInput = InputHelper.InputNumber(0, skills.Count);
                     if (skillInput == null || skillInput == 0 || skillInput > skills.Count) break;
 
-                    Skill selectedSkill = skills[(int)skillInput - 1];
+                    selectedSkill = skills[(int)skillInput - 1];
+
+                    if (selectedSkill.ManaCost > player.CurrentMP)
+                    {
+                        UI.DrawBox(new List<string> { "스킬을 사용하기 위한 마나가 부족합니다." });
+                        Console.ReadKey();
+                        break;
+                    }
 
                     if (enemies.Count == 1)
                     {
