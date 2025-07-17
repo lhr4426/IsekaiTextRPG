@@ -88,8 +88,8 @@ public class ShopScene : GameScene
 
             // 한 줄로 아이템 정보를 포맷하여 출력
             strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |" +
-                $"공격:{item.Attack}    |방어:{item.Defense}    |가격:{item.Price}    |" +
-                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} |    {item.Description} {status} ");
+                $"공격:{item.Attack}    |방어:{item.Defense}   |" +
+                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0}  |{item.Description}  |가격:{item.Price}  {status} ");
 
         }
 
