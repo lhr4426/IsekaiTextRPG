@@ -89,11 +89,10 @@ public class ItemSystem
         return true;
     }
 
-    public void ShowInventory()
+    public void ShowInventoryForSell()
     {
         var lines = new List<string>
         {
-            "인벤토리",
             $"보유 골드: {GameManager.player.Gold}",
             "",
             "[아이템 목록]"
@@ -103,7 +102,7 @@ public class ItemSystem
         // 장착 가능한 아이템은 공격력/방어력으로 구분
         foreach (var eq in GameManager.player.Inventory.Where(i => i.Type != Item.ItemType.Usable))
         {
-            lines.Add($"- {index} {eq.Name} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
+            lines.Add($"- {index} {eq.Name} | 판매가 {(int)(eq.Price * 0.85)} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
                   $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
             index++;
 
@@ -116,7 +115,8 @@ public class ItemSystem
             index++;
         } 
 
-        UI.DrawTitledBox("인벤토리", lines); 
+        UI.DrawTitledBox("인벤토리", null);
+        UI.DrawLeftAlignedBox(lines);
 
     }
 

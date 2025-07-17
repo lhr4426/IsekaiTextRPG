@@ -57,7 +57,10 @@ public class QuestScene : GameScene
 
         string title = $"퀘스트 - {quest.Title}";
         List<string> contents = new List<string>();
-        contents.Add(quest.Description);
+        foreach(var str in quest.Description)
+        {
+            contents.Add(str);
+        }
         contents.Add("");
 
         int current = playerQuest?.CurrentCount ?? 0;

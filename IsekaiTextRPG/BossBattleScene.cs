@@ -16,6 +16,9 @@ public class BossBattleScene : BattleBase
     }
     public override GameScene? StartScene()
     {
+        prevScene = SceneManager.Instance.scenes[SceneManager.SceneType.BossDungeonScene];
+        CooldownSetting();
+
         Console.Clear();
         player = GameManager.player;
 
@@ -31,7 +34,7 @@ public class BossBattleScene : BattleBase
         while (player.CurrentHP > 0 && boss.CurrentHP > 0)
         {
             TickCooldowns();
-            bool continueBattle = this.PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true);
+            bool continueBattle = PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true);
             if (!continueBattle) return prevScene;
             if (boss.CurrentHP <= 0) break;
 

@@ -11,6 +11,7 @@ public class SkillInvenScene : GameScene
 
     public override GameScene? StartScene()
     {
+        Console.Clear();
         skills = GameManager.player.Skills;
         PrintSkills();
         return EndScene();
@@ -30,7 +31,6 @@ public class SkillInvenScene : GameScene
         }
 
         else { strings.Add("사용 가능한 스킬이 없습니다."); }
-
 
         UI.DrawTitledBox(SceneName, strings);
     }
