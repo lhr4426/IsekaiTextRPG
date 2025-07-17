@@ -11,7 +11,7 @@ public class Item
         HeadArmor,
         BodyArmor,
         LegArmor,
-        Usable, // 사용 가능한 아이템 (ex. 포션)
+        Usable // 사용 가능한 아이템 (ex. 포션)
     }
 
     private string TypeKorean(ItemType type)
@@ -75,7 +75,4 @@ public class Item
                $"회피율: {DodgeRate * 100:F1}%    |" +
                $"가격: {Price} 골드, 착용 가능: {(IsEquip ? "예" : "아니오")}";
     }
-
-    
 }
-
