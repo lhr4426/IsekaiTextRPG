@@ -13,6 +13,7 @@ public class SceneManager
         InvenScene,
         SkillInvenScene,
         SkillShopScene,
+        QuestScene,
         ShopScene,
         RestScene,
         DungeonEnterScene,
@@ -36,6 +37,7 @@ public class SceneManager
         { SceneType.InvenScene, new InventoryScene() },
         { SceneType.SkillInvenScene, new SkillInvenScene() },
         { SceneType.SkillShopScene, new SkillShopScene() },
+        { SceneType.QuestScene, new QuestScene() },
         // { SceneType.GuildScene, new GuildScene() },
         { SceneType.ShopScene, new ShopScene(ItemSystem) },
         { SceneType.RestScene, new RestScene() },
@@ -76,6 +78,7 @@ public class SceneManager
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.ShopScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillShopScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.RestScene]);
+        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.QuestScene]);
         // scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.DungeonEnterScene]);
 
@@ -92,6 +95,7 @@ public class SceneManager
         // scenes[SceneType.GuildScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.ShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.RestScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.QuestScene].SetPrevScene(scenes[SceneType.TownScene]);
         // scenes[SceneType.DungeonScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.DungeonEnterScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.BossDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
