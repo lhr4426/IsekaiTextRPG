@@ -16,6 +16,7 @@ public class SkillShopScene : GameScene
     // 씬 시작 시 실행되는 메서드
     public override GameScene? StartScene()
     {
+        CheckDidYouLearn();
         // 스킬 상태 업데이트용 이벤트 설정 및 실행
         SetUpdate();
 
@@ -41,6 +42,20 @@ public class SkillShopScene : GameScene
         }
 
         return this;
+    }
+
+    // 스킬 배웠는지 직접 플레이어 Skill에서 찾아다가 검사
+    private void CheckDidYouLearn()
+    {
+        var learnedSkillIds = new HashSet<int>(GameManager.player.Skills.Select(s => s.Id));
+
+        foreach (var skill in SkillManager.Skills)
+        {
+            if (learnedSkillIds.Contains(skill.Value.Id))
+            {
+                skill.Value.learnState = LearnState.Learned;
+            }
+        }
     }
 
     // 스킬 상태 갱신 이벤트 구독 및 실행
@@ -104,7 +119,6 @@ public class SkillShopScene : GameScene
             strings.Add($"{skill.Name} 스킬을 습득하셨습니다!");
 
             // 변경된 스킬 상태 저장
-            SkillManager.SaveSkills();
             GameManager.player.SaveSkillsToJson();
         }
         else if (skill.learnState == LearnState.NotLearnable)
