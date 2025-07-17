@@ -14,7 +14,11 @@ public static class QuestManager
         masterQuests.Add(1, new Quest(
             id: 1,
             title: "마을을 위협하는 슬라임 처치",
-            description: "이봐! 마을 근처에 슬라임들이 너무 많아졌다고 생각하지 않나?\n마을 주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\n모험가인 자네가 좀 처치해주게!",
+            description: new List<string> {
+                "이봐! 마을 근처에 슬라임들이 너무 많아졌다고 생각하지 않나?",
+                "마을 주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!",
+                "모험가인 자네가 좀 처치해주게!" }
+            ,
             objective: "슬라임", // 목표 몬스터 이름
             requiredCount: 5,
             rewardGold: 50,
@@ -24,7 +28,7 @@ public static class QuestManager
         masterQuests.Add(2, new Quest(
             id: 2,
             title: "장비를 장착해보자",
-            description: "맨몸으로 싸우는 건 위험하다네. 기본적인 장비라도 갖추는 게 어떤가?",
+            description: new List<string> { "맨몸으로 싸우는 건 위험하다네. 기본적인 장비라도 갖추는 게 어떤가?" },
             objective: "장비 장착", // 특별한 목표 타입
             requiredCount: 1,
             rewardGold: 100
@@ -33,7 +37,7 @@ public static class QuestManager
         masterQuests.Add(3, new Quest(
             id: 3,
             title: "더욱 더 강해지기!",
-            description: "레벨 5를 달성하여 당신의 강함을 증명해보세요.",
+            description: new List<string> { "레벨 5를 달성하여 당신의 강함을 증명해보세요." },
             objective: "레벨 달성", // 특별한 목표 타입
             requiredCount: 5,
             rewardGold: 500

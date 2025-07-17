@@ -180,7 +180,7 @@ public class ShopScene : GameScene
         Console.Clear();
 
         // 1) 인벤토리와 골드를 출력
-        _itemSystem.ShowInventory();
+        _itemSystem.ShowInventoryForSell();
 
 
         // 판매할 아이템 이름 입력

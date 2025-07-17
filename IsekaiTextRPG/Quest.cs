@@ -22,7 +22,7 @@ public class Quest
 {
     public int Id { get; set; }
     public string Title { get; set; }
-    public string Description { get; set; }
+    public List<string> Description { get; set; }
     public QuestState State { get; set; }
     public QuestType Type { get; set; }
 
@@ -37,7 +37,7 @@ public class Quest
 
     public Quest() { }
 
-    public Quest(int id, string title, string description, string objective, int requiredCount, int rewardGold, string? rewardItem = null)
+    public Quest(int id, string title, List<string> description, string objective, int requiredCount, int rewardGold, string? rewardItem = null)
     {
         Id = id;
         Title = title;
