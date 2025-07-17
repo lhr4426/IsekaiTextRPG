@@ -29,7 +29,7 @@ public class BossDungeonScene : GameScene
                 "0. 던전 입구로 돌아가기"
             };
 
-        UI.DrawTitledBox(SceneName, contents); // TODO: 이거 잘됐는지 확인 필요
+        UI.DrawTitledBox(SceneName, contents);
         Console.Write(">> ");
         int? input = InputHelper.InputNumber(0, 3);// 사용자 입력을 받아 숫자로 변환 (0 ~ 3 범위)
 
