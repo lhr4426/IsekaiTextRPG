@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -29,9 +30,9 @@ public class ShopScene : GameScene
         _shopItems = new List<Item>
             {//이름 설명 공격력 방어력 가격 장착가능여부 아이템 타입 치명타 확률 치명타 배율 회피율
                 new("칼","기본 검",10, 0, 0, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
-                new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 1f),
-                new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 1f),
-                new("가죽 바지", "초급 다리보호구", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 1f),
+                new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 0.01f),
+                new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 0.01f),
+                new("가죽 바지", "초급 다리보호구", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 0.01f),
                 new("체력 물약", "HP +50 회복", 0, 0, 50, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
                 new("마나 물약", "MP +30 회복", 0, 0, 0, 50,70, false, Item.ItemType.Usable, 0f, 0f, 0f)
             };
@@ -86,9 +87,10 @@ public class ShopScene : GameScene
                          ? "[구매완료]" : string.Empty;
 
             // 한 줄로 아이템 정보를 포맷하여 출력
-            strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |{item.Description}    |" +
+            strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |" +
                 $"공격:{item.Attack}    |방어:{item.Defense}    |가격:{item.Price}    |" +
-                $"치명타:{item.CriticalRate:P0}    |배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} {status}");
+                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} |    {item.Description} {status} ");
+
         }
 
         UI.DrawLeftAlignedBox(strings);
@@ -174,7 +176,6 @@ public class ShopScene : GameScene
                 else
                     Console.WriteLine("골드가 부족하여 구매할 수 없습니다.");
             };
-            
         }
         else
         {
@@ -194,7 +195,7 @@ public class ShopScene : GameScene
 
 
         // 판매할 아이템 이름 입력
-        Console.Write("\n판매할 아이템 이름: ");
+        Console.Write("\n판매할 아이템 번호: ");
         
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
         var itemName = input;
@@ -212,13 +213,21 @@ public class ShopScene : GameScene
             .Select(g => g.Key));
 
             if (sel >= 1 && sel <= names.Count)
-                itemName = names[sel - 1];  
+            {
+                itemName = names[sel - 1];
+            }   
             else
-                itemName = input;
+            {
+                Console.WriteLine("유효한 번호를 입력하세요.");
+                Console.ReadKey();
+                return;
+            }
         }
         else
         {
-            itemName = input;          
+            Console.WriteLine("번호로만 판매가 가능합니다.");
+            Console.ReadKey();
+            return;
         }
 
         // 3) 플레이어가 장착 중인 경우 해제
@@ -246,6 +255,9 @@ public class ShopScene : GameScene
                     qty = 1;
                 qty = Math.Min(qty, invItems.Count);
 
+                if (!ConfirmSell(itemName, qty))  
+                    return;
+
                 int sold = 0;
                 for (int i = 0; i < qty; i++)
                 {
@@ -262,6 +274,9 @@ public class ShopScene : GameScene
             }
             else
             {
+                if (!ConfirmSell(itemName))
+                    return;
+
                 bool success = _itemSystem.SellItem(itemName);
                 if (success)
                 {
@@ -275,5 +290,12 @@ public class ShopScene : GameScene
         // 5) 판매 후 대기
         Console.WriteLine("\n아무 키나 눌러 계속...");
         Console.ReadKey();
+    }
+
+    private bool ConfirmSell(string itemName, int quantity = 1)
+    {
+        Console.WriteLine($"\n[{itemName} x{quantity}] 정말 판매하시겠습니까? (Y/N)");
+        var confirm = Console.ReadLine()?.Trim().ToUpper();
+        return confirm == "Y";
     }
 }

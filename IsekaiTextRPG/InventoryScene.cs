@@ -32,8 +32,12 @@
             foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable))
             {
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
-                string stats = item.Attack > 0 ? $"공격력 +{item.Attack}" : $"방어력 +{item.Defense}";
-                strings.Add($"- {index} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
+                strings.Add(
+                    $"- {index} {equippedMark}{item.Name,-15} | " +
+                    $"공격력 +{item.Attack} | 방어력 +{item.Defense} | " +
+                    $"치명타율 {item.CriticalRate:P0} | 치명타배율 {item.CriticalDamage} | " +
+                    $"회피율 {item.DodgeRate:P0} | {item.Description}"
+                );
                 index++;
             }
 
@@ -45,12 +49,8 @@
             {
                 var sample = g.First();
                 string equippedMark = player.EquippedItems.Contains(sample) ? "[E]" : "   ";
-                string stats = sample.Attack > 0
-                    ? $"공격력 +{sample.Attack}"
-                    : $"방어력 +{sample.Defense}";
                 strings.Add(
-                    $"- {index} {equippedMark}{sample.Name,-15} x{g.Count()} | " +
-                    $"{stats} | {sample.Description}"
+                    $"- {index} {equippedMark}{sample.Name,-15} x{g.Count()} | " +$" {sample.Description}"
                 );
                 index++;
             }
