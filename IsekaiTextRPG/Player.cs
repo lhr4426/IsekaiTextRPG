@@ -64,11 +64,11 @@ public class Player
     }
 
     // 플레이어 이름
-    public string Name { get; private set; }
+    public string Name { get; set; }
     // 플레이어 레벨
-    public int Level { get; private set; } = 1;
+    public int Level { get; set; } = 1;
     // 현재 경험치
-    public int Experience { get; private set; } = 0;
+    public int Experience { get; set; } = 0;
     // 소지 골드
     public int Gold { get; set; } = 1000;
 
@@ -76,31 +76,29 @@ public class Player
     public Jobs Job { get; set; } = Jobs.Prestige;
 
     // 최대 및 현재 체력
-    public int MaxHP { get; private set; } = 10;
+    public int MaxHP { get; set; } = 10;
     public int CurrentHP { get; set; } = 10;
     // 최대 및 현재 마나
-    public int MaxMP { get; private set; } = 50;
+    public int MaxMP { get; set; } = 50;
     public int CurrentMP { get; set; } = 50;
 
     // 기본 공격력 및 방어력
-    public int BaseAttack { get; private set; } = 10;
-    public int BaseDefense { get; private set; } = 5;
+    public int BaseAttack { get; set; } = 10;
+    public int BaseDefense { get; set; } = 5;
 
     // 치명타 확률, 치명타 피해 배율, 회피 확률
-    public float CriticalRate { get; private set; } = 0.1f;       // 10%
-    public float CriticalDamage { get; private set; } = 1.6f;    // 160%
-    public float DodgeRate { get; private set; } = 0.1f;         // 10%
+    public float CriticalRate { get; set; } = 0.1f;       // 10%
+    public float CriticalDamage { get; set; } = 1.6f;    // 160%
+    public float DodgeRate { get; set; } = 0.1f;         // 10%
 
     // 인벤토리, 장착 아이템, 상점 판매 아이템 리스트
-    public List<Item> Inventory { get; private set; } = new List<Item>();
-    public List<Item> EquippedItems { get; private set; } = new List<Item>();
+    public List<Item> Inventory { get; set; } = new List<Item>();
+    public List<Item> EquippedItems { get; set; } = new List<Item>();
     public List<Item> ShopItems { get; set; } = new List<Item>();
 
     // 플레이어가 보유한 스킬 리스트
     public List<Skill> Skills { get; set; } = new List<Skill>();
 
-    // 스킬 저장 파일 경로 (플레이어 이름을 포함)
-    private string SkillSavePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
 
     // 생성자 - 플레이어 이름을 받아 세팅하고 스킬을 JSON에서 불러옴
     public Player(string name)

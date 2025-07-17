@@ -27,21 +27,21 @@ public class Item
         };
     }
 
-    public string Name { get; }
-    public string Description { get; }
-    public int Hp { get; }
-    public int Mp { get; }
-    public int Attack { get; }
-    public int Defense { get; }
-    public int Price { get; }
-    public bool IsEquip { get; }
-    public ItemType Type { get; }
-    public float CriticalRate { get; }      // 치명타 확률 
-    public float CriticalDamage { get; }    // 치명타 데미지 배율 1.6 
-    public float DodgeRate { get; }       // 회피율 (
+    public string Name { get; set; }
+    public string Description { get; set; }
+    public int Hp { get; set; }
+    public int Mp { get; set; }
+    public int Attack { get; set; }
+    public int Defense { get; set; }
+    public int Price { get; set; }
+    public bool IsEquip { get; set; }
+    public ItemType Type { get; set; }
+    public float CriticalRate { get; set; }      // 치명타 확률 
+    public float CriticalDamage { get; set; }    // 치명타 데미지 배율 1.6 
+    public float DodgeRate { get; set; }       // 회피율 (
 
     public Item(string name, string description, int attack, int defense,int hp, int mp, int price,
-               bool isEquip, ItemType itemType, float criticalRate = 0,
+               bool isEquip, ItemType type, float criticalRate = 0,
                float criticalDamage = 1.6f, float dodgeRate = 0)
     {
         Name = name;
@@ -52,7 +52,7 @@ public class Item
         Mp = mp;
         Price = price;
         IsEquip = isEquip;
-        Type = itemType;
+        Type = type;
         CriticalRate = criticalRate;
         CriticalDamage = criticalDamage;
         DodgeRate = dodgeRate;

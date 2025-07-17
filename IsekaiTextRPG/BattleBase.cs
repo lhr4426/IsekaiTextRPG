@@ -188,6 +188,7 @@ public class BattleBase : GameScene
             }
 
             UI.DrawTitledBox("보상 획득", rewards);
+            BattleLogger.CloseLogger();
         }
     }
     public void DefeatMsg(string name = "적")
@@ -199,6 +200,7 @@ public class BattleBase : GameScene
             $"{name}에게 패배하셨습니다."
         });
         Console.ReadKey();
+        BattleLogger.CloseLogger();
     }
     public void ShowNormalBattleUI(Player player, List<Enemy> enemies)
     {
@@ -369,6 +371,7 @@ public class BattleBase : GameScene
                     {
                         BattleLogger.Log($"{player.Name}이(가) 도망쳤습니다.");
                         Console.WriteLine("당신은 도망쳤습니다.");
+                        BattleLogger.CloseLogger();
                         return false;
                     }
                     else
