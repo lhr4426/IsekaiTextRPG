@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -99,6 +100,10 @@ public class Player
     // 플레이어가 보유한 스킬 리스트
     public List<Skill> Skills { get; set; } = new List<Skill>();
 
+    // 스킬 저장 파일 경로 (플레이어 이름을 포함)
+    private string SkillSavePath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, $"Skills_{Name}.json");
+    public List<Quest> InProgressQuests { get; set; } = new List<Quest>();
+    public List<int> RewardedQuestIds { get; set; } = new List<int>(); // 보상까지 받은 퀘스트 ID 목록
 
     // 생성자 - 플레이어 이름을 받아 세팅하고 스킬을 JSON에서 불러옴
     public Player(string name)
