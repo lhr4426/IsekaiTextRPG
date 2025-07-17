@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 public class Enemy
 {
     public int Level { get; set; }
@@ -23,6 +25,7 @@ public class Enemy
         DodgeRate = dodgeRate;
         RewardGold = rewardGold;
         RewardExp = rewardExp;
+        RewardItems = new List<Item>();
     }
     public void DrawHealthBar(int currentHP, int maxHP, bool isDead = false, int barWidth = 20)
     {
@@ -97,7 +100,8 @@ public class Enemy
                 baseEnemy.RewardExp
             )
             {
-                CurrentHP = baseEnemy.MaxHP
+                CurrentHP = baseEnemy.MaxHP,
+                RewardItems = new List<Item>(baseEnemy.RewardItems) // baseEnemy의 RewardItems를 새로운 리스트로 복사
             };
             selectedEnemies.Add(copy);
         }

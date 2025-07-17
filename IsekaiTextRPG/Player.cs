@@ -64,40 +64,49 @@ public class Player
         };
     }
 
-    // 플레이어 이름
+
     public string Name { get; set; }
-    // 플레이어 레벨
-    public int Level { get; set; } = 1;
-    // 현재 경험치
+
+    private int _level;
+    public int Level
+    {
+        get { return _level; }
+        set
+        {
+            if (_level != value) // 레벨이 실제로 변경될 때만
+            {
+                _level = value;
+                Console.WriteLine($"\n[알림] 플레이어 레벨이 {_level}로 올랐습니다!"); // 레벨 업 메시지
+                // QuestManager에 레벨 변경을 알리는 메서드 호출
+                // QuestManager는 static 클래스이므로 직접 호출합니다.
+                QuestManager.UpdateLevelQuestProgress(_level); // <-- 이 줄을 추가합니다.
+            }
+        }
+    }
+
     public int Experience { get; set; } = 0;
-    // 소지 골드
+
     public int Gold { get; set; } = 1000;
 
-    // 현재 직업
     public Jobs Job { get; set; } = Jobs.Prestige;
 
-    // 최대 및 현재 체력
     public int MaxHP { get; set; } = 10;
     public int CurrentHP { get; set; } = 10;
-    // 최대 및 현재 마나
+
     public int MaxMP { get; set; } = 50;
     public int CurrentMP { get; set; } = 50;
 
-    // 기본 공격력 및 방어력
     public int BaseAttack { get; set; } = 10;
     public int BaseDefense { get; set; } = 5;
 
-    // 치명타 확률, 치명타 피해 배율, 회피 확률
     public float CriticalRate { get; set; } = 0.1f;       // 10%
     public float CriticalDamage { get; set; } = 1.6f;    // 160%
     public float DodgeRate { get; set; } = 0.1f;         // 10%
 
-    // 인벤토리, 장착 아이템, 상점 판매 아이템 리스트
     public List<Item> Inventory { get; set; } = new List<Item>();
     public List<Item> EquippedItems { get; set; } = new List<Item>();
     public List<Item> ShopItems { get; set; } = new List<Item>();
 
-    // 플레이어가 보유한 스킬 리스트
     public List<Skill> Skills { get; set; } = new List<Skill>();
 
     // 스킬 저장 파일 경로 (플레이어 이름을 포함)
@@ -109,6 +118,7 @@ public class Player
     public Player(string name)
     {
         Name = name;
+        _level = 1;
         LoadSkillsFromJson();
     }
 
@@ -142,29 +152,41 @@ public class Player
     public void GainExp(int amount)
     {
         Experience += amount;
+        Console.WriteLine($"경험치 {amount}를 획득했습니다. 현재 경험치: {Experience}");
         while (Experience >= Level * 100)
         {
             Experience -= Level * 100;
-            LevelUp();
+            Level++;
+            MaxHP += 20;
+            CurrentHP = MaxHP;
+            MaxMP += 10;
+            CurrentMP = MaxMP;
+            BaseAttack += 2;
+            BaseDefense += 1;
+            CriticalRate += 0.01f;      // 1% 증가
+            DodgeRate += 0.01f;         // 1% 증가
+            CriticalDamage += 0.1f;     // 10% 증가
+
+            Console.WriteLine($"\n[레벨 업!] {Level} 레벨이 되었습니다!");
         }
     }
 
     // 레벨업 시 능력치 상승 처리
-    private void LevelUp()
-    {
-        Level++;
-        MaxHP += 20;
-        CurrentHP = MaxHP;
-        MaxMP += 10;
-        CurrentMP = MaxMP;
-        BaseAttack += 2;
-        BaseDefense += 1;
-        CriticalRate += 0.01f;      // 1% 증가
-        DodgeRate += 0.01f;         // 1% 증가
-        CriticalDamage += 0.1f;     // 10% 증가
+    //private void LevelUp()
+    //{
+    //    Level++;
+    //    MaxHP += 20;
+    //    CurrentHP = MaxHP;
+    //    MaxMP += 10;
+    //    CurrentMP = MaxMP;
+    //    BaseAttack += 2;
+    //    BaseDefense += 1;
+    //    CriticalRate += 0.01f;      // 1% 증가
+    //    DodgeRate += 0.01f;         // 1% 증가
+    //    CriticalDamage += 0.1f;     // 10% 증가
 
-        Console.WriteLine($"\n[레벨 업!] {Level} 레벨이 되었습니다!");
-    }
+    //    Console.WriteLine($"\n[레벨 업!] {Level} 레벨이 되었습니다!");
+    //}
 
     // 장착 아이템이 있는지 여부 반환
     public bool HasEquippedItems()
@@ -289,5 +311,31 @@ public class Player
     private string GetSkillSavePath()
     {
         return Path.Combine(GameManager.instance.saveDir, $"Skills_{GameManager.instance.selectedSlot}.json");
+    }
+
+    public void ShowQuestLog()
+    {
+        List<string> questLogContents = new List<string>();
+        if (InProgressQuests.Count == 0)
+        {
+            questLogContents.Add("진행 중인 퀘스트가 없습니다.");
+        }
+        else
+        {
+            foreach (var quest in InProgressQuests)
+            {
+                string status = "";
+                if (quest.State == QuestState.InProgress)
+                {
+                    status = $"(진행 중: {Math.Min(quest.CurrentCount, quest.RequiredCount)}/{quest.RequiredCount})";
+                }
+                else if (quest.State == QuestState.Completed)
+                {
+                    status = "(완료!) 보상 대기 중";
+                }
+                questLogContents.Add($"- {quest.Title} {status}");
+            }
+        }
+        UI.DrawTitledBox("퀘스트 로그", questLogContents);
     }
 }

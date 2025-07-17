@@ -2,6 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
+public enum QuestType
+{
+    Kill,
+    Collect,
+    level
+}
+
 // 퀘스트의 상태를 나타내는 열거형
 public enum QuestState
 {
@@ -17,15 +24,16 @@ public class Quest
     public string Title { get; set; }
     public string Description { get; set; }
     public QuestState State { get; set; }
+    public QuestType Type { get; set; }
 
     // 퀘스트 목표
-    public string ObjectiveDescription { get; set; } // 예: "미니언 5마리 처치"
+    public string ObjectiveDescription { get; set; }
     public int RequiredCount { get; set; }
     public int CurrentCount { get; set; }
 
     // 퀘스트 보상
     public int RewardGold { get; set; }
-    public string? RewardItem { get; set; } // 아이템 이름으로 보상
+    public string? RewardItem { get; set; }
 
     public Quest() { }
 

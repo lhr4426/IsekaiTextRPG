@@ -41,6 +41,7 @@ public class BattleBase : GameScene
         if (target.CurrentHP <= 0)
         {
             logs.Add($"{target.Name}이(가) 쓰러졌습니다!");
+            QuestManager.UpdateKillQuestProgress(target.Name);
         }
 
         UI.DrawBox(logs);
@@ -118,6 +119,7 @@ public class BattleBase : GameScene
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Victory!");
             Console.ResetColor();
+            QuestManager.UpdateKillQuestProgress(boss.Name);
 
             player.Gold += boss.RewardGold;
             player.GainExp(boss.RewardExp);
