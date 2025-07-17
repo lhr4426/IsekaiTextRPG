@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IsekaiTextRPG;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +14,7 @@ public class BossDungeonScene : GameScene
     public override GameScene? StartScene()
     {
         Console.Clear();
-        // return HandleBossMenu();
-        return EndScene();
+        return HandleBossMenu();
     }
 
     private GameScene? HandleBossMenu() // 보스 던전 메뉴 처리
@@ -36,22 +36,18 @@ public class BossDungeonScene : GameScene
         switch (input)
         {
             case 1:
-                Console.WriteLine("핑크빈 던전으로 이동합니다."); // TODO: 핑크빈 만들어지면 연결
-                Console.ReadKey();
-                return null;
+                return new BossBattleScene(BossClass.GetBossList()[0]);
             case 2:
-                Console.WriteLine("쿠크세이튼 던전으로 이동합니다."); // TODO: 쿠크세이튼 만들어지면 연결
-                Console.ReadKey();
-                return null;
+                return new BossBattleScene(BossClass.GetBossList()[1]);
             case 3:
-                Console.WriteLine("안톤 던전으로 이동합니다."); // TODO: 안톤 만들어지면 연결
-                Console.ReadKey();
-                return null;
+                return new BossBattleScene(BossClass.GetBossList()[2]);
             case 0:
                 return prevScene;
             default:
                 Console.WriteLine("잘못된 입력입니다.");
+                Console.ReadKey();
                 return this;
         }
     }
 }
+

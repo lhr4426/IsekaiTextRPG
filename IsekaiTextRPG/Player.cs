@@ -97,7 +97,7 @@ public class Player
     public int CurrentMP { get; set; } = 50;
 
     public int BaseAttack { get; set; } = 10;
-    public int BaseDefense { get; set; } = 5;
+    public int BaseDefense { get; set; } = 10;
 
     public float CriticalRate { get; set; } = 0.1f;       // 10%
     public float CriticalDamage { get; set; } = 1.6f;    // 160%

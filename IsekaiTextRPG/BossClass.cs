@@ -28,6 +28,8 @@ namespace IsekaiTextRPG
             public float CriticalRate { get; } // 치명타 확률
             public float CriticalMultiplier { get; }  // 치명타 배율
             public List<Skill> Skills { get; }  // 보유 스킬 리스트
+            private Skill? _lastUsedSkill;// 마지막 사용한 스킬 
+            public string? LastUsedSkillName => _lastUsedSkill?.Name;
             private readonly Dictionary<Skill, int> _skillCooldowns; // 스킬 쿨타임 관리 딕셔너리
             public Boss(
                 int level, string name, int hp, int attack, int defense,
@@ -48,8 +50,11 @@ namespace IsekaiTextRPG
             {
                 foreach (var skill in Skills)
                 {
+                    Console.WriteLine($"[DEBUG] {Name}의 쿨타임 체크");
                     if (_skillCooldowns[skill] > 0)
                     {
+                        Console.WriteLine($"[DEBUG] {Name}의 쿨타임 체크");
+                        Console.WriteLine($"[DEBUG] {skill.Name} 남은 쿨타임: {_skillCooldowns[skill]}");
                         _skillCooldowns[skill]--;
                     }
                 }
@@ -58,10 +63,14 @@ namespace IsekaiTextRPG
             // 공격 실행: 회피 확인 → 공격력 계산 → 크리티컬 확인 → 피해량 방어력비례차감 → HP 감소
             public int PerformAttack(Enemy target)
             {
-                TickCooldowns();
+                
 
                 if (IsAttackDodged())
-                    return 0;// 회피 시 공격 무효
+                {
+                    _lastUsedSkill = null;                       
+                    return 0;
+                }
+
 
                 float attackPower = CalculateAttackPower();
 
@@ -70,9 +79,32 @@ namespace IsekaiTextRPG
 
                 int damage = ApplyDefenseReduction(attackPower, target);
                 target.CurrentHP -= damage; // 대상 HP 감소
-
+                TickCooldowns();
                 return damage;// 최종 데미지 반환
+
             }
+
+            public int PerformAttack(Player target)
+            {
+                
+
+                if (IsAttackDodged())
+                {
+                    _lastUsedSkill = null;     
+                    return 0;
+                }
+
+                float attackPower = CalculateAttackPower();
+
+                if (IsCriticalHit())
+                    attackPower *= CriticalMultiplier;
+
+                int damage = Math.Max(0, (int)(attackPower - target.BaseDefense));
+                target.CurrentHP -= damage;
+                TickCooldowns();
+                return damage;
+            }
+
             private bool IsAttackDodged() => _rng.NextDouble() < DodgeRate;  // 회피 여부 판정
             private float CalculateAttackPower() // 공격력 계산 (스킬이 발동하면 스킬, 아니면 기본 공격)
             {
@@ -84,9 +116,12 @@ namespace IsekaiTextRPG
                 {
                     var skill = availableSkills[_rng.Next(availableSkills.Count)];
                     _skillCooldowns[skill] = skill.CooldownTurns; // 쿨타임 설정
+                    _lastUsedSkill = skill; // 마지막 사용한 스킬 저장
                     return Attack * skill.MultiplicativeFactor + skill.AdditiveBonus;
                 }
 
+                _lastUsedSkill = null;
+                Console.WriteLine($"[DEBUG] {Name} 기본 공격!");
                 return Attack; // 스킬 발동 실패 시 기본 공격
             }
             private bool IsCriticalHit() => _rng.NextDouble() < CriticalRate;  // 크리티컬 여부 판정
@@ -97,11 +132,11 @@ namespace IsekaiTextRPG
         public static IReadOnlyList<Enemy> GetBossList() => new List<Enemy> 
         {
                 new Boss(
-                    level: 9999999,                 // 레벨
+                    level: 999,                     // 레벨
                     name: "핑크빈",                 // 보스 이름
-                    hp: 9999999,                    // 최대 HP
-                    attack: 9999999,                // 공격력
-                    defense: 9999999,               // 방어력
+                    hp: 999999,                     // 최대 HP
+                    attack: 9,                      // 공격력
+                    defense: 999999,                // 방어력
                     rewardGold: 9999999,            // 보상 골드
                     rewardExp: 9999999,             // 보상 경험치
                     dodgeRate: 0.10f,               // 10% 회피율
@@ -113,7 +148,7 @@ namespace IsekaiTextRPG
                     level: 9999999,
                     name: "쿠크세이튼",
                     hp: 9999999,
-                    attack: 9999999,
+                    attack: 9,
                     defense: 9999999,
                     rewardGold: 9999999,
                     rewardExp: 9999999,
@@ -125,8 +160,8 @@ namespace IsekaiTextRPG
                 new Boss(
                     level: 9999999,
                     name: "안톤",
-                    hp: 9999999,
-                    attack: 9999999,
+                    hp: 999999,
+                    attack: 9,
                     defense: 9999999,
                     rewardGold: 9999999,
                     rewardExp: 9999999,
@@ -152,7 +187,7 @@ namespace IsekaiTextRPG
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.15f, // 15% 확률로 발동
                     cooldownTurns: 5 // 5턴 쿨다운
-                )
+                ),
         };
         private static readonly List<Skill> KuxseitanSkills = new List<Skill> //쿠크세이튼 보스 스킬 리스트
         {
@@ -178,7 +213,7 @@ namespace IsekaiTextRPG
                     multiplicativeFactor: 1.4f, // 공격력 40% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.30f, // 30% 확률로 발동
-                    cooldownTurns: 2 // 2턴 쿨다운
+                    cooldownTurns: 5 // 2턴 쿨다운
                 ),
                 new Skill(
                     name: "스킬이름6",
