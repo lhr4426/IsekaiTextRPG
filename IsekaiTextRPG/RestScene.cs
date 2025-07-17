@@ -5,6 +5,7 @@ public class RestScene : GameScene
     public override string SceneName => "휴식하기";
     private const int RestCost = 500;
     private const int HealAmount = 100;
+    private const int MpAmount = 50;
 
     public override GameScene? StartScene()
     {
@@ -24,7 +25,7 @@ public class RestScene : GameScene
         Console.Write(">> ");
 
         int? input = InputHelper.InputNumber(0, 1);
-        
+
         switch (input)
         {
             case 1:
@@ -32,6 +33,7 @@ public class RestScene : GameScene
                 {
                     player.Gold -= RestCost;
                     player.CurrentHP = Math.Min(player.MaxHP, player.CurrentHP + HealAmount);
+                    player.CurrentMP = Math.Min(player.MaxMP, player.CurrentMP + MpAmount);
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("\n→ 휴식을 완료했습니다.");
                     Console.ResetColor();
@@ -44,7 +46,7 @@ public class RestScene : GameScene
                 }
                 Console.WriteLine("\n아무 키나 누르면 계속...");
                 Console.ReadKey();
-                return this;
+                return prevScene;
 
             case 0:
                 return prevScene;
