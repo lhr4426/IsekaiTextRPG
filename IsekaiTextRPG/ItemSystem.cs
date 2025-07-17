@@ -113,7 +113,7 @@ public class ItemSystem
         foreach (var eq in inventory.Where(i => i.Type != Item.ItemType.Usable))
         {
             lines.Add($"- {index} {eq.Name} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
-                  $"치명타율 {eq.CriticalRate:P0} | 배율 {eq.CriticalDamage} | 회피율 {(eq.DodgeRate * 0.01f):P0} | {eq.Description}");
+                  $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
             index++;
 
         }

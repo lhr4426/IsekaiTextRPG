@@ -30,9 +30,9 @@ public class ShopScene : GameScene
         _shopItems = new List<Item>
             {//이름 설명 공격력 방어력 가격 장착가능여부 아이템 타입 치명타 확률 치명타 배율 회피율
                 new("칼","기본 검",10, 0, 0, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
-                new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 1f),
-                new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 1f),
-                new("가죽 바지", "초급 다리보호구", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 1f),
+                new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 0.01f),
+                new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 0.01f),
+                new("가죽 바지", "초급 다리보호구", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 0.01f),
                 new("체력 물약", "HP +50 회복", 0, 0, 50, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
                 new("마나 물약", "MP +30 회복", 0, 0, 0, 50,70, false, Item.ItemType.Usable, 0f, 0f, 0f)
             };
@@ -89,7 +89,7 @@ public class ShopScene : GameScene
             // 한 줄로 아이템 정보를 포맷하여 출력
             strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |{item.Description}    |" +
                 $"공격:{item.Attack}    |방어:{item.Defense}    |가격:{item.Price}    |" +
-                $"치명타:{item.CriticalRate:P0}    |배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} {status}");
+                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0} {status}");
         }
 
         UI.DrawLeftAlignedBox(strings);
