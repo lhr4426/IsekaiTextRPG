@@ -48,8 +48,22 @@ public class Player
     {
         return job switch
         {
-            Jobs.Warlord => "워로드의 검",
-            _ => null
+            // 1번 아이템: 히어로, 썬콜, 나이트로드
+            Jobs.Hero => "전직의 증표 I",
+            Jobs.ArchMage => "전직의 증표 I",
+            Jobs.NightLord => "전직의 증표 I",
+
+            // 2번 아이템: 워로드, 소서리스, 블레이드
+            Jobs.Warlord => "전직의 증표 II",
+            Jobs.Sorceress => "전직의 증표 II",
+            Jobs.Blade => "전직의 증표 II",
+
+            // 3번 아이템: 워폰마스터, 소환사, 로그
+            Jobs.WeaponMaster => "전직의 증표 III",
+            Jobs.Summoner => "전직의 증표 III",
+            Jobs.Rogue => "전직의 증표 III",
+
+            _ => null // Prestige(환생자) 등 전직 아이템이 필요 없는 직업은 null 반환
         };
     }
 

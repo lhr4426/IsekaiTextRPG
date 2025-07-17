@@ -4,6 +4,18 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 public class ItemSystem
 {
+    public static Item CreateJobChangeItem(string jobChangeItemName)
+    {
+        // 전직 아이템의 능력치는 0이고, 소모품 타입이며, 가격은 0으로 설정
+        // Item(name, description, attack, defense, hp, mp, price, isEquip, type, criticalRate, criticalDamage, dodgeRate)
+        return jobChangeItemName switch
+        {
+            "전직의 증표 I" => new Item("전직의 증표 I", "메이플 세계의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.Usable, 0f, 1.6f, 0f),
+            "전직의 증표 II" => new Item("전직의 증표 II", "라크라시아 대륙의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.Usable, 0f, 1.6f, 0f),
+            "전직의 증표 III" => new Item("전직의 증표 III", "아라드 세계의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.Usable, 0f, 1.6f, 0f),
+            _ => throw new ArgumentException($"알 수 없는 전직 아이템 이름: {jobChangeItemName}") // 정의되지 않은 아이템 요청 시 예외 발생
+        };
+    }
 
     // 아이템 생성 및 구매
     public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
