@@ -50,8 +50,11 @@ namespace IsekaiTextRPG
             {
                 foreach (var skill in Skills)
                 {
+                    Console.WriteLine($"[DEBUG] {Name}의 쿨타임 체크");
                     if (_skillCooldowns[skill] > 0)
                     {
+                        Console.WriteLine($"[DEBUG] {Name}의 쿨타임 체크");
+                        Console.WriteLine($"[DEBUG] {skill.Name} 남은 쿨타임: {_skillCooldowns[skill]}");
                         _skillCooldowns[skill]--;
                     }
                 }
@@ -60,7 +63,7 @@ namespace IsekaiTextRPG
             // 공격 실행: 회피 확인 → 공격력 계산 → 크리티컬 확인 → 피해량 방어력비례차감 → HP 감소
             public int PerformAttack(Enemy target)
             {
-                TickCooldowns();
+                
 
                 if (IsAttackDodged())
                 {
@@ -76,13 +79,14 @@ namespace IsekaiTextRPG
 
                 int damage = ApplyDefenseReduction(attackPower, target);
                 target.CurrentHP -= damage; // 대상 HP 감소
-
+                TickCooldowns();
                 return damage;// 최종 데미지 반환
+
             }
 
             public int PerformAttack(Player target)
             {
-                TickCooldowns();
+                
 
                 if (IsAttackDodged())
                 {
@@ -97,7 +101,7 @@ namespace IsekaiTextRPG
 
                 int damage = Math.Max(0, (int)(attackPower - target.BaseDefense));
                 target.CurrentHP -= damage;
-
+                TickCooldowns();
                 return damage;
             }
 
@@ -116,6 +120,8 @@ namespace IsekaiTextRPG
                     return Attack * skill.MultiplicativeFactor + skill.AdditiveBonus;
                 }
 
+                _lastUsedSkill = null;
+                Console.WriteLine($"[DEBUG] {Name} 기본 공격!");
                 return Attack; // 스킬 발동 실패 시 기본 공격
             }
             private bool IsCriticalHit() => _rng.NextDouble() < CriticalRate;  // 크리티컬 여부 판정
@@ -126,11 +132,11 @@ namespace IsekaiTextRPG
         public static IReadOnlyList<Enemy> GetBossList() => new List<Enemy> 
         {
                 new Boss(
-                    level: 999,                 // 레벨
+                    level: 999,                     // 레벨
                     name: "핑크빈",                 // 보스 이름
-                    hp: 999999,                    // 최대 HP
-                    attack: 9,                // 공격력
-                    defense: 9,               // 방어력
+                    hp: 999999,                     // 최대 HP
+                    attack: 9,                      // 공격력
+                    defense: 999999,                // 방어력
                     rewardGold: 9999999,            // 보상 골드
                     rewardExp: 9999999,             // 보상 경험치
                     dodgeRate: 0.10f,               // 10% 회피율
@@ -142,7 +148,7 @@ namespace IsekaiTextRPG
                     level: 9999999,
                     name: "쿠크세이튼",
                     hp: 9999999,
-                    attack: 9999999,
+                    attack: 9,
                     defense: 9999999,
                     rewardGold: 9999999,
                     rewardExp: 9999999,
@@ -154,8 +160,8 @@ namespace IsekaiTextRPG
                 new Boss(
                     level: 9999999,
                     name: "안톤",
-                    hp: 9999999,
-                    attack: 9999999,
+                    hp: 999999,
+                    attack: 9,
                     defense: 9999999,
                     rewardGold: 9999999,
                     rewardExp: 9999999,
@@ -182,7 +188,6 @@ namespace IsekaiTextRPG
                     chance: 0.15f, // 15% 확률로 발동
                     cooldownTurns: 5 // 5턴 쿨다운
                 ),
-                new Skill("테스트스킬", 2.0f, 0, 1.0f, 2)
         };
         private static readonly List<Skill> KuxseitanSkills = new List<Skill> //쿠크세이튼 보스 스킬 리스트
         {
@@ -208,7 +213,7 @@ namespace IsekaiTextRPG
                     multiplicativeFactor: 1.4f, // 공격력 40% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.30f, // 30% 확률로 발동
-                    cooldownTurns: 2 // 2턴 쿨다운
+                    cooldownTurns: 5 // 2턴 쿨다운
                 ),
                 new Skill(
                     name: "스킬이름6",
