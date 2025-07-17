@@ -51,7 +51,6 @@ public class GameManager
         var welcome = new List<string> { $"{player.Name} 님 환영합니다!" };
         UI.DrawBox(welcome);
         SavePlayerData(slot);
-        Console.ReadKey();
     }
 
     public GameManager()
@@ -132,7 +131,6 @@ public class GameManager
         File.WriteAllText(GetSlotPath(slot), json);
         strings.Add($"슬롯 {slot}에 저장 완료!");
         UI.DrawBox(strings);
-        Console.ReadKey();
     }
 
     public void DeleteSlot(int slot)
