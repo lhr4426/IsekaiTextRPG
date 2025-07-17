@@ -52,6 +52,17 @@ public class Player
         };
     }
 
+    // TODO : 직업마다 필요한 아이템 반환
+    public static string? JobItemName(Jobs job)
+    {
+
+        return job switch
+        {
+            Jobs.Warlord => "워로드의 검",
+            _ => null
+        };
+    }
+
     // 플레이어 이름
     public string Name { get; private set; }
     // 플레이어 레벨

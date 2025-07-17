@@ -9,6 +9,7 @@ public class SceneManager
         FirstScene,
         TownScene,
         StatScene,
+        JeonJikScene,
         InvenScene,
         SkillInvenScene,
         SkillShopScene,
@@ -17,7 +18,7 @@ public class SceneManager
         DungeonEnterScene,
         BossDungeonScene,
         LevelDungeonScene,
-        BattleScene,
+        NormalBattleScene,
         BossBattleScene,
     }
 
@@ -31,6 +32,7 @@ public class SceneManager
         { SceneType.FirstScene, new FirstScene() },
         { SceneType.TownScene, new TownScene() },
         { SceneType.StatScene, new StatScene() },
+        { SceneType.JeonJikScene, new JeonJikScene() },
         { SceneType.InvenScene, new InventoryScene() },
         { SceneType.SkillInvenScene, new SkillInvenScene() },
         { SceneType.SkillShopScene, new SkillShopScene() },
@@ -40,7 +42,7 @@ public class SceneManager
         { SceneType.DungeonEnterScene, new DungeonEnterScene() },
         { SceneType.BossDungeonScene, new BossDungeonScene() },
         { SceneType.LevelDungeonScene, new LevelDungeonScene() },
-        { SceneType.BattleScene, new BattleScene() },
+        { SceneType.NormalBattleScene, new NormalBattleScene() },
         { SceneType.BossBattleScene, new BossBattleScene() },
 
     };
@@ -66,6 +68,7 @@ public class SceneManager
         scenes[SceneType.FirstScene].SetNextScene(scenes[SceneType.TownScene]);
 
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.StatScene]);
+        scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.JeonJikScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.InvenScene]);
         scenes[SceneType.TownScene].SetNextScene(scenes[SceneType.SkillInvenScene]);
 
@@ -78,11 +81,12 @@ public class SceneManager
 
         scenes[SceneType.DungeonEnterScene].SetNextScene(scenes[SceneType.LevelDungeonScene]);
         scenes[SceneType.DungeonEnterScene].SetNextScene(scenes[SceneType.BossDungeonScene]);
-        scenes[SceneType.LevelDungeonScene].SetNextScene(scenes[SceneType.BattleScene]);
+        scenes[SceneType.LevelDungeonScene].SetNextScene(scenes[SceneType.NormalBattleScene]);
         scenes[SceneType.BossDungeonScene].SetNextScene(scenes[SceneType.BossBattleScene]);
 
         scenes[SceneType.StatScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.InvenScene].SetPrevScene(scenes[SceneType.TownScene]);
+        scenes[SceneType.JeonJikScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.SkillInvenScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.SkillShopScene].SetPrevScene(scenes[SceneType.TownScene]);
         // scenes[SceneType.GuildScene].SetPrevScene(scenes[SceneType.TownScene]);
@@ -92,7 +96,7 @@ public class SceneManager
         scenes[SceneType.DungeonEnterScene].SetPrevScene(scenes[SceneType.TownScene]);
         scenes[SceneType.BossDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
         scenes[SceneType.LevelDungeonScene].SetPrevScene(scenes[SceneType.DungeonEnterScene]);
-        scenes[SceneType.BattleScene].SetPrevScene(scenes[SceneType.LevelDungeonScene]);
+        scenes[SceneType.NormalBattleScene].SetPrevScene(scenes[SceneType.LevelDungeonScene]);
         scenes[SceneType.BossBattleScene].SetPrevScene(scenes[SceneType.BossDungeonScene]);
 
     }

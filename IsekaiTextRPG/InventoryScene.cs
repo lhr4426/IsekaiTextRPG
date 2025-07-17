@@ -1,12 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-
-public class InventoryScene : GameScene
+﻿public class InventoryScene : GameScene
 {
     public override string SceneName => "인벤토리";
 
