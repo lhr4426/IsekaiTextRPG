@@ -169,6 +169,7 @@ public class BattleBase : GameScene
             }
 
             UI.DrawTitledBox("보상 획득", rewardLines);
+            BattleLogger.CloseLogger();
         }
     }
 
