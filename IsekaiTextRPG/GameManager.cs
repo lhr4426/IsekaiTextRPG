@@ -19,16 +19,37 @@ public class GameManager
     public void NewPlayerData(int slot = 1)
     {
         Console.Clear();
-        List<string> strings = new();
-        strings.Add("플레이어 이름을 입력하세요");
-        UI.DrawBox(strings);
-        Console.Write(">> ");
-        string? name = Console.ReadLine();
-        player = new Player(string.IsNullOrWhiteSpace(name) ? "Player" : name);
+        string name;
+        do
+        {
+           UI.DrawBox(new List<string> { "플레이어 이름을 입력하세요 (2글자 이상)" });
+           Console.Write(">> ");
+           name = Console.ReadLine()?.Trim() ?? "";
 
-        strings.Clear();
-        strings.Add($"{player.Name} 님 환영합니다!");
-        UI.DrawBox(strings);
+            if (string.IsNullOrEmpty(name))
+            {
+                UI.DrawBox(new List<string> { "이름은 반드시 입력해야 합니다. 다시 시도하세요." });
+            }
+            else if (name.Length < 2)
+            {
+                UI.DrawBox(new List<string> { "이름은 2글자 이상이어야 합니다. 다시 시도하세요." });
+            }
+            else if (name.Length > 12)
+            {
+                UI.DrawBox(new List<string> { "이름은 12글자 이하이어야 합니다. 다시 시도하세요." });
+            }
+            else
+            {
+                break;
+            }
+           Console.ReadKey();
+           Console.Clear();
+        } 
+        while (true);
+    
+        player = new Player(name);
+        var welcome = new List<string> { $"{player.Name} 님 환영합니다!" };
+        UI.DrawBox(welcome);
         SavePlayerData(slot);
         Console.ReadKey();
     }
