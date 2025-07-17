@@ -27,6 +27,8 @@ public class Quest
     public int RewardGold { get; set; }
     public string? RewardItem { get; set; } // 아이템 이름으로 보상
 
+    public Quest() { }
+
     public Quest(int id, string title, string description, string objective, int requiredCount, int rewardGold, string? rewardItem = null)
     {
         Id = id;
