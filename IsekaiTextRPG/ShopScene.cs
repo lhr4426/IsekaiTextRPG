@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -174,7 +175,6 @@ public class ShopScene : GameScene
                 else
                     Console.WriteLine("골드가 부족하여 구매할 수 없습니다.");
             };
-            
         }
         else
         {
@@ -194,7 +194,7 @@ public class ShopScene : GameScene
 
 
         // 판매할 아이템 이름 입력
-        Console.Write("\n판매할 아이템 이름: ");
+        Console.Write("\n판매할 아이템 번호: ");
         
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
         var itemName = input;
@@ -212,13 +212,21 @@ public class ShopScene : GameScene
             .Select(g => g.Key));
 
             if (sel >= 1 && sel <= names.Count)
-                itemName = names[sel - 1];  
+            {
+                itemName = names[sel - 1];
+            }   
             else
-                itemName = input;
+            {
+                Console.WriteLine("유효한 번호를 입력하세요.");
+                Console.ReadKey();
+                return;
+            }
         }
         else
         {
-            itemName = input;          
+            Console.WriteLine("번호로만 판매가 가능합니다.");
+            Console.ReadKey();
+            return;
         }
 
         // 3) 플레이어가 장착 중인 경우 해제

@@ -82,14 +82,14 @@ public class ItemSystem
     {
         return FindItem(name) != null;
     }
-
+    
     public List<Item> GetUsableItems()
     {
         return inventory
             .Where(i => i.Type == Item.ItemType.Usable)
             .ToList();
     }
-
+    
     public bool UseConsumable(string name)
     {
         var item = inventory.FirstOrDefault(i => i.Name == name);
@@ -109,20 +109,23 @@ public class ItemSystem
         };
 
         int index = 1;
+        // 장착 가능한 아이템은 공격력/방어력으로 구분
         foreach (var eq in inventory.Where(i => i.Type != Item.ItemType.Usable))
         {
-            lines.Add($"- {index} {eq.Name} | 방어력 +{eq.Defense} | {eq.Description}");
+            lines.Add($"- {index} {eq.Name} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
+                  $"치명타율 {eq.CriticalRate:P0} | 배율 {eq.CriticalDamage} | 회피율 {(eq.DodgeRate * 0.01f):P0} | {eq.Description}");
             index++;
+
         }
-        
-        foreach (var grp in inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name))
+        // 소비 아이템은 이름으로 그룹화하여 출력
+        foreach (var grp in inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name)) 
         {
             var sample = grp.First();
-            lines.Add($"- {index} {sample.Name} x{grp.Count()} | 방어력 +{sample.Defense} | {sample.Description}");
+            lines.Add($"- {index} {sample.Name} x{grp.Count()} | {sample.Description}");
             index++;
-        }
+        } 
 
-        UI.DrawTitledBox("인벤토리", lines);
+        UI.DrawTitledBox("인벤토리", lines); 
 
     }
 
