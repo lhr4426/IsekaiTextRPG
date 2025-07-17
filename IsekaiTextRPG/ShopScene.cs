@@ -9,7 +9,7 @@ public class ShopScene : GameScene
 {    // 메뉴 선택을 위한 상수 정의
     private const string MenuOptionBuy = "1";   // 아이템 구매
     private const string MenuOptionSell = "2";  // 아이템 판매
-    private const string MenuOptionReturn = "3";// 이전 씬으로 돌아가기
+    private const string MenuOptionReturn = "0";// 이전 씬으로 돌아가기
     private readonly ItemSystem _itemSystem;// 플레이어의 아이템/골드 관리 시스템
     private readonly List<Item> _shopItems; // 상점에 진열할 아이템 목록
 
@@ -98,9 +98,9 @@ public class ShopScene : GameScene
     {
         List<string> strings = new();
 
-        strings.Add("1 | 아이템 구매");
-        strings.Add("2 | 아이템 판매");
-        strings.Add("3 | 돌아가기");
+        strings.Add("1 : 아이템 구매");
+        strings.Add("2 : 아이템 판매");
+        strings.Add("0 : 돌아가기");
         UI.DrawBox(strings);
         Console.Write(">> "); 
 
