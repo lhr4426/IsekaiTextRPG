@@ -36,8 +36,10 @@ public class BossBattleScene : BattleBase
 
             if (player.CurrentHP <= 0)
             {
-                BattleLogger.Log($"{player.Name}은(는) 쓰러졌습니다... 게임 오버.");
-                break;
+                Console.Clear();
+                player.CurrentHP = 1;
+                DefeatMsg();
+                return SceneManager.Instance.scenes[SceneManager.SceneType.TownScene];
             }
         }
 

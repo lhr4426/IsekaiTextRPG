@@ -58,7 +58,10 @@ public class BattleBase : GameScene
         int damage = Math.Max(enemy.Attack - (player.BaseDefense + player.EquippedItems.Sum(i => i.Defense)), 0);
         int beforeHP = player.CurrentHP;
         player.CurrentHP -= damage;
-
+        if (player.CurrentHP < 0)
+        {
+            player.CurrentHP = 0;
+        }
         logs.Add($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
         logs.Add($"HP {beforeHP} → {Math.Max(player.CurrentHP, 0)}");
 
@@ -132,15 +135,6 @@ public class BattleBase : GameScene
 
             UI.DrawTitledBox("보상 획득", rewardLines);
         }
-        else
-        {
-            BattleLogger.Log($"{boss.Name}에게 패배하였습니다.");
-            UI.DrawTitledBox("패배", new List<string>
-            {
-                "You Lose...",
-                $"{boss.Name}에게 패배하셨습니다."
-            });
-        }
     }
 
     public void DrawBattleResult(List<Enemy> enemies, Player player)//일반몹용 결과 출력
@@ -188,29 +182,35 @@ public class BattleBase : GameScene
 
             UI.DrawTitledBox("보상 획득", rewards);
         }
-        else
+    }
+    public void DefeatMsg(string name = "적")
+    {
+        BattleLogger.Log($"{name}에게 패배하였습니다.");
+        UI.DrawTitledBox("패배", new List<string>
         {
-            BattleLogger.Log("적에게 패배하셨습니다.");
-            UI.DrawTitledBox("패배", new List<string>
-            {
-                "You Lose...",
-                "적에게 패배하셨습니다."
-            });
-        }
+            "You Lose...",
+            $"{name}에게 패배하셨습니다."
+        });
+        Console.ReadKey();
     }
     public void ShowNormalBattleUI(Player player, List<Enemy> enemies)
     {
+        int bonusAtk = player.EquippedItems.Where(i => i.IsEquip && i.Attack != 0).Sum(i => i.Attack);
+        int bonusDef = player.EquippedItems.Where(i => i.IsEquip && i.Defense != 0).Sum(i => i.Defense);
+        int bonusHp = player.EquippedItems.Where(i => i.IsEquip && i.Hp != 0).Sum(i => i.Hp);
+        int bonusMp = player.EquippedItems.Where(i => i.IsEquip && i.Mp != 0).Sum(i => i.Mp);
+
         List<string> info = new()
         {
             $"Lv.{player.Level} {player.Name} ({Player.JobsKorean(player.Job)})",
-            $"HP: {player.CurrentHP} / {player.MaxHP}",
-            $"ATK: {player.BaseAttack} | DEF: {player.BaseDefense}"
+            $"HP: {player.CurrentHP} / {player.MaxHP + bonusHp} | MP: {player.CurrentMP} / {player.MaxMP + bonusMp}",
+            $"ATK: {player.BaseAttack + bonusAtk} | DEF: {player.BaseDefense + bonusDef}"
         };
 
         List<string> menu = new()
         {
-            "1. 공격 (대상 지정)",
-            "2. 스킬 (스킬 지정 화면으로 이동)",
+            "1. 공격 ",
+            "2. 스킬 ",
             "3. 아이템 사용",
             "4. 나의 현재 스탯 보기",
             "0. 도망가기"
@@ -227,6 +227,11 @@ public class BattleBase : GameScene
 
     public void ShowBossBattleUI(Player player, Enemy boss)
     {
+        int bonusAtk = player.EquippedItems.Where(i => i.IsEquip && i.Attack != 0).Sum(i => i.Attack);
+        int bonusDef = player.EquippedItems.Where(i => i.IsEquip && i.Defense != 0).Sum(i => i.Defense);
+        int bonusHp = player.EquippedItems.Where(i => i.IsEquip && i.Hp != 0).Sum(i => i.Hp);
+        int bonusMp = player.EquippedItems.Where(i => i.IsEquip && i.Mp != 0).Sum(i => i.Mp);
+
         string hpText = boss.CurrentHP > 0 ? boss.CurrentHP.ToString() : "Dead";
 
         List<string> bossInfo = new()
@@ -236,15 +241,15 @@ public class BattleBase : GameScene
             $"ATK: {boss.Attack} | DEF: {boss.Defense}"
         };
         List<string> playerInfo = new()
-            {
-                $"Lv.{player.Level} {player.Name} ({Player.JobsKorean(player.Job)})",
-                $"HP: {player.CurrentHP} / {player.MaxHP}",
-                $"ATK: {player.BaseAttack} | DEF: {player.BaseDefense}"
+        {
+            $"Lv.{player.Level} {player.Name} ({Player.JobsKorean(player.Job)})",
+            $"HP: {player.CurrentHP} / {player.MaxHP + bonusHp} | MP: {player.CurrentMP} / {player.MaxMP + bonusMp}",
+            $"ATK: {player.BaseAttack + bonusAtk} | DEF: {player.BaseDefense + bonusDef}"
         };
         List<string> menu = new()
         {
             "1. 공격",
-            "2. 스킬 (스킬 지정 화면으로 이동)",
+            "2. 스킬 ",
             "3. 아이템 사용",
             "4. 나의 현재 스탯 보기",
             "0. 도망가기"
