@@ -4,15 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 public class ItemSystem
 {
-    // 아이템 관리 
-    private List<Item> inventory = new List<Item>();
-    public int Gold { get; private set; }
-
-    // 생성자
-    public ItemSystem(int startingGold = 1000)
-    {
-        Gold = startingGold;
-    }
 
     // 아이템 생성 및 구매
     public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
@@ -22,23 +13,23 @@ public class ItemSystem
         var newItem = new Item(name, description, attack, defense,hp,mp, price, isEquip,
                               itemType, criticalRate, criticalDamage, dodgeRate);
 
-        if (Gold < price)
+        if (GameManager.player.Gold < price)
         {
-            Console.WriteLine($"골드가 부족합니다! 현재 골드: {Gold}, 필요한 골드: {price}");
+            Console.WriteLine($"골드가 부족합니다! 현재 골드: {GameManager.player.Gold}, 필요한 골드: {price}");
             return false;
         }
 
         if(newItem.Type != Item.ItemType.Usable
-    && inventory.Any(i => i.Name == name))
+    && GameManager.player.Inventory.Any(i => i.Name == name))
         {
             Console.WriteLine("이미 소유한 아이템입니다.");
             return false;
         }
 
-        Gold -= price;
+        GameManager.player.Gold -= price;
         if (!suppressMessage)
-            Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {Gold}");
-        inventory.Add(newItem);
+            Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {GameManager.player.Gold}");
+        GameManager.player.Inventory.Add(newItem);
         
         return true;
     }
@@ -53,17 +44,17 @@ public class ItemSystem
             return false;
         }
 
-        inventory.Remove(itemToSell);
+        GameManager.player.Inventory.Remove(itemToSell);
         int sellPrice = (int)(itemToSell.Price * 0.85);  // 판매가 85%
-        Gold += sellPrice;
-        Console.WriteLine($"{itemToSell.Name}을(를) 판매했습니다! 골드 +{sellPrice}, 현재 골드: {Gold}");
+        GameManager.player.Gold += sellPrice;
+        Console.WriteLine($"{itemToSell.Name}을(를) 판매했습니다! 골드 +{sellPrice}, 현재 골드: {GameManager.player.Gold}");
         return true;
     }
 
     // 아이템 찾기
     private Item? FindItem(string name)
     {
-        foreach (var item in inventory)
+        foreach (var item in GameManager.player.Inventory)
         {
             if (item.Name == name)
                 return item;
@@ -85,16 +76,16 @@ public class ItemSystem
     
     public List<Item> GetUsableItems()
     {
-        return inventory
+        return GameManager.player.Inventory
             .Where(i => i.Type == Item.ItemType.Usable)
             .ToList();
     }
     
     public bool UseConsumable(string name)
     {
-        var item = inventory.FirstOrDefault(i => i.Name == name);
+        var item = GameManager.player.Inventory.FirstOrDefault(i => i.Name == name);
         if (item == null) return false;
-        inventory.Remove(item);
+        GameManager.player.Inventory.Remove(item);
         return true;
     }
 
@@ -103,14 +94,14 @@ public class ItemSystem
         var lines = new List<string>
         {
             "인벤토리",
-            $"보유 골드: {Gold}",
+            $"보유 골드: {GameManager.player.Gold}",
             "",
             "[아이템 목록]"
         };
 
         int index = 1;
         // 장착 가능한 아이템은 공격력/방어력으로 구분
-        foreach (var eq in inventory.Where(i => i.Type != Item.ItemType.Usable))
+        foreach (var eq in GameManager.player.Inventory.Where(i => i.Type != Item.ItemType.Usable))
         {
             lines.Add($"- {index} {eq.Name} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
                   $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
@@ -118,7 +109,7 @@ public class ItemSystem
 
         }
         // 소비 아이템은 이름으로 그룹화하여 출력
-        foreach (var grp in inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name)) 
+        foreach (var grp in GameManager.player.Inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name)) 
         {
             var sample = grp.First();
             lines.Add($"- {index} {sample.Name} x{grp.Count()} | {sample.Description}");

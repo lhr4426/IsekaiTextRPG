@@ -43,7 +43,7 @@ public class ShopScene : GameScene
     public override GameScene? StartScene()
     {
         Console.Clear();
-        UI.DrawTitledBox($"{SceneName} === 소지 골드: {_itemSystem.Gold}", null);
+        UI.DrawTitledBox($"{SceneName} === 소지 골드: {GameManager.player.Gold}", null);
         DisplayItems(); // 아이템 목록 출력
         DisplayMenu();  // 메뉴 옵션 출력
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
@@ -65,6 +65,7 @@ public class ShopScene : GameScene
         }
 
     }
+
     // 상점에 진열된 아이템 목록을 화면에 출력
     private void DisplayItems()
     {
@@ -110,77 +111,65 @@ public class ShopScene : GameScene
     // 아이템 구매 처리: 번호 입력 → BuyItem 호출 → 결과 메시지
     private void HandleBuy()
     {
-        Console.Write("\n구매할 아이템 번호: ");
+        Console.Write("\n구매할 아이템 번호 (0 : 취소) >> ");
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
 
-        if (int.TryParse(input, out var idx)
-            && idx >= 1
-            && idx <= _shopItems.Count)
+        if (int.TryParse(input, out var idx))
         {
-            var item = _shopItems[idx - 1];
-            int quantity = 1;
-            if (item.Type == Item.ItemType.Usable)
+            if (idx == 0) { return; }
+            if (idx >= 1 && idx <= _shopItems.Count)
             {
-                Console.WriteLine("구매할 개수:");
-                if (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 1)
+                var item = _shopItems[idx - 1];
+                int quantity = 1;
+                if (item.Type == Item.ItemType.Usable)
                 {
-                    quantity = 1;
+                    Console.WriteLine("구매할 개수:");
+                    if (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 1)
+                    {
+                        quantity = 1;
+                    }
                 }
-            }
-            int purchased = 0;
-            // 아이템이 장착 가능한 타입이고 이미 구매한 경우
-            if (item.Type != Item.ItemType.Usable && _itemSystem.HasItem(item.Name))
-            {
-                Console.WriteLine("이미 구매한 아이템입니다.");
+                int purchased = 0;
+                // 아이템이 장착 가능한 타입이고 이미 구매한 경우
+                if (item.Type != Item.ItemType.Usable && _itemSystem.HasItem(item.Name))
+                {
+                    Console.WriteLine("이미 구매한 아이템입니다.");
+                }
+                else
+                {       // 아이템 구매 반복
+                    for (int i = 0; i < quantity; i++)
+                    {
+                        if (!_itemSystem.BuyItem(
+                          item.Name,
+                          item.Description,
+                          item.Attack,
+                          item.Defense,
+                          item.Hp,
+                          item.Mp,
+                          item.Price,
+                          item.IsEquip,
+                          item.Type,
+                          item.CriticalRate,
+                          item.CriticalDamage,
+                          item.DodgeRate,
+                          suppressMessage: true))
+                        {
+                            break; // 골드 부족 시 반복 중단
+                        }
+                        purchased++; // 구매한 개수 증가
+                    }
+                    if (purchased > 0)
+                        Console.WriteLine($"{item.Name} x{purchased} 구매 완료! 남은 골드: {GameManager.player.Gold}");
+                    else
+                        Console.WriteLine("골드가 부족하여 구매할 수 없습니다.");
+                }
             }
             else
-            {       // 아이템 구매 반복
-                for (int i = 0; i < quantity; i++)
-                {
-                    if (!_itemSystem.BuyItem(
-                      item.Name,
-                      item.Description,
-                      item.Attack,
-                      item.Defense,
-                      item.Hp,
-                      item.Mp,
-                      item.Price,
-                      item.IsEquip,
-                      item.Type,
-                      item.CriticalRate,
-                      item.CriticalDamage,
-                      item.DodgeRate,
-                      suppressMessage: true))
-                    {
-                        break; // 골드 부족 시 반복 중단
-                    }
-                    GameManager.player.Inventory.Add(new Item( // 플레이어 인벤토리에 아이템 추가
-                        item.Name,
-                        item.Description,
-                        item.Attack,
-                        item.Defense,
-                        item.Hp,
-                        item.Mp,
-                        item.Price,
-                        item.IsEquip,
-                        item.Type,
-                        item.CriticalRate,
-                        item.CriticalDamage,
-                        item.DodgeRate
-                    ));
-                    purchased++; // 구매한 개수 증가
-                }
-                GameManager.player.Gold = _itemSystem.Gold; // 플레이어 골드 업데이트
-                if (purchased > 0)
-                    Console.WriteLine($"{item.Name} x{purchased} 구매 완료! 남은 골드: {GameManager.player.Gold}");
-                else
-                    Console.WriteLine("골드가 부족하여 구매할 수 없습니다.");
-            };
+            {
+                Console.WriteLine("유효한 번호를 입력하세요.");
+            }
         }
-        else
-        {
-            Console.WriteLine("유효한 번호를 입력하세요.");
-        }
+
         // 구매 후 대기
         Console.WriteLine("\n아무 키나 눌러 계속...");
         Console.ReadKey();
@@ -195,7 +184,7 @@ public class ShopScene : GameScene
 
 
         // 판매할 아이템 이름 입력
-        Console.Write("\n판매할 아이템 번호: ");
+        Console.Write("\n판매할 아이템 번호 (0 : 취소) >> ");
         
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
         var itemName = input;
@@ -212,6 +201,7 @@ public class ShopScene : GameScene
             .GroupBy(i => i.Name)
             .Select(g => g.Key));
 
+            if (sel == 0) return;
             if (sel >= 1 && sel <= names.Count)
             {
                 itemName = names[sel - 1];
@@ -263,28 +253,17 @@ public class ShopScene : GameScene
                 {
                     if (_itemSystem.SellItem(itemName))
                     {
-                        var toRemove = player.Inventory.FirstOrDefault(x => x.Name == itemName);
-                        if (toRemove != null)
-                            player.Inventory.Remove(toRemove);
                         sold++;
                     }
                     else break;
                 }
-                Console.WriteLine($"{itemName} x{sold} 판매 완료! 현재 골드: {_itemSystem.Gold}");
+                Console.WriteLine($"{itemName} x{sold} 판매 완료! 현재 골드: {GameManager.player.Gold}");
             }
             else
             {
                 if (!ConfirmSell(itemName))
                     return;
-
                 bool success = _itemSystem.SellItem(itemName);
-                if (success)
-                {
-                    var playerItem = player.Inventory.FirstOrDefault(i => i.Name == itemName);
-                    if (playerItem != null)
-                        player.Inventory.Remove(playerItem);
-                    player.Gold = _itemSystem.Gold;
-                }
             }
         }
         // 5) 판매 후 대기
