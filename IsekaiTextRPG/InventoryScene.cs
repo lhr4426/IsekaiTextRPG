@@ -11,13 +11,7 @@ public class InventoryScene : GameScene
         Console.Clear(); // 화면 초기화
         Player player = GameManager.player; // 현재 플레이어 객체 가져오기
 
-        List<string> strings = new List<string>()
-        {
-            "인벤토리",
-            "보유 중인 아이템을 관리할 수 있습니다.",
-            "",
-            "[아이템 목록]"
-        };
+        List<string> strings = new List<string>();
 
         // 인벤토리 아이템을 정렬합니다. (장착 여부 -> 타입 -> 이름 순)
         var sortedInventory = player.Inventory
@@ -38,7 +32,7 @@ public class InventoryScene : GameScene
             {
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부 표시
                 strings.Add(
-                    $"- {index} {equippedMark}{item.Name,-15} | " +
+                    $" - {index} {equippedMark}{item.Name,-15} | " +
                     $"공격력 +{item.Attack} | 방어력 +{item.Defense} | " +
                     $"치명타율 {item.CriticalRate:P0} | 치명타배율 {item.CriticalDamage:F1} | " + // 치명타배율 소수점 1자리까지 표시
                     $"회피율 {item.DodgeRate:P0} | {item.Description}"
@@ -64,10 +58,11 @@ public class InventoryScene : GameScene
             }
         }
 
-        strings.Add("1. 장착/해제 관리"); // 장착/해제 선택 메뉴
-        strings.Add("0. 나가기"); // 나가기 메뉴
+        strings.Add(" 1. 장착/해제 관리"); // 장착/해제 선택 메뉴
+        strings.Add(" 0. 나가기"); // 나가기 메뉴
 
-        UI.DrawTitledBox(SceneName, strings); // UI 박스 그리기
+        UI.DrawTitledBox(SceneName, null); // UI 박스 그리기
+        UI.DrawLeftAlignedBox(strings); // UI 박스 그리기
 
         Console.Write(">> ");
 
@@ -115,7 +110,7 @@ public class InventoryScene : GameScene
                                $"공격력 +{item.Attack} | 방어력 +{item.Defense} | HP +{item.Hp} | MP +{item.Mp}" : "";
 
                 // 중복된 아이템은 하나로 묶어서 표시
-                strings.Add($"- {displayIndex} {equippedMark}{item.Name,-15} x{count} | " +
+                strings.Add($" - {displayIndex} {equippedMark}{item.Name,-15} x{count} | " +
                              $"{stats} | {item.Description}");
                 i += count - 1; // 중복된 아이템 수 만큼 건너뜀
                 displayIndex++;
@@ -126,7 +121,7 @@ public class InventoryScene : GameScene
             strings.Add("사용 가능한 아이템이 없습니다.");
         }
 
-        UI.DrawBox(strings);
+        UI.DrawLeftAlignedBox(strings);
         // 그룹화된 아이템 리스트를 반환 (각 그룹의 첫 번째 아이템만 포함)
         inven = usable.GroupBy(x => x.Name).Select(g => g.First()).ToList();
     }
@@ -141,8 +136,10 @@ public class InventoryScene : GameScene
 
             List<string> strings = new List<string>()
             {
-                "장착/해제할 아이템을 선택하세요.", // 안내 메시지 수정
-                "[아이템 목록]"
+                " 장착/해제할 아이템을 선택하세요.", // 안내 메시지 수정
+                "",
+                " [아이템 목록]",
+                ""
             };
 
             // 장착 가능한 아이템 목록을 표시
@@ -162,9 +159,12 @@ public class InventoryScene : GameScene
                 }
             }
 
+            strings.Add("");
             strings.Add("0. 나가기"); // 나가기 메뉴
 
-            UI.DrawTitledBox("인벤토리 - 장착 관리", strings); // UI 박스 그리기
+            UI.DrawTitledBox("인벤토리 - 장착 관리", null);// UI 박스 그리기
+            UI.DrawLeftAlignedBox(strings);
+
 
             Console.Write(">> ");
 
