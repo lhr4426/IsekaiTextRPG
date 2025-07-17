@@ -10,7 +10,7 @@ public class NormalBattleScene : BattleBase
     {
         Console.Clear();
         Console.WriteLine("전투를 마주쳤습니다!");
-
+        CooldownSetting();
         BattleLogger.Init();
         BattleLogger.Log("전투 시작");
 
@@ -19,6 +19,7 @@ public class NormalBattleScene : BattleBase
 
         while (player.CurrentHP > 0 && enemies.Any(e => e.CurrentHP > 0))
         {
+            TickCooldowns();
             Console.Clear();
 
             bool continueBattle = PlayerPhase(player, enemies, isBossBattle: false);

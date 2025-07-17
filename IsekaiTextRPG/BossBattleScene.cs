@@ -14,6 +14,7 @@ public class BossBattleScene : BattleBase
     {
         Console.Clear();
         player = GameManager.player;
+        CooldownSetting();
         boss ??= new Enemy(1, "임시 Boss", 10, 10, 5, 0, 10, 50);
 
         if (boss.CurrentHP <= 0)
@@ -27,6 +28,7 @@ public class BossBattleScene : BattleBase
 
         while (player.CurrentHP > 0 && boss.CurrentHP > 0)
         {
+            TickCooldowns();
             bool continueBattle = this.PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true);
             if (!continueBattle) return prevScene;
             if (boss.CurrentHP <= 0) break;
