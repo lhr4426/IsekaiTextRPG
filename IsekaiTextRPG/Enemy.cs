@@ -24,12 +24,10 @@ public class Enemy
         RewardGold = rewardGold;
         RewardExp = rewardExp;
     }
-    public void DrawHealthBar(int currentHP, int maxHP, int barWidth = 20)
+    public void DrawHealthBar(int currentHP, int maxHP, bool isDead = false, int barWidth = 20)
     {
-        if (currentHP <= 0) //음수로 나누는 경우 대비
-        {
-            currentHP = 0;
-        }
+        if (currentHP < 0) currentHP = 0;
+
         float ratio = (float)currentHP / maxHP;
         int filledLength = (int)(barWidth * ratio);
         int emptyLength = barWidth - filledLength;
@@ -37,12 +35,29 @@ public class Enemy
         string filled = new string('█', filledLength);
         string empty = new string('─', emptyLength);
 
-        Console.WriteLine($"HP: [{filled}{empty}] {currentHP}/{maxHP}");
+        string hpStatus = isDead ? "Dead" : $"{currentHP}/{maxHP}";
+
+        if (isDead)
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
+        Console.WriteLine($"HP: [{filled}{empty}] {hpStatus}");
+
+        if (isDead)
+            Console.ResetColor();
     }
     public void showEnemyInfo()
     {
+        bool isDead = CurrentHP <= 0;
+
+        if (isDead)
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+
         Console.WriteLine($"Lv.{Level} {Name} (공격력: {Attack} / 방어력: {Defense})");
-        DrawHealthBar(CurrentHP, MaxHP);
+
+        if (isDead)
+            Console.ResetColor();
+
+        DrawHealthBar(CurrentHP, MaxHP, isDead);
     }
 
     public bool TryDodge()
