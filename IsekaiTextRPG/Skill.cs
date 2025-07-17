@@ -62,7 +62,6 @@ public class Skill
     public override string ToString()
     {
         StringBuilder sb = new StringBuilder();
-        sb.Append($"{(int)Id + 1}. ");
         sb.Append($"{Name}    |");
         sb.Append($"{Description}    |");
         sb.Append($"쿨타임: {Cooldown}턴    |");
