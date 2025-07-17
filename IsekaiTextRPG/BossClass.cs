@@ -181,7 +181,8 @@ namespace IsekaiTextRPG
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.15f, // 15% 확률로 발동
                     cooldownTurns: 5 // 5턴 쿨다운
-                )
+                ),
+                new Skill("테스트스킬", 2.0f, 0, 1.0f, 2)
         };
         private static readonly List<Skill> KuxseitanSkills = new List<Skill> //쿠크세이튼 보스 스킬 리스트
         {

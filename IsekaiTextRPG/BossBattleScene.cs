@@ -57,13 +57,14 @@ public class BossBattleScene : BattleBase
         if (boss is BossClass.Boss bossEnemy)
         {
             int damage = bossEnemy.PerformAttack(player);
+            string? skillName = bossEnemy.LastUsedSkillName;
 
-            
-            List<string> logs = new()
-        {
-            $"{boss.Name}의 공격!",
-            $"{player.Name}이(가) {damage}의 피해를 입었습니다!"
-        };
+
+            var logs = new List<string>();
+            logs.Add($"{boss.Name}의 공격!");
+            if (skillName != null)
+                logs.Add($"{boss.Name}이(가) 스킬 [{skillName}]을(를) 사용했다!");  
+            logs.Add($"{player.Name}이(가) {damage}의 피해를 입었습니다!");
             UI.DrawBox(logs);              
             logs.ForEach(BattleLogger.Log); 
         
