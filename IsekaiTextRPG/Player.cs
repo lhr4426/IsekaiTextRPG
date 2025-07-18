@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json; // JSON 직렬화/역직렬화에 사용
 
 public class Player
@@ -420,5 +421,17 @@ public class Player
             }
         }
         UI.DrawTitledBox("퀘스트 로그", questLogContents);
+    }
+
+    public string ToHeroString()
+    {
+        int initialBaseAttack = 10; 
+        string atkStr = (TotalAttack - initialBaseAttack) > 0 ? $" (+{TotalAttack - initialBaseAttack})" : "";
+        string strings = 
+            $"Lv. {Level:D2} |" +
+            $"{Name} ( {JobsKorean(Job)} ) |" +
+            $"공격력 : {TotalAttack}{atkStr} |";
+
+        return strings;
     }
 }

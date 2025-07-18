@@ -170,11 +170,10 @@ public class GameManager
     {
         List<string> strings = new();
 
-        string path = GetSlotPath(slot);
-        if (File.Exists(path))
+        player = GetPlayerData(slot);
+        
+        if (player != null)
         {
-            string json = File.ReadAllText(path);
-            player = JsonSerializer.Deserialize<Player>(json);
             player.LoadSkillsFromJson();
             strings.Add($"슬롯 {slot}에서 불러오기 완료.");
             UI.DrawBox(strings);
@@ -189,6 +188,21 @@ public class GameManager
         }
         selectedSlot = slot;
         Console.ReadKey();
+    }
+
+    public Player? GetPlayerData(int slot)
+    {
+        string path = GetSlotPath(slot);
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            Player newPlayer = JsonSerializer.Deserialize<Player>(json);
+            return newPlayer;
+        }
+        else
+        {
+            return null;
+        }
     }
 
     public void ShowSaveSlots()

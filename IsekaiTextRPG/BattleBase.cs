@@ -5,7 +5,9 @@ using static IsekaiTextRPG.BossClass;
 
 public class BattleBase : GameScene
 {
-    private  Random rng = new Random();
+    public List<Player> heros = new List<Player>();
+
+    private Random rng = new Random();
 
     public Dictionary<Skill, int> playerCooldowns = new Dictionary<Skill, int>();
 
@@ -13,7 +15,7 @@ public class BattleBase : GameScene
 
     public void CooldownSetting()
     {
-        foreach(var skill in GameManager.player.Skills)
+        foreach (var skill in GameManager.player.Skills)
         {
             playerCooldowns[skill] = 0;
         }
@@ -56,6 +58,15 @@ public class BattleBase : GameScene
         {
             logs.Add("★ 치명타! ★");
             finalDamage = (int)(finalDamage * player.CriticalDamage);
+        }
+
+        if(heros.Count>0)
+        {
+            foreach(var hero in heros)
+            {
+                logs.Add($"{hero.Name}의 합공! (추가 공격력 : {hero.TotalAttack}");
+                finalDamage += hero.TotalAttack;
+            }
         }
 
         int damage = Math.Max(finalDamage - target.Defense, 0);
@@ -264,6 +275,17 @@ public class BattleBase : GameScene
         UI.DrawTitledBox("플레이어 정보", info);
     }
 
+    public void SummonHeros()
+    {
+        List<int> slots = new List<int>() { 1, 2, 3, 4 };
+        foreach(int slot in slots)
+        {
+            if (slot == GameManager.instance.selectedSlot) continue;
+            Player hero = GameManager.instance.GetPlayerData(slot);
+            if(hero == null) continue;
+            heros.Add(hero);
+        }
+    }
 
     public void ShowBossBattleUI(Player player, Enemy boss)
     {
@@ -292,11 +314,21 @@ public class BattleBase : GameScene
             "2. 스킬 ",
             "3. 아이템 사용",
             "4. 나의 현재 스탯 보기",
+            "5. 누군가를 부르기?",
             "0. 도망가기"
         };
 
         UI.DrawTitledBox("보스 정보", bossInfo);
         UI.DrawBox(menu);
+        if(heros.Count > 0)
+        {
+            List<string> herosString = new();
+            foreach (var hero in heros)
+            {
+                herosString.Add(hero.ToHeroString());
+            }
+            UI.DrawBox(herosString);
+        }
         UI.DrawTitledBox("플레이어 정보", playerInfo);
     }
     public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle)
@@ -306,16 +338,19 @@ public class BattleBase : GameScene
             Console.Clear();
             if (isBossBattle && enemies.Count == 1)
             {
-                ShowBossBattleUI(player,enemies[0]);
+                ShowBossBattleUI(player, enemies[0]);
             }
 
             else
             {
                 ShowNormalBattleUI(player, enemies);
             }
-            
+
             Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
-            int? input = InputHelper.InputNumber(0, 4);
+            int? input;
+            if (isBossBattle) input = InputHelper.InputNumber(0, 5);
+            else input = InputHelper.InputNumber(0, 4);
+
 
             switch (input)
             {
@@ -330,7 +365,7 @@ public class BattleBase : GameScene
                     else
                     {
                         List<string> strings = new();
-                        
+
                         List<Enemy> alive = enemies.Where(e => e.CurrentHP > 0).ToList();
                         for (int i = 0; i < alive.Count; i++)
                         {
@@ -425,6 +460,15 @@ public class BattleBase : GameScene
                     Console.WriteLine("아무 키나 입력하여 돌아가기");
                     Console.ReadKey();
                     break;
+
+                case 5:
+                    if (!isBossBattle) break;
+                    else 
+                    {
+                        SummonHeros();
+                    }
+                    break;
+
 
                 case 0:
                     Console.Write("정말 도망가시겠습니까? (Y/N): ");
