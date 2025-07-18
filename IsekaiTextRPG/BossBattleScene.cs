@@ -32,6 +32,7 @@ public class BossBattleScene : BattleBase
 
         if (boss is BossClass.Boss asciiBoss && !string.IsNullOrEmpty(asciiBoss.AsciiArt))
         {
+            DrawBossIntro(asciiBoss.Name);
             ShowAsciiWithCombatUI(asciiBoss, player);
         }
 
@@ -87,7 +88,7 @@ public class BossBattleScene : BattleBase
             EnemyAttack(boss, player);
         }
     }
-    public static void DrawBossIntro(string bossName)
+    public void DrawBossIntro(string bossName)
     {
         List<string> talk;
         ConsoleColor color;
@@ -100,7 +101,6 @@ public class BossBattleScene : BattleBase
                     "(핑크빈이 포효한다!)",
                     "삐요옹~ 나 화났어! 이 세계는 이제 내 거야!"
                 };
-                color = ConsoleColor.Magenta;
                 break;
 
             case "쿠크세이튼":
@@ -110,7 +110,6 @@ public class BossBattleScene : BattleBase
                     "세이튼 : 여러분, 혜성처럼 등장한 머저리들을 소개하겠습니다!",
                     "쿠크 : 판이 깔렸으니 신나게 놀아보자고!"
                 };
-                color = ConsoleColor.DarkRed;
                 break;
 
             case "안톤":
@@ -119,20 +118,27 @@ public class BossBattleScene : BattleBase
                     "(불타는 심연 속에서 안톤이 눈을 뜬다)",
                     "지옥의 화염이... 너를 삼킬 것이다!"
                 };
-                color = ConsoleColor.Red;
                 break;
 
             default:
                 talk = new List<string> { "(정체불명의 존재가 등장했다...)" };
-                color = ConsoleColor.Gray;
                 break;
         }
 
         UI.DrawBox(talk);
         Console.ReadKey();
-        Console.ForegroundColor = color;
+        Console.ForegroundColor = GetBossColor(bossName);
     }
-
+    public static ConsoleColor GetBossColor(string bossName)
+    {
+        return bossName switch
+        {
+            "핑크빈" => ConsoleColor.Magenta,
+            "쿠크세이튼" => ConsoleColor.Yellow,
+            "안톤" => ConsoleColor.Red,
+            _ => ConsoleColor.Gray
+        };
+    }
     public static void ShowAsciiWithCombatUI(BossClass.Boss asciiBoss, Player player)
     {
         Console.Clear();
@@ -142,8 +148,7 @@ public class BossBattleScene : BattleBase
         int rightStartX = 70;
         int currentY = 0;
         
-        DrawBossIntro(asciiBoss.Name);
-
+        Console.ForegroundColor = GetBossColor(asciiBoss.Name);
         for (int i = 0; i < asciiHeight; i++)
         {
             Console.SetCursorPosition(0, i);
