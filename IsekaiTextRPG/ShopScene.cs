@@ -80,40 +80,40 @@ public class ShopScene : GameScene
             return;
         }
 
-    int maxWidth = 0;
-    List<string> displayLines = new();
+        int maxWidth = 0;
+        List<string> displayLines = new();
 
-    for (var i = 0; i < _shopItems.Count; i++)
-    {
-        var item = _shopItems[i];
-        var status = (item.Type != Item.ItemType.Usable && _itemSystem.HasItem(item.Name)) ? "[구매완료]" : "";
+        for (var i = 0; i < _shopItems.Count; i++)
+        {
+            var item = _shopItems[i];
+            var status = (item.Type != Item.ItemType.Usable && _itemSystem.HasItem(item.Name)) ? "[구매완료]" : "";
 
-        string line = string.Format(
-            "{0,2} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} | {9}",
-            i + 1,
-            PadToWidth(item.Name, 10),
-            PadToWidth(_itemTypeNames[item.Type], 6),
-            PadToWidth(item.Attack > 0 ? $"공격:{item.Attack}" : "", 8),
-            PadToWidth(item.Defense > 0 ? $"방어:{item.Defense}" : "", 8),
-            PadToWidth(item.CriticalRate > 0 ? $"치명타:{item.CriticalRate:P0}" : "", 10),
-            PadToWidth(item.CriticalDamage > 1 ? $"배율:{item.CriticalDamage:F1}" : "", 10),
-            PadToWidth(item.DodgeRate > 0 ? $"회피:{item.DodgeRate:P0}" : "", 10),
-            PadToWidth(item.Description, 20),
-            PadToWidth($"가격:{item.Price}", 10) + status
-        );
+            string line = string.Format(
+                "{0,2} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} | {9}",
+                i + 1,
+                PadToWidth(item.Name, 10),
+                PadToWidth(_itemTypeNames[item.Type], 6),
+                PadToWidth(item.Attack > 0 ? $"공격:{item.Attack}" : "", 8),
+                PadToWidth(item.Defense > 0 ? $"방어:{item.Defense}" : "", 8),
+                PadToWidth(item.CriticalRate > 0 ? $"치명타:{item.CriticalRate:P0}" : "", 10),
+                PadToWidth(item.CriticalDamage > 1 ? $"배율:{item.CriticalDamage:F1}" : "", 10),
+                PadToWidth(item.DodgeRate > 0 ? $"회피:{item.DodgeRate:P0}" : "", 10),
+                PadToWidth(item.Description, 20),
+                PadToWidth($"가격:{item.Price}", 10) + status
+            );
 
-        displayLines.Add(line);
-        maxWidth = Math.Max(maxWidth, line.Length); // 가장 긴 줄 길이 기록
-    }
+            displayLines.Add(line);
+            maxWidth = Math.Max(maxWidth, line.Length); // 가장 긴 줄 길이 기록
+        }
 
-    // 이후 줄과 줄 사이에 고정 너비 구분선 추가
-    for (int i = 0; i < displayLines.Count; i++)
-    {
-        strings.Add(displayLines[i]);
+        // 이후 줄과 줄 사이에 고정 너비 구분선 추가
+        for (int i = 0; i < displayLines.Count; i++)
+        {
+            strings.Add(displayLines[i]);
 
-        if (i < displayLines.Count - 1)
-            strings.Add(new string('─', maxWidth)); // 고정 너비의 선 추가
-    }
+            if (i < displayLines.Count - 1)
+                strings.Add(new string('─', maxWidth+20)); // 고정 너비의 선 추가
+        }
 
 
         UI.DrawLeftAlignedBox(strings);
