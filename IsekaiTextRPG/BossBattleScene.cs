@@ -64,8 +64,6 @@ public class BossBattleScene : BattleBase
         }
 
         DrawBattleResult(boss, player);
-        Console.WriteLine("\n0. 다음");
-        Console.ReadLine();
         return prevScene;
     }
 
