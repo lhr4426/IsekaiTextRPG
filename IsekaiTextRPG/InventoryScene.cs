@@ -58,13 +58,13 @@ public class InventoryScene : GameScene
                 index++;
             }
         }
-
-        strings.Add(" 1. 장착/해제 관리"); // 장착/해제 선택 메뉴
-        strings.Add(" 0. 나가기"); // 나가기 메뉴
+        List<string> menu = new List<string>();
+        menu.Add(" 1. 장착/해제 관리"); // 장착/해제 선택 메뉴
+        menu.Add(" 0. 나가기"); // 나가기 메뉴
 
         UI.DrawTitledBox(SceneName, null); // UI 박스 그리기
         UI.DrawLeftAlignedBox(strings); // UI 박스 그리기
-
+        UI.DrawLeftAlignedBox(menu);
         Console.Write(">> ");
 
         // 사용자 입력 받기 (0 또는 1)
@@ -173,13 +173,12 @@ public class InventoryScene : GameScene
                 }
 
             }
-
-            strings.Add("");
-            strings.Add("0. 나가기"); // 나가기 메뉴
+            List<string> menu = new List<string>();
+            menu.Add("0. 나가기"); // 나가기 메뉴
 
             UI.DrawTitledBox("인벤토리 - 장착 관리", null);// UI 박스 그리기
             UI.DrawLeftAlignedBox(strings);
-
+            UI.DrawLeftAlignedBox(menu);
 
             Console.Write(">> ");
 
