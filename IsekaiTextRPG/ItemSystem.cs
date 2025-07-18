@@ -111,37 +111,68 @@ public class ItemSystem
     public void ShowInventoryForSell()
     {
         var lines = new List<string>
-    {
-        $"보유 골드: {GameManager.player.Gold}",
-        "",
-        "[아이템 목록]"
-    };
+        {
+            $"보유 골드: {GameManager.player.Gold}",
+            "",
+            "[아이템 목록]"
+        };
 
         int index = 1;
+        List<string> itemsToDisplay = new();
 
-        // 장비 아이템 출력 (Usable 및 ClassChange 제외)
-        foreach (var eq in GameManager.player.Inventory
-            .Where(i => i.Type != Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange))
+        // 장비 아이템
+        var equipmentItems = GameManager.player.Inventory
+            .Where(i => i.Type != Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange)
+            .ToList();
+
+        foreach (var eq in equipmentItems)
         {
-            lines.Add($"- {index} {eq.Name} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
-                      $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description} | 판매가 { (int)(eq.Price * 0.85)}");
+            var statParts = new List<string>();
+            if (eq.Attack > 0) statParts.Add($"공격력 +{eq.Attack}");
+            if (eq.Defense > 0) statParts.Add($"방어력 +{eq.Defense}");
+            if (eq.CriticalRate > 0) statParts.Add($"치명타율 {eq.CriticalRate:P0}");
+            if (eq.CriticalDamage > 1) statParts.Add($"치명타배율 {eq.CriticalDamage}");
+            if (eq.DodgeRate > 0) statParts.Add($"회피율 {eq.DodgeRate:P0}");
+
+            string stats = statParts.Count > 0 ? " | " + string.Join(" | ", statParts) : "";
+            string line = $"- {index} {eq.Name}{stats} | {eq.Description} | 판매가 {(int)(eq.Price * 0.85)}";
+            itemsToDisplay.Add(line);
             index++;
         }
 
-        // 소비 아이템 출력 (ClassChange 제외)
-        foreach (var grp in GameManager.player.Inventory
+        // 소비 아이템
+        var usableGroups = GameManager.player.Inventory
             .Where(i => i.Type == Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange)
-            .GroupBy(i => i.Name))
+            .GroupBy(i => i.Name);
+
+        foreach (var grp in usableGroups)
         {
             var sample = grp.First();
             int totalCount = grp.Sum(i => i.ItemCount);
-            lines.Add($"- {index} {sample.Name} x{totalCount} | {sample.Description} | 판매가 {(int)(sample.Price * 0.85)}");
+            if (totalCount <= 0) continue;
+
+            string line = $"- {index} {sample.Name} x{totalCount} | {sample.Description} | 판매가 {(int)(sample.Price * 0.85)}";
+            itemsToDisplay.Add(line);
             index++;
+        }
+
+        int maxDisplayWidth = itemsToDisplay.Select(UI.GetDisplayWidth).Max();
+
+        for (int i = 0; i < itemsToDisplay.Count; i++)
+        {
+            lines.Add(itemsToDisplay[i]);
+
+            if (i < itemsToDisplay.Count - 1)
+            {
+                lines.Add(new string('─', maxDisplayWidth + 2));
+            }
         }
 
         UI.DrawTitledBox("인벤토리", null);
         UI.DrawLeftAlignedBox(lines);
     }
+
+
 
     // 아이템 정보 가져오기
     public string GetItemInfo(string name)
