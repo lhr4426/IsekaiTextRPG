@@ -105,13 +105,19 @@ public class InventoryScene : GameScene
                 var item = usable[i];
                 // 중복된 아이템 수 세기
                 int count = usable.Skip(i).TakeWhile(x => x.Name == item.Name).Count();
-                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부 (소모품은 항상 빈칸)
-                string stats = (item.Attack > 0 || item.Defense > 0 || item.Hp > 0 || item.Mp > 0) ? // 스탯이 있으면 표시
-                               $"공격력 +{item.Attack} | 방어력 +{item.Defense} | HP +{item.Hp} | MP +{item.Mp}" : "";
 
-                // 중복된 아이템은 하나로 묶어서 표시
+                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부
+
+                List<string> statParts = new(); //스텟이 0인 항목은 출력안하게 설정
+                if (item.Attack > 0) statParts.Add($"공격력 +{item.Attack}");
+                if (item.Defense > 0) statParts.Add($"방어력 +{item.Defense}");
+                if (item.Hp > 0) statParts.Add($"HP +{item.Hp}");
+                if (item.Mp > 0) statParts.Add($"MP +{item.Mp}");
+
+                string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
+
                 strings.Add($" - {displayIndex} {equippedMark}{item.Name,-15} x{count} | " +
-                             $"{stats} | {item.Description}");
+                            $"{(stats != "" ? stats + " | " : "")}{item.Description}");
                 i += count - 1; // 중복된 아이템 수 만큼 건너뜀
                 displayIndex++;
             }
