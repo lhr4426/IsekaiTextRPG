@@ -11,6 +11,7 @@ public class Item
         HeadArmor,
         BodyArmor,
         LegArmor,
+        OffHand,
         Usable // 사용 가능한 아이템 (ex. 포션)
     }
 
@@ -22,6 +23,7 @@ public class Item
             ItemType.HeadArmor => "머리 방어구",
             ItemType.BodyArmor => "몸통 방어구",
             ItemType.LegArmor => "다리 방어구",
+            ItemType.OffHand => "보조 무기",
             ItemType.Usable => "소비 아이템",
             _ => type.ToString()
         };
