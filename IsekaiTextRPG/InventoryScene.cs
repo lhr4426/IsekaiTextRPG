@@ -30,15 +30,23 @@ public class InventoryScene : GameScene
             // 장착 가능한 아이템(무기, 방어구)을 먼저 표시
             foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable))
             {
-                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부 표시
+                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
+
+                List<string> statParts = new();
+                if (item.Attack > 0) statParts.Add($"공격력 +{item.Attack}");
+                if (item.Defense > 0) statParts.Add($"방어력 +{item.Defense}");
+                if (item.CriticalRate > 0) statParts.Add($"치명타율 {item.CriticalRate:P0}");
+                if (item.CriticalDamage > 1f) statParts.Add($"치명타배율 {item.CriticalDamage:F1}");
+                if (item.DodgeRate > 0) statParts.Add($"회피율 {item.DodgeRate:P0}");
+
+                string statText = statParts.Count > 0 ? string.Join(" | ", statParts) + " | " : "";
+
                 strings.Add(
-                    $" - {index} {equippedMark}{item.Name,-15} | " +
-                    $"공격력 +{item.Attack} | 방어력 +{item.Defense} | " +
-                    $"치명타율 {item.CriticalRate:P0} | 치명타배율 {item.CriticalDamage:F1} | " + // 치명타배율 소수점 1자리까지 표시
-                    $"회피율 {item.DodgeRate:P0} | {item.Description}"
+                    $" - {index} {equippedMark}{item.Name,-15} | {statText}{item.Description}"
                 );
                 index++;
             }
+
 
             // 소비 아이템을 이름으로 그룹화하여 표시
             foreach (var item in sortedInventory.Where(i => i.Type == Item.ItemType.Usable))
@@ -149,11 +157,21 @@ public class InventoryScene : GameScene
                 for (int i = 0; i < equippableItems.Count; i++)
                 {
                     var item = equippableItems[i];
-                    string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부 표시
-                    // 아이템의 모든 스탯을 표시하도록 수정
-                    string stats = $"공격력 +{item.Attack} | 방어력 +{item.Defense} | HP +{item.Hp} | MP +{item.Mp}";
-                    strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
+                    string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
+
+                    List<string> statParts = new();
+                    if (item.Attack > 0) statParts.Add($"공격력 +{item.Attack}");
+                    if (item.Defense > 0) statParts.Add($"방어력 +{item.Defense}");
+                    if (item.Hp > 0) statParts.Add($"HP +{item.Hp}");
+                    if (item.Mp > 0) statParts.Add($"MP +{item.Mp}");
+                    if (item.CriticalRate > 0) statParts.Add($"치명타율 {item.CriticalRate:P0}");
+                    if (item.CriticalDamage > 1f) statParts.Add($"치명타배율 {item.CriticalDamage:F1}");
+                    if (item.DodgeRate > 0) statParts.Add($"회피율 {item.DodgeRate:P0}");
+
+                    string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
+                    strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} {(stats != "" ? "| " : "")}{item.Description}");
                 }
+
             }
 
             strings.Add("");
