@@ -344,7 +344,7 @@ public class BattleBase : GameScene
     {
         while (true)
         {
-            // Console.Clear();
+            Console.Clear();
             if (isBossBattle && enemies.Count == 1)
             {
                 // ShowBossBattleUI(player,enemies[0]);
@@ -468,6 +468,7 @@ public class BattleBase : GameScene
                     player.ShowStatus();
                     Console.WriteLine("아무 키나 입력하여 돌아가기");
                     Console.ReadKey();
+                    Console.Clear();
                     break;
 
                 case 5:
