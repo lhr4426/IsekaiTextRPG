@@ -129,7 +129,6 @@ public class BossBattleScene : BattleBase
         }
 
         UI.DrawBox(talk);
-        Console.WriteLine("보상을 받으려면 아무키나 입력...");
         Console.ReadKey();
         Console.ForegroundColor = color;
     }
