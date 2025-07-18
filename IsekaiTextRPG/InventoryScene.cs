@@ -43,20 +43,20 @@ public class InventoryScene : GameScene
 
                 string statText = statParts.Count > 0 ? string.Join(" | ", statParts) + " | " : "";
 
-                string line = $" - {index} {equippedMark}{item.Name,-15} | {statText}{item.Description}";
+                string line = $" - {index} {equippedMark}{item.Name,-5} | {statText}{item.Description}";
                 itemLines.Add(line);
                 index++;
             }
 
             // 소비 아이템 (이름+설명 기준으로 그룹화)
             foreach (var group in sortedInventory
-                        .Where(i => i.Type == Item.ItemType.Usable)
-                        .GroupBy(i => new { i.Name, i.Description }))
+                .Where(i => i.Type == Item.ItemType.Usable || i.Type == Item.ItemType.ClassChange)
+                .GroupBy(i => new { i.Name, i.Description }))
             {
                 int totalCount = group.Sum(i => i.ItemCount);
                 if (totalCount <= 0) continue;
 
-                string line = $"- {index}    {group.Key.Name,-15} x{totalCount} | {group.Key.Description}";
+                string line = $"- {index}    {group.Key.Name,-5} x{totalCount} | {group.Key.Description}";
                 itemLines.Add(line);
                 index++;
             }
@@ -134,7 +134,7 @@ public class InventoryScene : GameScene
                 if (item.Mp > 0) statParts.Add($"MP +{item.Mp}");
 
                 string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
-                strings.Add($" - {displayIndex} {item.Name,-15} x{item.ItemCount} | " +
+                strings.Add($" - {displayIndex} {item.Name,-5} x{item.ItemCount} | " +
                             $"{(stats != "" ? stats + " | " : "")}{item.Description}");
                 displayIndex++;
             }
@@ -190,7 +190,7 @@ public class InventoryScene : GameScene
 
                     string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
                     string descriptionPart = item.Description;
-                    string line = $"- {i + 1} {equippedMark}{item.Name,-15}";
+                    string line = $"- {i + 1} {equippedMark}{item.Name,-5}";
 
                     if (!string.IsNullOrEmpty(stats))
                         line += $" | {stats}";

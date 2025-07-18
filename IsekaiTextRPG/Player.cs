@@ -270,7 +270,7 @@ public class Player
         string hpStr = (TotalMaxHP - initialMaxHP) > 0 ? $" (+{TotalMaxHP - initialMaxHP})" : "";
         string mpStr = (TotalMaxMP - initialMaxMP) > 0 ? $" (+{TotalMaxMP - initialMaxMP})" : "";
         string crStr = (TotalCriticalRate - initialCriticalRate) > 0 ? $" (+{(TotalCriticalRate - initialCriticalRate) * 100:F1}%)" : "";
-        string cdStr = (TotalCriticalDamage - initialCriticalDamage) > 0 ? $" (+{(TotalCriticalDamage - initialCriticalRate) * 100:F1}%)" : "";
+        string cdStr = (TotalCriticalDamage - initialCriticalDamage) > 0 ? $" (+{(TotalCriticalDamage - initialCriticalDamage) * 100:F1}%)" : "";
         string drStr = (TotalDodgeRate - initialDodgeRate) > 0 ? $" (+{(TotalDodgeRate - initialDodgeRate) * 100:F1}%)" : "";
 
         List<string> strings = new List<string>()

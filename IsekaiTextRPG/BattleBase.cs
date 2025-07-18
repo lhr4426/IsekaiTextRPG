@@ -213,7 +213,26 @@ public class BattleBase : GameScene
 
             player.Gold += boss.RewardGold;
             player.GainExp(boss.RewardExp);
-            boss.RewardItems?.ForEach(item => player.Inventory.Add(item));
+            if (boss.RewardItems != null)
+            {
+                foreach (var reward in boss.RewardItems)
+                {
+                    var existing = player.Inventory.FirstOrDefault(i => i.Name == reward.Name);
+                    if (existing != null)
+                    {
+                        existing.ItemCount += reward.ItemCount > 0 ? reward.ItemCount : 1;
+                    }
+                    else
+                    {
+                        var newItem = new Item(reward.Name, reward.Description, reward.Attack, reward.Defense, reward.Hp, reward.Mp,
+                            reward.Price, reward.IsEquip, reward.Type, reward.CriticalRate, reward.CriticalDamage, reward.DodgeRate);
+
+                        newItem.ItemCount = reward.ItemCount > 0 ? reward.ItemCount : 1;
+                        player.Inventory.Add(newItem);
+                    }
+                }
+            }
+
 
             List<string> rewardLines = new()
             {

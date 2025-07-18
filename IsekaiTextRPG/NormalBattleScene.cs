@@ -46,8 +46,6 @@ public class NormalBattleScene : BattleBase
             DrawBattleResult(enemies, player);
         }
 
-        Console.WriteLine("\n0. 다음");
-        Console.ReadLine();
         return prevScene;
     }
 }
