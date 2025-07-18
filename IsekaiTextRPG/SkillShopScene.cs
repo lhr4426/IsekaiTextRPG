@@ -5,90 +5,73 @@ using System.Linq;
 
 public class SkillShopScene : GameScene
 {
-    // 스킬 상태 변경 시 호출할 이벤트
     private event Action? OnSkilltreeUpdated;
 
-    // 스킬 딕셔너리 (ID -> Skill)
-    SortedDictionary<int, Skill> skills = SkillManager.Skills;
-
-    // 씬 이름 정의
     public override string SceneName => "스킬 상점";
 
-    // 씬 시작 시 실행되는 메서드
     public override GameScene? StartScene()
     {
         Console.Clear();
         CheckDidYouLearn();
-        // 스킬 상태 업데이트용 이벤트 설정 및 실행
         SetUpdate();
 
-        // 씬 이름 박스 출력
         UI.DrawTitledBox(SceneName, null);
+        RunSkillShopUI(); // 병합된 UI 함수 실행
 
-        // 스킬 목록 출력
-        PrintSkills();
-
-        return prevScene;
+        return prevScene;
     }
 
-    // 스킬 배웠는지 직접 플레이어 Skill에서 찾아다가 검사
     private void CheckDidYouLearn()
     {
         var learnedSkillIds = new HashSet<int>(GameManager.player.Skills.Select(s => s.Id));
-
-        foreach (var skill in SkillManager.Skills)
+        foreach (var skill in SkillManager.Skills.Values)
         {
-            if (learnedSkillIds.Contains(skill.Value.Id))
+            if (learnedSkillIds.Contains(skill.Id))
             {
-                skill.Value.learnState = LearnState.Learned;
+                skill.learnState = LearnState.Learned;
             }
         }
     }
 
-    // 스킬 상태 갱신 이벤트 구독 및 실행
     private void SetUpdate()
     {
-        OnSkilltreeUpdated = null; // 기존 구독 초기화
-        if (skills != null)
+        OnSkilltreeUpdated = null;
+        foreach (var skill in SkillManager.Skills.Values)
         {
-            foreach (var skill in skills)
-            {
-                OnSkilltreeUpdated += skill.Value.UpdateLearnState;
-            }
+            OnSkilltreeUpdated += skill.UpdateLearnState;
         }
         OnSkilltreeUpdated?.Invoke();
     }
 
-    // 스킬 목록을 화면에 출력
-    private void PrintSkills()
+    private void RunSkillShopUI()
     {
-        const int pageSize = 7; // 페이지당 스킬 개수
-        const int maxPage = 3; // 최대 페이지 수
-        int currentPage = 0; // 현재 페이지
-        var skillList = skills.Values.ToList();
-        int totalPages = Math.Min((int)Math.Ceiling((double)skills.Count / pageSize), maxPage);
-        while(true)
+        const int pageSize = 7;
+        var displayedSkills = SkillManager.Skills.Values.OrderBy(s =>
+          s.learnState == LearnState.Learnable ? 0 :
+          s.learnState == LearnState.NotLearnable ? 1 : 2
+        ).ToList();
+
+        int totalPages = (int)Math.Ceiling(displayedSkills.Count / (double)pageSize);
+        int currentPage = 0;
+
+        while (true)
         {
             Console.Clear();
             List<string> strings = new List<string>();
+
             int startIndex = currentPage * pageSize;
-            int endIndex = Math.Min(startIndex + pageSize, skills.Count);
+            int endIndex = Math.Min(startIndex + pageSize, displayedSkills.Count);
 
-            if (skills != null)
+            for (int i = startIndex; i < endIndex; i++)
             {
-                for (int i = startIndex; i < endIndex; i++)
-                {
-                    Skill skill = skillList[i];
-                    var itemStrings = skill.ToShopString();
-
-                    string firstLine = itemStrings[0];
-                    int dot = firstLine.IndexOf('.');
-                    string rest = dot >= 0 ? firstLine.Substring(dot + 1) : firstLine;
-                    itemStrings[0] = $"{i + 1}.{rest}";  
-
-                    strings.AddRange(itemStrings);
-                    strings.Add("");
-                }
+                Skill skill = displayedSkills[i];
+                var itemStrings = skill.ToShopString();
+                string firstLine = itemStrings[0];
+                int dot = firstLine.IndexOf('.');
+                string rest = dot >= 0 ? firstLine.Substring(dot + 1) : firstLine;
+                itemStrings[0] = $"{i + 1}.{rest}";
+                strings.AddRange(itemStrings);
+                strings.Add("");
             }
 
             strings.Add($"[Page {currentPage + 1} / {totalPages}]");
@@ -98,35 +81,29 @@ public class SkillShopScene : GameScene
             Console.Write("입력 ▶ ");
             string input = Console.ReadLine()?.Trim().ToUpper() ?? "";
 
-            // 다음 페이지
             if (input == "N")
             {
                 if (currentPage < totalPages - 1) currentPage++;
                 else { UI.DrawBox(new List<string> { "이미 마지막 페이지입니다." }); Console.ReadKey(true); }
                 continue;
             }
-            // 이전 페이지
             if (input == "P")
             {
                 if (currentPage > 0) currentPage--;
                 else { UI.DrawBox(new List<string> { "이미 첫 페이지입니다." }); Console.ReadKey(true); }
                 continue;
             }
-            // 상점 나가기
             if (input == "Q")
             {
                 break;
             }
 
-            // 전역 인덱스 입력 처리 (예: 1~skills.Count)
             if (int.TryParse(input, out int num))
             {
                 int selected = num - 1;
-                // 페이지에 보이는 번호(startIndex+1 ~ endIndex)만 허용
                 if (selected >= startIndex && selected < endIndex)
                 {
-                    LearnSkill(selected);
-                    Console.Clear();
+                    LearnSkill(displayedSkills[selected]);
                 }
                 else
                 {
@@ -136,37 +113,20 @@ public class SkillShopScene : GameScene
                 continue;
             }
 
-            // 잘못된 입력
             UI.DrawBox(new List<string> { "잘못된 입력입니다. 다시 시도하세요." });
             Console.ReadKey(true);
-            continue;
         }
     }
 
-    // 스킬 습득 처리 (인덱스 기반)
-    private void LearnSkill(int idx)
+    private void LearnSkill(Skill skill)
     {
-        // 인덱스 범위 검증 (안전하게 키 기반 접근을 위해)
-        if (idx < 0 || idx >= skills.Count)
-        {
-            UI.DrawBox(new List<string> { "잘못된 스킬 번호입니다." });
-            return;
-        }
-
-        // 인덱스에 해당하는 스킬 키 얻기
-        int skillKey = skills.Keys.ElementAt(idx);
-        Skill skill = skills[skillKey];
-
         List<string> strings = new();
 
         if (skill.learnState == LearnState.Learnable)
         {
-            // 스킬 습득 처리
             skill.learnState = LearnState.Learned;
             GameManager.player.Skills.Add(skill);
             strings.Add($"{skill.Name} 스킬을 습득하셨습니다!");
-
-            // 변경된 스킬 상태 저장
             GameManager.player.SaveSkillsToJson();
         }
         else if (skill.learnState == LearnState.NotLearnable)
