@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Xml.Linq;
 
 public class QuestScene : GameScene
 {
@@ -113,6 +115,17 @@ public class QuestScene : GameScene
         if (choice == 1)
         {
             GameManager.player.Gold += quest.RewardGold;
+            if (quest.RewardItem == "쓸만한 방패") //슬라임 킬퀘스트 보상
+            {
+                var shield = new Item(
+                name: "쓸만한 방패",
+                description: "견고한 방패로 몬스터 공격을 막습니다.",
+                attack: 0, defense: 5, hp: 0, mp: 0,
+                price: 0, isEquip: true, type: Item.ItemType.OffHand,
+                criticalRate: 0f, criticalDamage: 1.0f, dodgeRate: 0f);
+
+                GameManager.player.Inventory.Add(shield);
+            }
 
             quest.State = QuestState.Rewarded;
             GameManager.player.RewardedQuestIds.Add(quest.Id);
