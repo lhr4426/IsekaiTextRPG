@@ -109,16 +109,25 @@ public class JeonJikScene : GameScene
             {
                 string? needItemName = Player.JobItemName(selectedJob);
 
-                // 아이템이 필요하면 제거
+               // 아이템이 필요하면 제거
                 if (needItemName != null)
                 {
                     Item? itemToRemove = GameManager.player.Inventory.FirstOrDefault(x => x.Name == needItemName);
                     if (itemToRemove != null)
                     {
-                        GameManager.player.Inventory.Remove(itemToRemove);
+                        if (itemToRemove.ItemCount > 1)
+                        {
+                            itemToRemove.ItemCount--; // 수량만 감소
+                        }
+                        else
+                        {
+                            GameManager.player.Inventory.Remove(itemToRemove); // 수량이 1개면 제거
+                        }
+
                         strings.Add($"'{itemToRemove.Name}'을(를) 사용하여 전직했습니다.");
                     }
                 }
+
 
                 // 직업 변경 처리
                 GameManager.player.Job = selectedJob;

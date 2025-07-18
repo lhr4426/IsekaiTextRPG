@@ -142,7 +142,7 @@ public class ItemSystem
 
         // 소비 아이템
         var usableGroups = GameManager.player.Inventory
-            .Where(i => i.Type == Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange)
+            .Where(i => i.Type == Item.ItemType.Usable || i.Type != Item.ItemType.ClassChange)
             .GroupBy(i => i.Name);
 
         foreach (var grp in usableGroups)

@@ -30,7 +30,7 @@ public class InventoryScene : GameScene
             int index = 1;
 
             // 장비 아이템
-            foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable))
+            foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange))
             {
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
 
@@ -50,8 +50,8 @@ public class InventoryScene : GameScene
 
             // 소비 아이템 (이름+설명 기준으로 그룹화)
             foreach (var group in sortedInventory
-                .Where(i => i.Type == Item.ItemType.Usable || i.Type == Item.ItemType.ClassChange)
-                .GroupBy(i => new { i.Name, i.Description }))
+                        .Where(i => i.Type == Item.ItemType.Usable || i.Type == Item.ItemType.ClassChange )
+                        .GroupBy(i => new { i.Name, i.Description }))
             {
                 int totalCount = group.Sum(i => i.ItemCount);
                 if (totalCount <= 0) continue;
@@ -60,7 +60,6 @@ public class InventoryScene : GameScene
                 itemLines.Add(line);
                 index++;
             }
-
             // 공통 너비 계산
             int maxDisplayWidth = itemLines.Select(UI.GetDisplayWidth).Max();
 
