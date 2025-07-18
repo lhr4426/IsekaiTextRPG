@@ -28,22 +28,7 @@ public class SkillShopScene : GameScene
         // 스킬 목록 출력
         PrintSkills();
 
-        // 사용자 입력 요청
-        Console.Write("배울 스킬 입력 (0 : 취소) >> ");
-
-        // 입력 값 받기 (0 ~ 스킬 개수)
-        int? input = InputHelper.InputNumber(0, skills.Count);
-
-        // 0 입력 시 이전 씬으로 복귀
-        if (input == 0) return prevScene;
-
-        // 올바른 범위 내 입력 시 스킬 습득 시도
-        else if (input > 0 && input <= skills.Count)
-        {
-            LearnSkill((int)input - 1);
-        }
-
-        return this;
+        return prevScene;
     }
 
     // 스킬 배웠는지 직접 플레이어 Skill에서 찾아다가 검사
@@ -77,9 +62,10 @@ public class SkillShopScene : GameScene
     // 스킬 목록을 화면에 출력
     private void PrintSkills()
     {
-        const int pageSize = 6; // 페이지당 스킬 개수
+        const int pageSize = 7; // 페이지당 스킬 개수
         const int maxPage = 3; // 최대 페이지 수
         int currentPage = 0; // 현재 페이지
+        var skillList = skills.Values.ToList();
         int totalPages = Math.Min((int)Math.Ceiling((double)skills.Count / pageSize), maxPage);
         while(true)
         {
@@ -90,11 +76,15 @@ public class SkillShopScene : GameScene
 
             if (skills != null)
             {
-                var skillList = skills.Values.ToList();
                 for (int i = startIndex; i < endIndex; i++)
                 {
                     Skill skill = skillList[i];
-                    List<string> itemStrings = skill.ToShopString();
+                    var itemStrings = skill.ToShopString();
+
+                    string firstLine = itemStrings[0];
+                    int dot = firstLine.IndexOf('.');
+                    string rest = dot >= 0 ? firstLine.Substring(dot + 1) : firstLine;
+                    itemStrings[0] = $"{i + 1}.{rest}";  
 
                     strings.AddRange(itemStrings);
                     strings.Add("");
@@ -105,27 +95,51 @@ public class SkillShopScene : GameScene
             strings.Add("N: 다음 | P: 이전 | 번호 입력: 배우기 | Q: 종료");
             UI.DrawLeftAlignedBox(strings);
 
-            ConsoleKey key = Console.ReadKey(true).Key;
-            if (key == ConsoleKey.N && currentPage < totalPages - 1)
+            Console.Write("입력 ▶ ");
+            string input = Console.ReadLine()?.Trim().ToUpper() ?? "";
+
+            // 다음 페이지
+            if (input == "N")
             {
-                currentPage++;
+                if (currentPage < totalPages - 1) currentPage++;
+                else { UI.DrawBox(new List<string> { "이미 마지막 페이지입니다." }); Console.ReadKey(true); }
+                continue;
             }
-            else if (key == ConsoleKey.P && currentPage > 0)
+            // 이전 페이지
+            if (input == "P")
             {
-                currentPage--;
+                if (currentPage > 0) currentPage--;
+                else { UI.DrawBox(new List<string> { "이미 첫 페이지입니다." }); Console.ReadKey(true); }
+                continue;
             }
-            else if (key == ConsoleKey.Q)
+            // 상점 나가기
+            if (input == "Q")
             {
                 break;
             }
-            else if (char.IsDigit((char)key))
+
+            // 전역 인덱스 입력 처리 (예: 1~skills.Count)
+            if (int.TryParse(input, out int num))
             {
-                int selected = (int)char.GetNumericValue((char)key) - 1;
+                int selected = num - 1;
+                // 페이지에 보이는 번호(startIndex+1 ~ endIndex)만 허용
                 if (selected >= startIndex && selected < endIndex)
                 {
                     LearnSkill(selected);
+                    Console.Clear();
                 }
+                else
+                {
+                    UI.DrawBox(new List<string> { $"유효한 번호는 {startIndex + 1}~{endIndex}입니다." });
+                    Console.ReadKey(true);
+                }
+                continue;
             }
+
+            // 잘못된 입력
+            UI.DrawBox(new List<string> { "잘못된 입력입니다. 다시 시도하세요." });
+            Console.ReadKey(true);
+            continue;
         }
     }
 
