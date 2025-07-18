@@ -26,12 +26,13 @@ public class BossDungeonScene : GameScene
                 "1. 핑크빈 (난이도: 하)",
                 "2. 쿠크세이튼 (난이도: 중)",
                 "3. 안톤 (난이도: 상)",
+                "?. ??? (난이도 : 최상)",
                 "0. 던전 입구로 돌아가기"
             };
 
         UI.DrawTitledBox(SceneName, contents);
         Console.Write(">> ");
-        int? input = InputHelper.InputNumber(0, 3);// 사용자 입력을 받아 숫자로 변환 (0 ~ 3 범위)
+        int? input = InputHelper.InputNumber(0, 7);// 사용자 입력을 받아 숫자로 변환 (0 ~ 3 범위)
 
         switch (input)
         {
@@ -41,6 +42,8 @@ public class BossDungeonScene : GameScene
                 return new BossBattleScene(BossClass.GetBossList()[1]);
             case 3:
                 return new BossBattleScene(BossClass.GetBossList()[2]);
+            case 7:
+                return new BossBattleScene(BossClass.GetBossList()[3]);
             case 0:
                 return prevScene;
             default:

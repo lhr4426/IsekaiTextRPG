@@ -22,7 +22,7 @@ public class NormalBattleScene : BattleBase
             TickCooldowns();
             Console.Clear();
 
-            bool continueBattle = PlayerPhase(player, enemies, isBossBattle: false);
+            bool continueBattle = PlayerPhase(player, enemies, isBossBattle: false, isHidden: false);
             if (!continueBattle) return prevScene;
 
             foreach (var enemy in enemies.Where(e => e.CurrentHP > 0))
