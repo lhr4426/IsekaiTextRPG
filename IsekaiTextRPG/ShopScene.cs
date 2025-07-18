@@ -29,12 +29,21 @@ public class ShopScene : GameScene
         _itemSystem = itemSystem ?? throw new ArgumentNullException(nameof(itemSystem));
         _shopItems = new List<Item>
             {//이름 설명 공격력 방어력 가격 장착가능여부 아이템 타입 치명타 확률 치명타 배율 회피율
-                new("칼","기본 검",10, 0, 0, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
-                new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 0.01f),
-                new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 0.01f),
-                new("가죽 바지", "초급 각반", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 0.01f),
-                new("체력 물약", "HP +50 회복", 0, 0, 50, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
-                new("마나 물약", "MP +30 회복", 0, 0, 0, 50,70, false, Item.ItemType.Usable, 0f, 0f, 0f)
+                new("초급 검", "낡은 검", 6, 0, 0, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.3f, 0f),
+                new("초급 갑옷", "얇은 천 갑옷", 0, 2, 0, 0, 300, true, Item.ItemType.BodyArmor, 0f, 0f, 0.001f),
+                new("초급 헬멧", "조잡한 가죽 투구", 0, 1, 0, 0, 150, true, Item.ItemType.HeadArmor, 0f, 0f, 0.001f),
+                new("초급 각반", "헐렁한 다리 보호대", 0, 1, 0, 0, 200, true, Item.ItemType.LegArmor, 0f, 0f, 0.001f),
+
+                new("철검", "날카롭고 균형 잡힌 검", 12, 0, 0, 0, 2000, true, Item.ItemType.Weapon, 0.1f, 1.6f, 0f),
+                new("철갑 흉갑", "두껍고 단단한 흉갑", 0, 5, 0, 0, 1800, true, Item.ItemType.BodyArmor, 0f, 0f, 0.02f),
+                new("철제 투구", "머리를 강하게 보호", 0, 4, 0, 0, 800, true, Item.ItemType.HeadArmor, 0f, 0f, 0.02f),
+                new("철각 보호대", "다치지는않을것 같다.", 0, 3, 0, 0, 1700, true, Item.ItemType.LegArmor, 0f, 0f, 0.02f),
+
+                new("섬광의 검", "베였는지 보이지않는다.", 20, 0, 0, 0, 7000, true, Item.ItemType.Weapon, 0.2f, 2.0f, 0f),
+                new("용비늘갑옷", "잠들어있던 용의 비늘로 제작", 0, 8, 0, 0, 8000, true, Item.ItemType.BodyArmor, 0f, 0f, 0.05f),
+                new("불을삼킨투구", "대장장이의 유작", 0, 7, 0, 0, 5500, true, Item.ItemType.HeadArmor, 0f, 0f, 0.05f),
+                new("미스릴 각반", "귀한 미스릴을 사용한 각반", 0, 6, 0, 0, 5000, true, Item.ItemType.LegArmor, 0f, 0f, 0.05f),
+
             };
     }
     // 씬 이름: 상단 헤더에 표시
