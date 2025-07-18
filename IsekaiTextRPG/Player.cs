@@ -148,8 +148,7 @@ public class Player
             UnequipItem(existingEquippedItem); // 기존 아이템을 해제하고 스탯 되돌림
         }
 
-        // 2. 인벤토리에서 장착할 아이템을 제거
-        Inventory.Remove(itemToEquip);
+
 
         // 3. EquippedItems 리스트에 아이템 추가
         EquippedItems.Add(itemToEquip);
@@ -185,9 +184,6 @@ public class Player
 
         // 1. EquippedItems 리스트에서 아이템 제거
         EquippedItems.Remove(itemToUnequip);
-
-        // 2. 인벤토리에 다시 추가
-        Inventory.Add(itemToUnequip);
 
         // 3. 플레이어 스탯 되돌리기 (아이템 스탯을 플레이어의 실제 스탯 속성에서 뺌)
         MaxHP -= itemToUnequip.Hp;

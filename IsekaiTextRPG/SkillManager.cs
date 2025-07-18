@@ -134,34 +134,6 @@ public static class SkillManager
                 }
             },
             {
-                (int)SkillId.BurstCannon,
-                new Skill(
-                    id: (int)SkillId.BurstCannon,
-                    name: "버스트 캐논",
-                    damage: 100,
-                    manaCost: 150,
-                    cooldown: 17,
-                    description: "무기에 장착된 기폭장치를 이용하여 화력을 응축시켜 전방을 향해 쏟아낸다.")
-                {
-                    NeedLevel = 15,
-                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Warlord }
-                }
-            },
-            {
-                (int)SkillId.DrawSlash,
-                new Skill(
-                    id: (int)SkillId.DrawSlash,
-                    name: "발도",
-                    damage: 20,
-                    manaCost: 0,
-                    cooldown: 5,
-                    description: "빠르게 검을 뽑아내어 공격한다.")
-                {
-                    NeedLevel = 7,
-                    NeedJobs = new List<Player.Jobs> { Player.Jobs.Blade, Player.Jobs.Rogue, Player.Jobs.NightLord }
-                }
-            },
-            {
                 (int)SkillId.PhantomBladeDance,
                 new Skill(
                     id: (int)SkillId.PhantomBladeDance,

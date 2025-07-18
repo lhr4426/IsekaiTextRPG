@@ -21,7 +21,6 @@ public enum SkillId
     FocusEvasion,
     GuardianLightning,
     BurstCannon,
-    DrawSlash,
     PhantomBladeDance,
     ComboDeathFault,
     Doomsday,

@@ -54,14 +54,14 @@ public class SkillShopScene : GameScene
 
     private void PrintSkills()
     {
-        // 1. 스킬들을 원하는 순서대로 정렬합니다.
+        // 스킬들을 원하는 순서대로 정렬합니다.
         var displayedSkills = SkillManager.Skills.Values.OrderBy(s =>
             s.learnState == LearnState.Learnable ? 0 :
             s.learnState == LearnState.NotLearnable ? 1 :
             2
         ).ToList();
 
-        // 2. 정렬된 리스트를 기반으로 화면에 출력합니다.
+        // 정렬된 리스트를 기반으로 화면에 출력합니다.
         List<string> strings = new List<string>();
         foreach (var skill in displayedSkills)
         {
