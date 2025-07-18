@@ -31,11 +31,11 @@ public class Program
             // 최종적으로 콘솔 창 제목을 설정합니다.
             Console.Title = "이세계 RPG - 던전 탐험 시작!";
         }
-        catch (System.IO.IOException e)
+        catch (System.IO.IOException)
         {
             
         }
-        catch (ArgumentOutOfRangeException e)
+        catch (ArgumentOutOfRangeException)
         {
             
         }

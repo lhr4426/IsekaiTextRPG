@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IsekaiTextRPG;
 public class Enemy
 {
     public int Level { get; set; }
@@ -14,7 +15,7 @@ public class Enemy
 
     public List<Item> RewardItems { get; set; }
 
-    public Enemy(int level, string name, int hp, int attack, int defense, float dodgeRate, int rewardGold, int rewardExp)
+    public Enemy(int level, string name, int hp, int attack, int defense, float dodgeRate, int rewardGold, int rewardExp, List<Item>? rewardItems = null)
     {
         Level = level;
         Name = name;
@@ -25,7 +26,7 @@ public class Enemy
         DodgeRate = dodgeRate;
         RewardGold = rewardGold;
         RewardExp = rewardExp;
-        RewardItems = new List<Item>();
+        RewardItems = rewardItems ?? new List<Item>();
     }
     public void DrawHealthBar(int currentHP, int maxHP, bool isDead = false, int barWidth = 20)
     {
@@ -85,7 +86,7 @@ public class Enemy
             new Enemy(6, "스켈레톤", 20, 15, 6, 0.04f, 150, 60),
         };
 
-        int count = random.Next(1, 5);
+        int count = random.Next(1, 6);
 
         List<Enemy> selectedEnemies = new List<Enemy>();
         for (int i = 0; i < count; i++)
@@ -103,7 +104,7 @@ public class Enemy
             )
             {
                 CurrentHP = baseEnemy.MaxHP,
-                RewardItems = new List<Item>(baseEnemy.RewardItems) // baseEnemy의 RewardItems를 새로운 리스트로 복사
+                RewardItems = new List<Item>(baseEnemy.RewardItems ?? new List<Item>()) // baseEnemy의 RewardItems를 새로운 리스트로 복사
             };
             selectedEnemies.Add(copy);
         }
