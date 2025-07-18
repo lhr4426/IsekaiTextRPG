@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -76,24 +77,56 @@ public class SkillShopScene : GameScene
     // 스킬 목록을 화면에 출력
     private void PrintSkills()
     {
-        List<string> strings = new List<string>();
-
-        if (skills != null)
+        const int pageSize = 6; // 페이지당 스킬 개수
+        const int maxPage = 3; // 최대 페이지 수
+        int currentPage = 0; // 현재 페이지
+        int totalPages = Math.Min((int)Math.Ceiling((double)skills.Count / pageSize), maxPage);
+        while(true)
         {
-            foreach (var skill in skills)
+            Console.Clear();
+            List<string> strings = new List<string>();
+            int startIndex = currentPage * pageSize;
+            int endIndex = Math.Min(startIndex + pageSize, skills.Count);
+
+            if (skills != null)
             {
-                List<string> itemStrings = skill.Value.ToShopString();
-
-                foreach (var str in itemStrings)
+                var skillList = skills.Values.ToList();
+                for (int i = startIndex; i < endIndex; i++)
                 {
-                    strings.Add(str);
-                }
+                    Skill skill = skillList[i];
+                    List<string> itemStrings = skill.ToShopString();
 
-                strings.Add(""); // 스킬 간 구분용 빈 줄 추가
+                    strings.AddRange(itemStrings);
+                    strings.Add("");
+                }
+            }
+
+            strings.Add($"[Page {currentPage + 1} / {totalPages}]");
+            strings.Add("N: 다음 | P: 이전 | 번호 입력: 배우기 | Q: 종료");
+            UI.DrawLeftAlignedBox(strings);
+
+            ConsoleKey key = Console.ReadKey(true).Key;
+            if (key == ConsoleKey.N && currentPage < totalPages - 1)
+            {
+                currentPage++;
+            }
+            else if (key == ConsoleKey.P && currentPage > 0)
+            {
+                currentPage--;
+            }
+            else if (key == ConsoleKey.Q)
+            {
+                break;
+            }
+            else if (char.IsDigit((char)key))
+            {
+                int selected = (int)char.GetNumericValue((char)key) - 1;
+                if (selected >= startIndex && selected < endIndex)
+                {
+                    LearnSkill(selected);
+                }
             }
         }
-
-        UI.DrawLeftAlignedBox(strings);
     }
 
     // 스킬 습득 처리 (인덱스 기반)
