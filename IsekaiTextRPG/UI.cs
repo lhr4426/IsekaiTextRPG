@@ -16,14 +16,14 @@ public static class UI
     {
         List<string> fullStrings = new List<string>();
         fullStrings.Add(title);
-        if(contents != null)
+        if (contents != null)
         {
             foreach (var str in contents)
             {
                 fullStrings.Add(str);
             }
         }
-        
+
         int width = GetMaxWidth(fullStrings);
 
         string topBorder = "╔" + new string('═', width) + "╗";
@@ -131,7 +131,7 @@ public static class UI
 
     private static string PadCenter(string text, int width)
     {
-        int textWidth = GetDisplayWidth(text); 
+        int textWidth = GetDisplayWidth(text);
         int padding = Math.Max(0, width - textWidth); // 남는 부분 (패딩)
         int padLeft = padding / 2;
         int padRight = padding - padLeft;
@@ -179,7 +179,7 @@ public static class UI
     {
         bool skip = false;
 
-        foreach(string text in texts)
+        foreach (string text in texts)
         {
             foreach (char c in text)
             {
@@ -198,6 +198,74 @@ public static class UI
             }
             Console.WriteLine();
         }
+    }
+    public static void DrawTitledBoxAt(string title, List<string> contents, int left, int top)
+    {
+        List<string> fullStrings = new List<string> { title };
+        fullStrings.AddRange(contents);
+
+        int width = GetMaxWidth(fullStrings);
+        string topBorder = "╔" + new string('═', width) + "╗";
+        string titleLine = $"║{PadCenter(title, width)}║";
+        string divider = "╠" + new string('═', width) + "╣";
+        string emptyLine = $"║{new string(' ', width)}║";
+        string bottomBorder = "╚" + new string('═', width) + "╝";
+
+        Console.SetCursorPosition(left, top++);
+        Console.Write(topBorder);
+
+        Console.SetCursorPosition(left, top++);
+        Console.Write(titleLine);
+
+        if (contents.Count > 0)
+        {
+            Console.SetCursorPosition(left, top++);
+            Console.Write(divider);
+
+            Console.SetCursorPosition(left, top++);
+            Console.Write(emptyLine);
+
+            foreach (var line in contents)
+            {
+                Console.SetCursorPosition(left, top++);
+                Console.Write($"║{PadCenter(line, width)}║");
+            }
+
+            Console.SetCursorPosition(left, top++);
+            Console.Write(emptyLine);
+        }
+
+        Console.SetCursorPosition(left, top);
+        Console.Write(bottomBorder);
+    }
+
+
+
+    public static void DrawBoxAt(List<string> contents, int left, int top)
+    {
+        int width = GetMaxWidth(contents);
+        string topBorder = "╔" + new string('═', width) + "╗";
+        string emptyLine = $"║{new string(' ', width)}║";
+        string bottomBorder = "╚" + new string('═', width) + "╝";
+
+        Console.SetCursorPosition(left, top++);
+        Console.Write(topBorder);
+
+        Console.SetCursorPosition(left, top++);
+        Console.Write(emptyLine);
+
+        foreach (string line in contents)
+        {
+            string centered = $"║{PadCenter(line, width)}║";
+            Console.SetCursorPosition(left, top++);
+            Console.Write(centered);
+        }
+
+        Console.SetCursorPosition(left, top++);
+        Console.Write(emptyLine);
+
+        Console.SetCursorPosition(left, top);
+        Console.Write(bottomBorder);
     }
 }
 

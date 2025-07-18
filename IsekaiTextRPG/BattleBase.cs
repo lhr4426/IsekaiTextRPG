@@ -134,12 +134,49 @@ public class BattleBase : GameScene
         logs.ForEach(BattleLogger.Log);
         return used;
     }
+    public static void DrawBossLast(string bossName)
+    {
+        List<string> talk;
+        ConsoleColor color = ConsoleColor.Yellow;
 
+        switch (bossName)
+        {
+            case "핑크빈":
+                talk = new List<string>
+                {
+                    "삐요옹... 나 진짜 진심 아니었는데... 다음엔 안 져줄 거야!"
+                };
+                break;
+            case "쿠크세이튼":
+                talk = new List<string>
+                {
+                    "좋아. 오늘은 여기까지! 계속 분발해! 자만하지 말고! 우리가 널 응원하고 있으니까 말이야.",
+                    "그럼 혼돈이 가득 차오를 때 다시 보자고!"
+                };
+                break;
+            case "안톤":
+                talk = new List<string>
+                {
+                    "이대로... 사라지진 않아...",
+                    "지옥의 화염은... 언젠가 다시 타오를 것이다..."
+                };
+                break;
+
+            default:
+                talk = new List<string> { "(...)" };
+                break;
+        }
+
+        UI.DrawBox(talk);
+        Console.ReadKey();
+        Console.ForegroundColor = color;
+    }
     public void DrawBattleResult(Enemy boss, Player player)//보스용 결과출력
     {
         if (boss.CurrentHP <= 0)
         {
             Console.Clear();
+            DrawBossLast(boss.Name);
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Victory!");
             Console.ResetColor();
@@ -298,15 +335,16 @@ public class BattleBase : GameScene
         UI.DrawTitledBox("보스 정보", bossInfo);
         UI.DrawBox(menu);
         UI.DrawTitledBox("플레이어 정보", playerInfo);
+
     }
     public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle)
     {
         while (true)
         {
-            Console.Clear();
+            // Console.Clear();
             if (isBossBattle && enemies.Count == 1)
             {
-                ShowBossBattleUI(player,enemies[0]);
+                // ShowBossBattleUI(player,enemies[0]);
             }
 
             else
