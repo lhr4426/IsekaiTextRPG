@@ -123,8 +123,8 @@ public class ItemSystem
         foreach (var eq in GameManager.player.Inventory
             .Where(i => i.Type != Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange))
         {
-            lines.Add($"- {index} {eq.Name} | 판매가 {(int)(eq.Price * 0.85)} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
-                      $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
+            lines.Add($"- {index} {eq.Name} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
+                      $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description} | 판매가 { (int)(eq.Price * 0.85)}");
             index++;
         }
 
@@ -135,7 +135,7 @@ public class ItemSystem
         {
             var sample = grp.First();
             int totalCount = grp.Sum(i => i.ItemCount);
-            lines.Add($"- {index} {sample.Name} x{totalCount} | {sample.Description}");
+            lines.Add($"- {index} {sample.Name} x{totalCount} | {sample.Description} | 판매가 {(int)(sample.Price * 0.85)}");
             index++;
         }
 

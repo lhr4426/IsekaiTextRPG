@@ -218,7 +218,8 @@ public class ShopScene : GameScene
             if (!ConfirmSell(itemName, qty)) return;
 
             target.ItemCount -= qty;
-            GameManager.player.Gold += target.Price * qty;
+            int sellPricePer = (int)Math.Round(target.Price * 0.85);
+            GameManager.player.Gold += sellPricePer;
 
             if (target.ItemCount <= 0)
                 inv.Remove(target);
@@ -231,7 +232,8 @@ public class ShopScene : GameScene
 
             GameManager.player.EquippedItems.RemoveAll(i => i.Name == itemName);
             inv.Remove(target);
-            GameManager.player.Gold += target.Price;
+            int sellPricePer = (int)Math.Round(target.Price * 0.85);
+            GameManager.player.Gold += sellPricePer;
 
             Console.WriteLine($"{itemName} 판매 완료! 현재 골드: {GameManager.player.Gold}");
         }
