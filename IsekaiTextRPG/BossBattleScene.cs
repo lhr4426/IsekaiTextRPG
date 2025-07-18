@@ -87,31 +87,63 @@ public class BossBattleScene : BattleBase
             EnemyAttack(boss, player);
         }
     }
+    public static void DrawBossIntro(string bossName)
+    {
+        List<string> talk;
+        ConsoleColor color;
+
+        switch (bossName)
+        {
+            case "핑크빈":
+                talk = new List<string>
+                {
+                    "(핑크빈이 포효한다!)",
+                    "삐요옹~ 나 화났어! 이 세계는 이제 내 거야!"
+                };
+                color = ConsoleColor.Magenta;
+                break;
+
+            case "쿠크세이튼":
+                talk = new List<string>
+                {
+                    "(쿠크세이튼이 비웃는다...)",
+                    "세이튼 : 여러분, 혜성처럼 등장한 머저리들을 소개하겠습니다!",
+                    "쿠크 : 판이 깔렸으니 신나게 놀아보자고!"
+                };
+                color = ConsoleColor.DarkRed;
+                break;
+
+            case "안톤":
+                talk = new List<string>
+                {
+                    "(불타는 심연 속에서 안톤이 눈을 뜬다)",
+                    "지옥의 화염이... 너를 삼킬 것이다!"
+                };
+                color = ConsoleColor.Red;
+                break;
+
+            default:
+                talk = new List<string> { "(정체불명의 존재가 등장했다...)" };
+                color = ConsoleColor.Gray;
+                break;
+        }
+
+        UI.DrawBox(talk);
+        Console.WriteLine("보상을 받으려면 아무키나 입력...");
+        Console.ReadKey();
+        Console.ForegroundColor = color;
+    }
 
     public static void ShowAsciiWithCombatUI(BossClass.Boss asciiBoss, Player player)
     {
         Console.Clear();
-
+        
         string[] asciiLines = asciiBoss.AsciiArt.Split('\n');
         int asciiHeight = asciiLines.Length;
         int rightStartX = 70;
         int currentY = 0;
-
-        switch (asciiBoss.Name)
-        {
-            case "핑크빈":
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                break;
-            case "쿠크세이튼":
-                Console.ForegroundColor = ConsoleColor.DarkRed;
-                break;
-            case "안톤":
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                break;
-            default:
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                break;
-        }
+        
+        DrawBossIntro(asciiBoss.Name);
 
         for (int i = 0; i < asciiHeight; i++)
         {
