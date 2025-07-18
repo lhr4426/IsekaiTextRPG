@@ -24,7 +24,6 @@ namespace IsekaiTextRPG
         public class Boss : Enemy
         {
             private static readonly Random _rng = new Random();
-            public float DodgeRate { get; } // 회피 확률
             public float CriticalRate { get; } // 치명타 확률
             public float CriticalMultiplier { get; }  // 치명타 배율
             public List<Skill> Skills { get; }  // 보유 스킬 리스트
@@ -37,7 +36,7 @@ namespace IsekaiTextRPG
                 int rewardGold, int rewardExp,
                 float dodgeRate, float criticalRate, float criticalMultiplier,
                 IEnumerable<Skill> skills,
-                List<Item>? rewardItems = null
+                List<Item>? rewardItems = null,
                 string? asciiArt = null
             ) : base(level, name, hp, attack, defense, dodgeRate, rewardGold, rewardExp, rewardItems)
 
