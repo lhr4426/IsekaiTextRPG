@@ -5,7 +5,7 @@ using static IsekaiTextRPG.BossClass;
 
 public class BattleBase : GameScene
 {
-    public List<Player> heros = new List<Player>();
+    public static List<Player> heros = new List<Player>();
 
     private Random rng = new Random();
 
@@ -64,7 +64,7 @@ public class BattleBase : GameScene
         {
             foreach(var hero in heros)
             {
-                logs.Add($"{hero.Name}의 합공! (추가 공격력 : {hero.TotalAttack}");
+                logs.Add($"{hero.Name}의 합공! (추가 공격력 : {hero.TotalAttack})");
                 finalDamage += hero.TotalAttack;
             }
         }
@@ -504,9 +504,10 @@ public class BattleBase : GameScene
                     if (!isBossBattle) break;
                     else 
                     {
+                        Console.WriteLine("당신은 혼자가 아님을 직감했습니다. 누군가의 도움을 간절히 빌어봅니다.");
                         SummonHeros();
+                        return true;
                     }
-                    break;
 
 
                 case 0:

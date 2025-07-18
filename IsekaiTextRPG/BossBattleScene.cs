@@ -18,6 +18,7 @@ public class BossBattleScene : BattleBase
 
     public override GameScene? StartScene()
     {
+        heros.Clear();
         prevScene = SceneManager.Instance.scenes[SceneManager.SceneType.BossDungeonScene];
         CooldownSetting();
 
@@ -169,6 +170,7 @@ public class BossBattleScene : BattleBase
             "2. 스킬",
             "3. 아이템 사용",
             "4. 나의 현재 스탯 보기",
+            "5. 누군가를 부르기?",
             "0. 도망가기"
         };
 
@@ -190,6 +192,18 @@ public class BossBattleScene : BattleBase
         currentY += 6 + bossInfo.Count;
         UI.DrawBoxAt(menu, rightStartX, currentY);
         currentY += 4 + menu.Count;
+
+        List<string> herosString = new();
+        if (heros.Count > 0)
+        {
+            foreach (var hero in heros)
+            {
+                herosString.Add(hero.ToHeroString());
+            }
+            UI.DrawBoxAt(herosString, rightStartX, currentY);
+        }
+
+        currentY += 4 + herosString.Count;
         UI.DrawTitledBoxAt("플레이어 정보", playerInfo, rightStartX, currentY);
         Console.SetCursorPosition(0, asciiHeight);
     }

@@ -89,8 +89,8 @@ public class Player
     public Jobs Job { get; set; } = Jobs.Prestige; // 플레이어 직업
 
     // 기본 체력 및 현재 체력 (아이템 효과가 이 값에 직접 반영됨)
-    public int MaxHP { get; set; } = 10;
-    public int CurrentHP { get; set; } = 10;
+    public int MaxHP { get; set; } = 100;
+    public int CurrentHP { get; set; } = 100;
 
     // 기본 마나 및 현재 마나 (아이템 효과가 이 값에 직접 반영됨)
     public int MaxMP { get; set; } = 50;
