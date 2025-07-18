@@ -19,11 +19,11 @@ public class ItemSystem
     }
 
     // 아이템 생성 및 구매
-    public bool BuyItem(string name, string description, int attack, int defense,int hp,int mp,
+    public bool BuyItem(string name, string description, int attack, int defense, int hp, int mp,
                        int price, bool isEquip, Item.ItemType itemType, float criticalRate = 0,
-                       float criticalDamage = 1.6f, float dodgeRate = 0, bool suppressMessage = false) 
+                       float criticalDamage = 1.6f, float dodgeRate = 0, bool suppressMessage = false)
     {
-        var newItem = new Item(name, description, attack, defense,hp,mp, price, isEquip,
+        var newItem = new Item(name, description, attack, defense, hp, mp, price, isEquip,
                               itemType, criticalRate, criticalDamage, dodgeRate);
 
         if (GameManager.player.Gold < price)
@@ -32,7 +32,7 @@ public class ItemSystem
             return false;
         }
 
-        if(newItem.Type != Item.ItemType.Usable
+        if (newItem.Type != Item.ItemType.Usable
     && GameManager.player.Inventory.Any(i => i.Name == name))
         {
             Console.WriteLine("이미 소유한 아이템입니다.");
@@ -43,7 +43,7 @@ public class ItemSystem
         if (!suppressMessage)
             Console.WriteLine($"{name}을(를) 구매했습니다! 남은 골드: {GameManager.player.Gold}");
         GameManager.player.Inventory.Add(newItem);
-        
+
         return true;
     }
 
@@ -57,8 +57,14 @@ public class ItemSystem
             return false;
         }
 
+        if (itemToSell.Type == Item.ItemType.ClassChange)
+        {
+            Console.WriteLine("이 아이템은 판매할 수 없습니다!");
+            return false;
+        }
+
         GameManager.player.Inventory.Remove(itemToSell);
-        int sellPrice = (int)(itemToSell.Price * 0.85);  // 판매가 85%
+        int sellPrice = (int)(itemToSell.Price * 0.85);
         GameManager.player.Gold += sellPrice;
         Console.WriteLine($"{itemToSell.Name}을(를) 판매했습니다! 골드 +{sellPrice}, 현재 골드: {GameManager.player.Gold}");
         return true;
@@ -86,14 +92,14 @@ public class ItemSystem
     {
         return FindItem(name) != null;
     }
-    
+
     public List<Item> GetUsableItems()
     {
         return GameManager.player.Inventory
             .Where(i => i.Type == Item.ItemType.Usable)
             .ToList();
     }
-    
+
     public bool UseConsumable(string name)
     {
         var item = GameManager.player.Inventory.FirstOrDefault(i => i.Name == name);
@@ -105,27 +111,30 @@ public class ItemSystem
     public void ShowInventoryForSell()
     {
         var lines = new List<string>
-        {
-            $"보유 골드: {GameManager.player.Gold}",
-            "",
-            "[아이템 목록]"
-        };
+    {
+        $"보유 골드: {GameManager.player.Gold}",
+        "",
+        "[아이템 목록]"
+    };
 
         int index = 1;
 
-        // 장착 가능한 아이템은 공격력/방어력으로 구분
-        foreach (var eq in GameManager.player.Inventory.Where(i => i.Type != Item.ItemType.Usable))
+        // 장비 아이템 출력 (Usable 및 ClassChange 제외)
+        foreach (var eq in GameManager.player.Inventory
+            .Where(i => i.Type != Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange))
         {
             lines.Add($"- {index} {eq.Name} | 판매가 {(int)(eq.Price * 0.85)} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
-                $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
+                      $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
             index++;
         }
 
-        // 소비 아이템은 이름으로 그룹화하여 수량 합산
-        foreach (var grp in GameManager.player.Inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name))
+        // 소비 아이템 출력 (ClassChange 제외)
+        foreach (var grp in GameManager.player.Inventory
+            .Where(i => i.Type == Item.ItemType.Usable && i.Type != Item.ItemType.ClassChange)
+            .GroupBy(i => i.Name))
         {
             var sample = grp.First();
-            int totalCount = grp.Sum(i => i.ItemCount); // 여기를 수정!
+            int totalCount = grp.Sum(i => i.ItemCount);
             lines.Add($"- {index} {sample.Name} x{totalCount} | {sample.Description}");
             index++;
         }
@@ -133,8 +142,6 @@ public class ItemSystem
         UI.DrawTitledBox("인벤토리", null);
         UI.DrawLeftAlignedBox(lines);
     }
-
-
 
     // 아이템 정보 가져오기
     public string GetItemInfo(string name)
