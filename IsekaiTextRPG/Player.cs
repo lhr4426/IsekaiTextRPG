@@ -63,7 +63,8 @@ public class Player
             {
                 _level = value;
                 UpdateMaxExp(); // 레벨이 변경될 때마다 MaxExp 업데이트
-                QuestManager.UpdateLevelQuestProgress(_level);
+                if (GameManager.player != null && GameManager.player.Name == Name) 
+                    QuestManager.UpdateLevelQuestProgress(_level);
             }
         }
     }
