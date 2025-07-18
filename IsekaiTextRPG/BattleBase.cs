@@ -211,8 +211,6 @@ public class BattleBase : GameScene
             Console.ResetColor();
             QuestManager.UpdateKillQuestProgress(boss.Name);
 
-            int previousLevel = player.Level;
-
             player.Gold += boss.RewardGold;
             player.GainExp(boss.RewardExp);
             boss.RewardItems?.ForEach(item => player.Inventory.Add(item));
@@ -223,11 +221,6 @@ public class BattleBase : GameScene
                 $"획득 골드 : {boss.RewardGold} G",
                 $"획득 경험치 : {boss.RewardExp} EXP"
             };
-
-            if (player.Level > previousLevel)
-            {
-                rewardLines.Add($"[레벨 업!] {player.Level} 레벨이 되었습니다!");
-            }
 
             rewardLines.Add("");
             rewardLines.Add($"레벨: {player.Level}");
@@ -275,8 +268,6 @@ public class BattleBase : GameScene
                 .SelectMany(e => e.RewardItems!)
                 .ToList();
 
-            int previousLevel = player.Level;
-
             player.Gold += totalGold;
             player.GainExp(totalExp);
             totalItems.ForEach(i => player.Inventory.Add(i));
@@ -287,11 +278,6 @@ public class BattleBase : GameScene
                 $"획득 골드 : {totalGold} G",
                 $"획득 경험치 : {totalExp} EXP"
             };
-
-            if (player.Level > previousLevel)
-            {
-                rewards.Add($"[레벨 업!] {player.Level} 레벨이 되었습니다!");
-            }
 
             rewards.Add("");
             rewards.Add($"레벨: {player.Level}");
@@ -378,7 +364,6 @@ public class BattleBase : GameScene
     {
         while (true)
         {
-            Console.Clear();
             if (isBossBattle && enemies.Count == 1)
             {
                 // ShowBossBattleUI(player,enemies[0]);

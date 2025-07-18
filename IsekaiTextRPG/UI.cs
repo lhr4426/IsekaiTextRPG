@@ -71,7 +71,7 @@ public static class UI
         Console.WriteLine($"║{new string(' ', width)}║");
         Console.WriteLine(bottomBorder);
     }
-
+    
     public static List<string> DrawBox(List<string> contents, bool retuner)
     {
         if (retuner)
@@ -116,8 +116,26 @@ public static class UI
         Console.WriteLine($"║{new string(' ', width)}║");
         Console.WriteLine(bottomBorder);
     }
+    public static void DrawLeftAlignedBox(List<string> contents, int fixedWidth)
+    {
+        int width = Math.Max(fixedWidth, GetMaxWidth(contents));
 
-    private static int GetMaxWidth(List<string> contents)
+        string topBorder = "╔" + new string('═', width) + "╗";
+        string bottomBorder = "╚" + new string('═', width) + "╝";
+
+        Console.WriteLine(topBorder);
+        Console.WriteLine($"║{new string(' ', width)}║");
+
+        foreach (string line in contents)
+        {
+            Console.WriteLine($"║{PadLeftAlign(line, width)}║");
+        }
+
+        Console.WriteLine($"║{new string(' ', width)}║");
+        Console.WriteLine(bottomBorder);
+    }
+
+    public static int GetMaxWidth(List<string> contents)
     {
         int maxWidth = 0;
         foreach (string line in contents)
@@ -146,7 +164,7 @@ public static class UI
     }
 
 
-    private static int GetDisplayWidth(string text)
+    public static int GetDisplayWidth(string text)
     {
         int width = 0;
         foreach (char c in text)

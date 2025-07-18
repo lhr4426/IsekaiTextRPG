@@ -9,25 +9,27 @@ public class InventoryScene : GameScene
     public override GameScene? StartScene()
     {
         Console.Clear(); // 화면 초기화
-        Player player = GameManager.player; // 현재 플레이어 객체 가져오기
+        Player player = GameManager.player;
 
-        List<string> strings = new List<string>();
+        List<string> lines = new(); // 최종 출력줄
+        List<string> itemLines = new(); // 아이템 줄만 모음
 
-        // 인벤토리 아이템을 정렬합니다. (장착 여부 -> 타입 -> 이름 순)
+        // 정렬: 장착 여부 → 타입 → 이름
         var sortedInventory = player.Inventory
-            .OrderByDescending(item => player.EquippedItems.Contains(item)) // 장착 여부 (장착된 것이 먼저 오도록)
-            .ThenBy(item => item.Type)                                      // 아이템 타입 (무기, 방어구, 소모품 등)
-            .ThenBy(item => item.Name)                                      // 이름순
+            .OrderByDescending(item => player.EquippedItems.Contains(item))
+            .ThenBy(item => item.Type)
+            .ThenBy(item => item.Name)
             .ToList();
 
-        if (sortedInventory.Count == 0) // 인벤토리가 비어있을 경우
+        if (sortedInventory.Count == 0)
         {
-            strings.Add(" - 아이템이 없습니다.");
+            lines.Add(" - 아이템이 없습니다.");
         }
         else
         {
             int index = 1;
-            // 장착 가능한 아이템(무기, 방어구)을 먼저 표시
+
+            // 장비 아이템
             foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable))
             {
                 string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
@@ -41,49 +43,66 @@ public class InventoryScene : GameScene
 
                 string statText = statParts.Count > 0 ? string.Join(" | ", statParts) + " | " : "";
 
-                strings.Add(
-                    $" - {index} {equippedMark}{item.Name,-15} | {statText}{item.Description}"
-                );
+                string line = $" - {index} {equippedMark}{item.Name,-15} | {statText}{item.Description}";
+                itemLines.Add(line);
                 index++;
             }
 
-
-            // 소비 아이템을 이름으로 그룹화하여 표시
-            foreach (var item in sortedInventory.Where(i => i.Type == Item.ItemType.Usable))
+            // 소비 아이템 (이름+설명 기준으로 그룹화)
+            foreach (var group in sortedInventory
+                        .Where(i => i.Type == Item.ItemType.Usable)
+                        .GroupBy(i => new { i.Name, i.Description }))
             {
-                string equippedMark = "   "; // 소비 아이템은 항상 빈칸
-                strings.Add(
-                    $"- {index} {equippedMark}{item.Name,-15} x{item.ItemCount} | {item.Description}"
-                );
+                int totalCount = group.Sum(i => i.ItemCount);
+                if (totalCount <= 0) continue;
+
+                string line = $"- {index}    {group.Key.Name,-15} x{totalCount} | {group.Key.Description}";
+                itemLines.Add(line);
                 index++;
+            }
+
+            // 공통 너비 계산
+            int maxDisplayWidth = itemLines.Select(UI.GetDisplayWidth).Max();
+
+            // 줄 삽입 + 구분선 통일
+            for (int i = 0; i < itemLines.Count; i++)
+            {
+                lines.Add(itemLines[i]);
+                if (i < itemLines.Count - 1)
+                {
+                    lines.Add(new string('─', maxDisplayWidth + 2)); // 통일된 길이
+                }
             }
         }
-        List<string> menu = new List<string>();
-        menu.Add(" 1. 장착/해제 관리"); // 장착/해제 선택 메뉴
-        menu.Add(" 0. 나가기"); // 나가기 메뉴
 
-        UI.DrawTitledBox(SceneName, null); // UI 박스 그리기
-        UI.DrawLeftAlignedBox(strings); // UI 박스 그리기
-        UI.DrawLeftAlignedBox(menu);
+        // 메뉴 출력도 동일한 폭 기준
+        List<string> menu = new()
+        {
+            " 1. 장착/해제 관리",
+            " 0. 나가기"
+        };
+
+        UI.DrawTitledBox(SceneName, null);
+        UI.DrawLeftAlignedBox(lines);
+        UI.DrawLeftAlignedBox(menu, lines.Any() ? UI.GetMaxWidth(lines) : UI.GetMaxWidth(menu));
+
         Console.Write(">> ");
-
-        // 사용자 입력 받기 (0 또는 1)
         int? input = InputHelper.InputNumber(0, 1);
 
         switch (input)
         {
             case 1:
-                // HandleEquip 메서드 호출 시, 장착 가능한 아이템만 넘겨줍니다.
                 HandleEquip(player, sortedInventory.Where(i => i.IsEquip).ToList());
-                return this; // 현재 씬 유지
+                return this;
             case 0:
-                return prevScene; // 이전 씬으로 돌아가기
+                return prevScene;
             default:
                 Console.WriteLine("잘못된 입력입니다. 아무 키나 눌러 계속...");
                 Console.ReadKey();
-                return this; // 현재 씬 유지
+                return this;
         }
     }
+
 
     // 사용 가능한 아이템 목록을 출력하는 메서드 (현재 사용되지 않을 수 있으나, 확장성을 위해 유지)
     public void PrintUsableItems(out List<Item> inven)
@@ -133,24 +152,25 @@ public class InventoryScene : GameScene
 
 
     // 아이템 장착/해제를 처리하는 메서드
-    private void HandleEquip(Player player, List<Item> equippableItems) // 'inventory' 매개변수 이름을 'equippableItems'로 변경
+    private void HandleEquip(Player player, List<Item> equippableItems)
     {
         while (true)
         {
-            Console.Clear(); // 화면 초기화
+            Console.Clear();
 
-            List<string> strings = new List<string>()
+            List<string> lines = new()
             {
-                " 장착/해제할 아이템을 선택하세요.", // 안내 메시지 수정
+                " 장착/해제할 아이템을 선택하세요.",
                 "",
                 " [아이템 목록]",
                 ""
             };
 
-            // 장착 가능한 아이템 목록을 표시
+            List<string> itemLines = new();
+
             if (equippableItems.Count == 0)
             {
-                strings.Add(" - 장착 가능한 아이템이 없습니다.");
+                itemLines.Add(" - 장착 가능한 아이템이 없습니다.");
             }
             else
             {
@@ -169,41 +189,58 @@ public class InventoryScene : GameScene
                     if (item.DodgeRate > 0) statParts.Add($"회피율 {item.DodgeRate:P0}");
 
                     string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
-                    strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} {(stats != "" ? "| " : "")}{item.Description}");
+                    string descriptionPart = item.Description;
+                    string line = $"- {i + 1} {equippedMark}{item.Name,-15}";
+
+                    if (!string.IsNullOrEmpty(stats))
+                        line += $" | {stats}";
+
+                    if (!string.IsNullOrEmpty(descriptionPart))
+                        line += $" | {descriptionPart}";
+
+                    itemLines.Add(line);
                 }
-
             }
-            List<string> menu = new List<string>();
-            menu.Add("0. 나가기"); // 나가기 메뉴
 
-            UI.DrawTitledBox("인벤토리 - 장착 관리", null);// UI 박스 그리기
-            UI.DrawLeftAlignedBox(strings);
-            UI.DrawLeftAlignedBox(menu);
+            // 🟨 통일된 DisplayWidth 기반 구분선
+            int maxWidth = itemLines.Any() ? itemLines.Select(UI.GetDisplayWidth).Max() : 0;
+
+            for (int i = 0; i < itemLines.Count; i++)
+            {
+                lines.Add(itemLines[i]);
+
+                if (i < itemLines.Count - 1)
+                    lines.Add(new string('─', maxWidth + 2));
+            }
+
+            List<string> menu = new()
+            {
+                "0. 나가기"
+            };
+
+            UI.DrawTitledBox("인벤토리 - 장착 관리", null);
+            UI.DrawLeftAlignedBox(lines);
+            UI.DrawLeftAlignedBox(menu, Math.Max(maxWidth + 4, UI.GetMaxWidth(menu)));
 
             Console.Write(">> ");
-
-            // 사용자 입력 받기 (0부터 장착 가능한 아이템 개수까지)
             int? input = InputHelper.InputNumber(0, equippableItems.Count);
 
-            if (input == 0) return; // 0 입력 시 메서드 종료
-            if (input == null) continue; // 유효하지 않은 입력 시 다시 반복
+            if (input == 0) return;
+            if (input == null) continue;
 
-            // 선택된 아이템 가져오기
             var selectedItem = equippableItems[(int)input - 1];
 
-            // ⚡️ 중요한 변경: Player 클래스의 EquipItem 또는 UnequipItem 메서드 호출 ⚡️
             if (player.EquippedItems.Contains(selectedItem))
             {
-                // 이미 장착된 아이템이면 해제
-                player.UnequipItem(selectedItem); // Player.UnequipItem 호출
+                player.UnequipItem(selectedItem);
             }
             else
             {
-                // 장착되지 않은 아이템이면 장착
-                player.EquipItem(selectedItem); // Player.EquipItem 호출
+                player.EquipItem(selectedItem);
             }
 
-            Console.ReadKey(); // 사용자 입력 대기
+            Console.ReadKey();
         }
     }
+
 }
