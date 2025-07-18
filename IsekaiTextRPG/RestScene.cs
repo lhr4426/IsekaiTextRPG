@@ -4,8 +4,6 @@ public class RestScene : GameScene
 {
     public override string SceneName => "휴식하기";
     private const int RestCost = 500;
-    private const int HealAmount = 100;
-    private const int MpAmount = 50;
 
     public override GameScene? StartScene()
     {
@@ -32,8 +30,8 @@ public class RestScene : GameScene
                 if (player.Gold >= RestCost)
                 {
                     player.Gold -= RestCost;
-                    player.CurrentHP = Math.Min(player.MaxHP, player.CurrentHP + HealAmount);
-                    player.CurrentMP = Math.Min(player.MaxMP, player.CurrentMP + MpAmount);
+                    player.CurrentHP = player.MaxHP;
+                    player.CurrentMP = player.MaxMP;
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("\n→ 휴식을 완료했습니다.");
                     Console.ResetColor();
