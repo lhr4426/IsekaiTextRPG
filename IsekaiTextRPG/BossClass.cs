@@ -130,13 +130,13 @@ namespace IsekaiTextRPG
         public static IReadOnlyList<Enemy> GetBossList() => new List<Enemy>
         {
                 new Boss(
-                level: 3,
+                level: 10,
                 name: "핑크빈",
-                hp: 100,
-                attack: 12,
-                defense: 5,
-                rewardGold: 2000,
-                rewardExp: 300,
+                hp: 500,
+                attack: 20,
+                defense: 15,
+                rewardGold: 1000,
+                rewardExp: 500,
                 dodgeRate: 0.10f,
                 criticalRate: 0.05f,
                 criticalMultiplier: 1.40f,
@@ -184,13 +184,13 @@ namespace IsekaiTextRPG
 )
                 ,
                 new Boss(
-                    level: 5,
+                    level: 20,
                     name: "쿠크세이튼", //회피율이 높지만 치명타확률과 데미지는 약함
-                    hp: 200,
-                    attack: 15,
-                    defense: 10,
-                    rewardGold: 5000,
-                    rewardExp: 500,
+                    hp: 400,
+                    attack: 40,
+                    defense: 5,
+                    rewardGold: 3000,
+                    rewardExp: 1000,
                     dodgeRate: 0.30f,
                     criticalRate: 0.01f,
                     criticalMultiplier: 1.10f,
@@ -237,13 +237,13 @@ namespace IsekaiTextRPG
 "
                 ),
                 new Boss(
-                    level: 9,
+                    level: 30,
                     name: "안톤", //맷집이 단단한 보스 회피율이 낮지만 크리확률과 데미지가 강력함
-                    hp: 500,
-                    attack: 35,
-                    defense: 15,
+                    hp: 1000,
+                    attack: 50,
+                    defense: 30,
                     rewardGold: 100000,
-                    rewardExp: 1000,
+                    rewardExp: 2000,
                     dodgeRate: 0.05f,
                     criticalRate: 0.30f,
                     criticalMultiplier: 1.60f,
@@ -293,16 +293,16 @@ namespace IsekaiTextRPG
                 ),
 
             new Boss(
-                    level: 77,
+                    level: 777,
                     name: "최강 7조", // 히든보스!
-                    hp: 777,
+                    hp: 7777,
                     attack: 77,
                     defense: 77,
-                    rewardGold: 700000,
-                    rewardExp: 7000,
+                    rewardGold: 7777777,
+                    rewardExp: 77777,
                     dodgeRate: 0.07f,
                     criticalRate: 0.07f,
-                    criticalMultiplier: 1.70f,
+                    criticalMultiplier: 1.7777f,
                     skills: HiddenSkills,
                     rewardItems: new List<Item> { ItemSystem.CreateJobChangeItem("플레이 해 주셔서 감사합니다")},
                     asciiArt: @"----------------------------------------------------------------------
@@ -347,15 +347,15 @@ namespace IsekaiTextRPG
                 new Skill(
                     name: "미니빈의 도움",
                     multiplicativeFactor: 1.2f, // 공격력 20% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가    
+                    additiveBonus: 5, // 공격연산이 끝난뒤 피해량에 추가    
                     chance: 0.50f, // 50% 확률로 발동
                     cooldownTurns: 3 // 3턴 쿨다운
                 ),
                 new Skill(
                     name: "죽은척하기",
                     multiplicativeFactor: 1.5f, // 공격력 50% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.50f, // 50% 확률로 발동
+                    additiveBonus: 7, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.30f, // 30% 확률로 발동
                     cooldownTurns: 7 // 7턴 쿨다운
                 ),
         };
@@ -364,15 +364,15 @@ namespace IsekaiTextRPG
                 new Skill(
                     name: "광대 변이",
                     multiplicativeFactor: 1.3f, // 공격력 30% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    additiveBonus: 5, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.50f, // 50% 확률로 발동
                     cooldownTurns: 3 // 3턴 쿨다운
                 ),
                 new Skill(
                     name: "쇼 타임",
                     multiplicativeFactor: 1.6f, // 공격력 60% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.50f, // 50% 확률로 발동
+                    additiveBonus: 10, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.20f, // 20% 확률로 발동
                     cooldownTurns: 7 // 7턴 쿨다운
                 )
         };
@@ -381,15 +381,15 @@ namespace IsekaiTextRPG
                 new Skill(
                     name: "네르베: 구슬 폭발",
                     multiplicativeFactor: 1.4f, // 공격력 40% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.50f, // 50% 확률로 발동
-                    cooldownTurns: 3 // 3턴 쿨다운
+                    additiveBonus: 15, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.60f, // 60% 확률로 발동
+                    cooldownTurns: 5 // 5턴 쿨다운
                 ),
                 new Skill(
                     name: "마테카: 혈",
                     multiplicativeFactor: 1.7f, // 공격력 70% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.50f, // 50% 확률로 발동
+                    additiveBonus: 5, // 공격연산이 끝난뒤 피해량에 추가
+                    chance: 0.30f, // 30% 확률로 발동
                     cooldownTurns: 7 // 7턴 쿨다운
                 )
         };
@@ -398,14 +398,14 @@ namespace IsekaiTextRPG
                 new Skill(
                     name: "여기 버그있는데요?",
                     multiplicativeFactor: 1.5f, // 공격력 50% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    additiveBonus: 7, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.50f, // 50% 확률로 발동
                     cooldownTurns: 3 // 3턴 쿨다운
                 ),
                 new Skill(
                     name: "Null Null 하네",
                     multiplicativeFactor: 1.8f, // 공격력 80% 증가
-                    additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
+                    additiveBonus: 7, // 공격연산이 끝난뒤 피해량에 추가
                     chance: 0.50f, // 50% 확률로 발동
                     cooldownTurns: 7 // 7턴 쿨다운
                 )
