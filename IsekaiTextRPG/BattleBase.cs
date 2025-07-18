@@ -102,7 +102,7 @@ public class BattleBase : GameScene
             player.CurrentHP = 0;
         }
         logs.Add($"{player.Name}을(를) 맞췄습니다. [데미지 : {damage}]");
-        logs.Add($"HP {beforeHP} → {Math.Max(player.CurrentHP, 0)}");
+        logs.Add($"HP {beforeHP} > {Math.Max(player.CurrentHP, 0)}");
 
         UI.DrawBox(logs);
         logs.ForEach(BattleLogger.Log);
