@@ -31,6 +31,8 @@ public class BossBattleScene : BattleBase
         BattleLogger.Init();
         BattleLogger.Log("보스 전투 시작");
 
+        bool isHidden = boss.Name == "최강 7조";
+
         if (boss is BossClass.Boss asciiBoss && !string.IsNullOrEmpty(asciiBoss.AsciiArt))
         {
             DrawBossIntro(asciiBoss.Name);
@@ -40,7 +42,7 @@ public class BossBattleScene : BattleBase
         while (player.CurrentHP > 0 && boss.CurrentHP > 0)
         {
             TickCooldowns();
-            bool continueBattle = PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true);
+            bool continueBattle = PlayerPhase(player, new List<Enemy> { boss }, isBossBattle: true, isHidden);
             if (!continueBattle) return prevScene;
             if (boss.CurrentHP <= 0) break;
 
@@ -120,6 +122,13 @@ public class BossBattleScene : BattleBase
                     "지옥의 화염이... 너를 삼킬 것이다!"
                 };
                 break;
+            case "최강 7조":
+                talk = new List<string>
+                {
+                    "(알 수 없는 4인조가 서있다.)",
+                    "후후... 여기까지 오셨군요. 과연 저희를 이길 수 있을까요?"
+                };
+                break;
 
             default:
                 talk = new List<string> { "(정체불명의 존재가 등장했다...)" };
@@ -137,6 +146,7 @@ public class BossBattleScene : BattleBase
             "핑크빈" => ConsoleColor.Magenta,
             "쿠크세이튼" => ConsoleColor.Yellow,
             "안톤" => ConsoleColor.Red,
+            "최강 7조" => ConsoleColor.White,
             _ => ConsoleColor.Gray
         };
     }
@@ -148,6 +158,7 @@ public class BossBattleScene : BattleBase
         int asciiHeight = asciiLines.Length;
         int rightStartX = 70;
         int currentY = 0;
+        bool isHidden = asciiBoss.Name == "최강 7조";
         
         Console.ForegroundColor = GetBossColor(asciiBoss.Name);
         for (int i = 0; i < asciiHeight; i++)
@@ -169,11 +180,11 @@ public class BossBattleScene : BattleBase
             "1. 공격",
             "2. 스킬",
             "3. 아이템 사용",
-            "4. 나의 현재 스탯 보기",
-            "5. 누군가를 부르기?",
-            "0. 도망가기"
+            "4. 나의 현재 스탯 보기"
         };
 
+        if (isHidden) menu.Add("5. 누군가를 부르기?");
+        menu.Add("0. 도망가기");
 
         var bonusAtk = player.EquippedItems.Where(i => i.IsEquip).Sum(i => i.Attack);
         var bonusDef = player.EquippedItems.Where(i => i.IsEquip).Sum(i => i.Defense);
@@ -193,17 +204,20 @@ public class BossBattleScene : BattleBase
         UI.DrawBoxAt(menu, rightStartX, currentY);
         currentY += 4 + menu.Count;
 
-        List<string> herosString = new();
-        if (heros.Count > 0)
+        if (isHidden)
         {
-            foreach (var hero in heros)
+            List<string> herosString = new();
+            if (heros.Count > 0)
             {
-                herosString.Add(hero.ToHeroString());
+                foreach (var hero in heros)
+                {
+                    herosString.Add(hero.ToHeroString());
+                }
+                UI.DrawBoxAt(herosString, rightStartX, currentY);
             }
-            UI.DrawBoxAt(herosString, rightStartX, currentY);
+            currentY += 4 + herosString.Count;
         }
-
-        currentY += 4 + herosString.Count;
+        
         UI.DrawTitledBoxAt("플레이어 정보", playerInfo, rightStartX, currentY);
         Console.SetCursorPosition(0, asciiHeight);
     }

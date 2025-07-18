@@ -172,6 +172,13 @@ public class BattleBase : GameScene
                     "지옥의 화염은... 언젠가 다시 타오를 것이다..."
                 };
                 break;
+            case "최강 7조":
+                talk = new List<string>
+                {
+                    "지금까지 이세계 RPG를 플레이 해 주셔서 감사합니다!",
+                    "더이상 이 세계는 이세계가 아닌, 당신의 세계입니다!"
+                };
+                break;
 
             default:
                 talk = new List<string> { "(...)" };
@@ -324,53 +331,7 @@ public class BattleBase : GameScene
             heros.Add(hero);
         }
     }
-
-    public void ShowBossBattleUI(Player player, Enemy boss)
-    {
-        int bonusAtk = player.EquippedItems.Where(i => i.IsEquip && i.Attack != 0).Sum(i => i.Attack);
-        int bonusDef = player.EquippedItems.Where(i => i.IsEquip && i.Defense != 0).Sum(i => i.Defense);
-        int bonusHp = player.EquippedItems.Where(i => i.IsEquip && i.Hp != 0).Sum(i => i.Hp);
-        int bonusMp = player.EquippedItems.Where(i => i.IsEquip && i.Mp != 0).Sum(i => i.Mp);
-
-        string hpText = boss.CurrentHP > 0 ? boss.CurrentHP.ToString() : "Dead";
-
-        List<string> bossInfo = new()
-        {
-            $"Lv.{boss.Level} {boss.Name}",
-            $"HP: {hpText} / {boss.MaxHP}",
-            $"ATK: {boss.Attack} | DEF: {boss.Defense}"
-        };
-        List<string> playerInfo = new()
-        {
-            $"Lv.{player.Level} {player.Name} ({Player.JobsKorean(player.Job)})",
-            $"HP: {player.CurrentHP} / {player.MaxHP + bonusHp} | MP: {player.CurrentMP} / {player.MaxMP + bonusMp}",
-            $"ATK: {player.BaseAttack + bonusAtk} | DEF: {player.BaseDefense + bonusDef}"
-        };
-        List<string> menu = new()
-        {
-            "1. 공격",
-            "2. 스킬 ",
-            "3. 아이템 사용",
-            "4. 나의 현재 스탯 보기",
-            "5. 누군가를 부르기?",
-            "0. 도망가기"
-        };
-
-        UI.DrawTitledBox("보스 정보", bossInfo);
-        UI.DrawBox(menu);
-        if(heros.Count > 0)
-        {
-            List<string> herosString = new();
-            foreach (var hero in heros)
-            {
-                herosString.Add(hero.ToHeroString());
-            }
-            UI.DrawBox(herosString);
-        }
-        UI.DrawTitledBox("플레이어 정보", playerInfo);
-
-    }
-    public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle)
+    public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle, bool isHidden)
     {
         while (true)
         {
@@ -387,7 +348,7 @@ public class BattleBase : GameScene
 
             Console.Write("\n원하시는 행동을 입력해주세요.\n>> ");
             int? input;
-            if (isBossBattle) input = InputHelper.InputNumber(0, 5);
+            if (isHidden) input = InputHelper.InputNumber(0, 5);
             else input = InputHelper.InputNumber(0, 4);
 
 
@@ -501,7 +462,7 @@ public class BattleBase : GameScene
                     break;
 
                 case 5:
-                    if (!isBossBattle) break;
+                    if (!isHidden) break;
                     else 
                     {
                         Console.WriteLine("당신은 혼자가 아님을 직감했습니다. 누군가의 도움을 간절히 빌어봅니다.");
