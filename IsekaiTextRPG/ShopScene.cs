@@ -98,8 +98,8 @@ public class ShopScene : GameScene
             PadToWidth(item.CriticalRate > 0 ? $"치명타:{item.CriticalRate:P0}" : "", 10),
             PadToWidth(item.CriticalDamage > 1 ? $"배율:{item.CriticalDamage:F1}" : "", 10),
             PadToWidth(item.DodgeRate > 0 ? $"회피:{item.DodgeRate:P0}" : "", 10),
-            PadToWidth($"가격:{item.Description}", 20),
-            PadToWidth(item.Price.ToString(), 5) + " " + status
+            PadToWidth(item.Description, 20),
+            PadToWidth($"가격:{item.Price}", 10) + status
         );
 
         displayLines.Add(line);
