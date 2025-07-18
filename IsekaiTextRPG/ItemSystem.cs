@@ -48,9 +48,9 @@ public class ItemSystem
     }
 
     // 아이템 판매 
-    public bool SellItem(string itemName)
+    public bool SellItem(string itemName, int countToSell = 1)
     {
-        var itemToSell = FindItem(itemName);
+        var itemToSell = GameManager.player.Inventory.FirstOrDefault(i => i.Name == itemName && i.Type != Item.ItemType.ClassChange);
         if (itemToSell == null)
         {
             Console.WriteLine("판매할 아이템이 없습니다.");
@@ -63,10 +63,22 @@ public class ItemSystem
             return false;
         }
 
-        GameManager.player.Inventory.Remove(itemToSell);
-        int sellPrice = (int)(itemToSell.Price * 0.85);
+        if (itemToSell.ItemCount < countToSell)
+        {
+            Console.WriteLine("판매 수량이 보유 수량보다 많습니다.");
+            return false;
+        }
+
+        int sellPrice = (int)(itemToSell.Price * 0.85) * countToSell;
+        itemToSell.ItemCount -= countToSell;
+
+        if (itemToSell.ItemCount <= 0)
+        {
+            GameManager.player.Inventory.Remove(itemToSell);
+        }
+
         GameManager.player.Gold += sellPrice;
-        Console.WriteLine($"{itemToSell.Name}을(를) 판매했습니다! 골드 +{sellPrice}, 현재 골드: {GameManager.player.Gold}");
+        Console.WriteLine($"{itemToSell.Name} x{countToSell}개를 판매했습니다! 골드 +{sellPrice}, 현재 골드: {GameManager.player.Gold}");
         return true;
     }
 
@@ -111,14 +123,15 @@ public class ItemSystem
     public void ShowInventoryForSell()
     {
         var lines = new List<string>
-        {
-            $"보유 골드: {GameManager.player.Gold}",
-            "",
-            "[아이템 목록]"
-        };
+    {
+        $"보유 골드: {GameManager.player.Gold}",
+        "",
+        "[아이템 목록]"
+    };
 
         int index = 1;
         List<string> itemsToDisplay = new();
+        Dictionary<int, string> indexToItemName = new(); // 선택 인덱스 매핑
 
         // 장비 아이템
         var equipmentItems = GameManager.player.Inventory
@@ -137,12 +150,13 @@ public class ItemSystem
             string stats = statParts.Count > 0 ? " | " + string.Join(" | ", statParts) : "";
             string line = $"- {index} {eq.Name}{stats} | {eq.Description} | 판매가 {(int)(eq.Price * 0.85)}";
             itemsToDisplay.Add(line);
+            indexToItemName[index] = eq.Name;
             index++;
         }
 
         // 소비 아이템
         var usableGroups = GameManager.player.Inventory
-            .Where(i => i.Type == Item.ItemType.Usable || i.Type != Item.ItemType.ClassChange)
+            .Where(i => i.Type == Item.ItemType.Usable)
             .GroupBy(i => i.Name);
 
         foreach (var grp in usableGroups)
@@ -153,23 +167,36 @@ public class ItemSystem
 
             string line = $"- {index} {sample.Name} x{totalCount} | {sample.Description} | 판매가 {(int)(sample.Price * 0.85)}";
             itemsToDisplay.Add(line);
+            indexToItemName[index] = sample.Name;
             index++;
         }
 
-        int maxDisplayWidth = itemsToDisplay.Select(UI.GetDisplayWidth).Max();
-
+        int maxDisplayWidth = itemsToDisplay.Select(UI.GetDisplayWidth).DefaultIfEmpty(0).Max();
         for (int i = 0; i < itemsToDisplay.Count; i++)
         {
             lines.Add(itemsToDisplay[i]);
-
             if (i < itemsToDisplay.Count - 1)
             {
                 lines.Add(new string('─', maxDisplayWidth + 2));
             }
         }
 
-        UI.DrawTitledBox("인벤토리", null);
+        UI.DrawTitledBox("판매 인벤토리", null);
         UI.DrawLeftAlignedBox(lines);
+
+        Console.Write("판매할 아이템 번호 (0: 나가기): ");
+        int? selected = InputHelper.InputNumber(0, indexToItemName.Count);
+
+        if (selected == null || selected == 0)
+            return;
+
+        string selectedName = indexToItemName[(int)selected];
+
+        Console.Write("판매할 수량을 입력하세요: ");
+        int? count = InputHelper.InputNumber(1, 999); // 예외처리는 내부에서 처리
+
+        if (count != null)
+            SellItem(selectedName, (int)count);
     }
 
 

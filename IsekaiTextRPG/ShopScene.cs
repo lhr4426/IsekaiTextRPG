@@ -43,6 +43,8 @@ public class ShopScene : GameScene
                 new("용비늘갑옷", "잠들어있던 용의 비늘로 제작", 0, 8, 0, 0, 8000, true, Item.ItemType.BodyArmor, 0f, 0f, 0.05f),
                 new("불을삼킨투구", "대장장이의 유작", 0, 7, 0, 0, 5500, true, Item.ItemType.HeadArmor, 0f, 0f, 0.05f),
                 new("미스릴 각반", "귀한 미스릴을 사용한 각반", 0, 6, 0, 0, 5000, true, Item.ItemType.LegArmor, 0f, 0f, 0.05f),
+                new("체력 물약", "HP +50 회복", 0, 0, 50, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
+                new("마나 물약", "MP +30 회복", 0, 0, 0, 50,70, false, Item.ItemType.Usable, 0f, 0f, 0f)
 
             };
     }
@@ -112,7 +114,7 @@ public class ShopScene : GameScene
             );
 
             displayLines.Add(line);
-            maxWidth = Math.Max(maxWidth, line.Length); // 가장 긴 줄 길이 기록
+            maxWidth = Math.Max(maxWidth, line.Length);
         }
 
         // 이후 줄과 줄 사이에 고정 너비 구분선 추가
@@ -121,7 +123,7 @@ public class ShopScene : GameScene
             strings.Add(displayLines[i]);
 
             if (i < displayLines.Count - 1)
-                strings.Add(new string('─', maxWidth+20)); // 고정 너비의 선 추가
+                strings.Add(new string('─', maxWidth+20));
         }
 
 
