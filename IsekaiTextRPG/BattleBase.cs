@@ -136,15 +136,24 @@ public class BattleBase : GameScene
 
         if (used && selected.Type == Item.ItemType.Usable)
         {
-            player.Inventory.Remove(selected);
-            int remaining = player.Inventory.Count(i => i.Name == selected.Name);
-            Console.WriteLine($"{selected.Name}을(를) 사용했습니다. 남은 개수: {remaining}개.");
+            selected.ItemCount--;
+
+            if (selected.ItemCount <= 0)
+            {
+                player.Inventory.Remove(selected);
+                logs.Add($"{selected.Name}을(를) 모두 사용했습니다.");
+            }
+            else
+            {
+                logs.Add($"{selected.Name}을(를) 사용했습니다. 남은 개수: {selected.ItemCount}개.");
+            }
         }
 
         UI.DrawBox(logs);
         logs.ForEach(BattleLogger.Log);
         return used;
     }
+
     public static void DrawBossLast(string bossName)
     {
         List<string> talk;

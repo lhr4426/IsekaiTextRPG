@@ -41,18 +41,11 @@ public class InventoryScene : GameScene
             }
 
             // 소비 아이템을 이름으로 그룹화하여 표시
-            var consumables = sortedInventory
-                .Where(i => i.Type == Item.ItemType.Usable)
-                .GroupBy(i => i.Name)
-                .OrderBy(g => g.Key);
-            foreach (var g in consumables)
+            foreach (var item in sortedInventory.Where(i => i.Type == Item.ItemType.Usable))
             {
-                var sample = g.First(); // 그룹 내 첫 번째 아이템을 대표로 사용
-                // 소비 아이템은 장착되지 않으므로 [E] 마크는 불필요하지만, 통일성을 위해 빈칸 유지
-                string equippedMark = "   "; // 소비 아이템이므로 항상 빈칸
+                string equippedMark = "   "; // 소비 아이템은 항상 빈칸
                 strings.Add(
-                    $"- {index} {equippedMark}{sample.Name,-15} x{g.Count()} | " + // 아이템 이름과 개수
-                    $" {sample.Description}"
+                    $"- {index} {equippedMark}{item.Name,-15} x{item.ItemCount} | {item.Description}"
                 );
                 index++;
             }
@@ -90,35 +83,32 @@ public class InventoryScene : GameScene
         Player player = GameManager.player;
         List<string> strings = new();
 
-        var usable = player.Inventory
+        var grouped = player.Inventory
             .Where(item => item.Type == Item.ItemType.Usable)
-            .OrderByDescending(item => player.EquippedItems.Contains(item))
-            .ThenBy(item => item.Type)
-            .ThenBy(item => item.Name)
-            .ToList(); // 사용 가능한 아이템만 필터링
+            .GroupBy(item => item.Name)
+            .Select(g =>
+            {
+                var baseItem = g.First(); // 첫 번째 아이템 복사
+                baseItem.ItemCount = g.Sum(x => x.ItemCount); // 총 개수 반영
+                return baseItem;
+            })
+            .OrderBy(item => item.Name)
+            .ToList();
 
-        if (usable.Count > 0)
+        if (grouped.Count > 0)
         {
             int displayIndex = 1;
-            for (int i = 0; i < usable.Count; i++)
+            foreach (var item in grouped)
             {
-                var item = usable[i];
-                // 중복된 아이템 수 세기
-                int count = usable.Skip(i).TakeWhile(x => x.Name == item.Name).Count();
-
-                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부
-
-                List<string> statParts = new(); //스텟이 0인 항목은 출력안하게 설정
+                List<string> statParts = new(); // 스탯 설명 구성
                 if (item.Attack > 0) statParts.Add($"공격력 +{item.Attack}");
                 if (item.Defense > 0) statParts.Add($"방어력 +{item.Defense}");
                 if (item.Hp > 0) statParts.Add($"HP +{item.Hp}");
                 if (item.Mp > 0) statParts.Add($"MP +{item.Mp}");
 
                 string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
-
-                strings.Add($" - {displayIndex} {equippedMark}{item.Name,-15} x{count} | " +
+                strings.Add($" - {displayIndex} {item.Name,-15} x{item.ItemCount} | " +
                             $"{(stats != "" ? stats + " | " : "")}{item.Description}");
-                i += count - 1; // 중복된 아이템 수 만큼 건너뜀
                 displayIndex++;
             }
         }
@@ -128,8 +118,9 @@ public class InventoryScene : GameScene
         }
 
         UI.DrawLeftAlignedBox(strings);
-        // 그룹화된 아이템 리스트를 반환 (각 그룹의 첫 번째 아이템만 포함)
-        inven = usable.GroupBy(x => x.Name).Select(g => g.First()).ToList();
+
+        // 정확한 수량 포함한 usable 아이템 반환
+        inven = grouped;
     }
 
 

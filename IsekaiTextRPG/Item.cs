@@ -12,7 +12,8 @@ public class Item
         BodyArmor,
         LegArmor,
         OffHand,
-        Usable // 사용 가능한 아이템 (ex. 포션)
+        Usable, // 사용 가능한 아이템 (ex. 포션)
+        ClassChange,
     }
 
     private string TypeKorean(ItemType type)
@@ -25,6 +26,7 @@ public class Item
             ItemType.LegArmor => "다리 방어구",
             ItemType.OffHand => "보조 무기",
             ItemType.Usable => "소비 아이템",
+            ItemType.ClassChange => "전직 아이템",
             _ => type.ToString()
         };
     }
@@ -41,10 +43,11 @@ public class Item
     public float CriticalRate { get; set; }      // 치명타 확률 
     public float CriticalDamage { get; set; }    // 치명타 데미지 배율 1.6 
     public float DodgeRate { get; set; }       // 회피율 (
-
-    public Item(string name, string description, int attack, int defense,int hp, int mp, int price,
+    public int ItemCount { get; set; }
+    public Item() { }
+    public Item(string name, string description, int attack, int defense, int hp, int mp, int price,
                bool isEquip, ItemType type, float criticalRate = 0,
-               float criticalDamage = 1.6f, float dodgeRate = 0)
+               float criticalDamage = 1.6f, float dodgeRate = 0, int itemCount = 1)
     {
         Name = name;
         Description = description;
@@ -58,6 +61,7 @@ public class Item
         CriticalRate = criticalRate;
         CriticalDamage = criticalDamage;
         DodgeRate = dodgeRate;
+        ItemCount = itemCount;
     }
 
     public override bool Equals(object obj)
