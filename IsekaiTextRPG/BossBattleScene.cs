@@ -156,8 +156,19 @@ public class BossBattleScene : BattleBase
         int asciiHeight = asciiLines.Length;
         int rightStartX = 70;
         int currentY = 0;
+        int minHeight = asciiHeight + 10; // 여유 공간 포함
+        int minWidth = rightStartX + 20;
         bool isHidden = asciiBoss.Name == "최강 7조";
-        
+
+        while (Console.WindowWidth < minWidth || Console.WindowHeight < minHeight)
+        {
+            Console.Clear();
+            Console.SetCursorPosition(0, 0);
+            Console.WriteLine("⚠ 창이 너무 작습니다. 창 크기를 늘려주세요.");
+            Console.WriteLine($"필요: 너비 {minWidth}, 높이 {minHeight} 이상");
+            Thread.Sleep(1000); // 1초 후 다시 검사
+        }
+
         Console.ForegroundColor = GetBossColor(asciiBoss.Name);
         for (int i = 0; i < asciiHeight; i++)
         {
