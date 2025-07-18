@@ -298,15 +298,16 @@ public class BattleBase : GameScene
         UI.DrawTitledBox("보스 정보", bossInfo);
         UI.DrawBox(menu);
         UI.DrawTitledBox("플레이어 정보", playerInfo);
+
     }
     public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle)
     {
         while (true)
         {
-            Console.Clear();
+            // Console.Clear();
             if (isBossBattle && enemies.Count == 1)
             {
-                ShowBossBattleUI(player,enemies[0]);
+                // ShowBossBattleUI(player,enemies[0]);
             }
 
             else
