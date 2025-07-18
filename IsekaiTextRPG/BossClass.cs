@@ -247,8 +247,10 @@ namespace IsekaiTextRPG
                     dodgeRate: 0.05f,
                     criticalRate: 0.30f,
                     criticalMultiplier: 1.60f,
+
                     skills: AntonSkills,
                     rewardItems: new List<Item> { ItemSystem.CreateJobChangeItem("전직의 증표 III")},
+
                     asciiArt: @"%%%%%%%%%%%%%%@@%%%%%%%%%%%%%%%%%%%%%%%%%%%#%%####****#####%%%%%%%%%%%
 %%@@@%%%@%%%%%@@%%%%%%%%%%%%%%%%%%%%%%%%%%%##**#**+++++**#####%%%%%%%%
 @@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%####%##*+++===-==++****####%%%%%

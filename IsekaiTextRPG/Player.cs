@@ -77,9 +77,10 @@ public class Player
         set
         {
             if (_level != value) // 레벨이 실제로 변경될 때만 동작
-            {
+            { 
                 _level = value;
-                QuestManager.UpdateLevelQuestProgress(_level);
+                if (GameManager.player != null && GameManager.player.Name == Name)
+                    QuestManager.UpdateLevelQuestProgress(_level);
             }
         }
     }

@@ -56,7 +56,7 @@ public class BattleBase : GameScene
 
         if (player.IsCriticalHit())
         {
-            logs.Add("★ 치명타! ★");
+            logs.Add("★치명타!★");
             finalDamage = (int)(finalDamage * player.CriticalDamage);
         }
 
