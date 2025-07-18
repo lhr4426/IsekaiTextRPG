@@ -201,6 +201,7 @@ public class ShopScene : GameScene
                     if (_itemSystem.HasItem(item.Name))
                     {
                         Console.WriteLine("이미 구매한 아이템입니다.");
+                        Console.ReadKey();
                         return;
                     }
 

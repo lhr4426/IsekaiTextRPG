@@ -135,7 +135,7 @@ public static class UI
         Console.WriteLine(bottomBorder);
     }
 
-    private static int GetMaxWidth(List<string> contents)
+    public static int GetMaxWidth(List<string> contents)
     {
         int maxWidth = 0;
         foreach (string line in contents)
