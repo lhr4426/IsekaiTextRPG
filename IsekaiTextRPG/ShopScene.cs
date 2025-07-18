@@ -20,7 +20,7 @@ public class ShopScene : GameScene
             {Item.ItemType.Weapon,"무기"},
             {Item.ItemType.BodyArmor,"방어구"},
             {Item.ItemType.HeadArmor,"투구"},
-            {Item.ItemType.LegArmor,"다리보호구"},
+            {Item.ItemType.LegArmor,"각반"},
             {Item.ItemType.Usable,"소모품"}
         };
     // 생성자: ItemSystem을 주입받고, 상점 아이템 목록을 초기화
@@ -32,7 +32,7 @@ public class ShopScene : GameScene
                 new("칼","기본 검",10, 0, 0, 0, 100, true, Item.ItemType.Weapon, 0.05f, 1.5f, 0f),
                 new("가죽 갑옷", "초급 가슴방어구", 0, 5, 0, 0, 150, true, Item.ItemType.BodyArmor, 0f, 0f, 0.01f),
                 new("가죽 헬멧", "초급 머리보호구", 0, 3, 0, 0, 80, true, Item.ItemType.HeadArmor, 0f, 0f, 0.01f),
-                new("가죽 바지", "초급 다리보호구", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 0.01f),
+                new("가죽 바지", "초급 각반", 0, 2, 0, 0, 50, true, Item.ItemType.LegArmor, 0f, 0f, 0.01f),
                 new("체력 물약", "HP +50 회복", 0, 0, 50, 0, 50, false, Item.ItemType.Usable, 0f, 0f, 0f),
                 new("마나 물약", "MP +30 회복", 0, 0, 0, 50,70, false, Item.ItemType.Usable, 0f, 0f, 0f)
             };
@@ -80,22 +80,64 @@ public class ShopScene : GameScene
             return;
         }
 
-        for (var i = 0; i < _shopItems.Count; i++)
-        {
-            var item = _shopItems[i];
-            var status = (item.Type != Item.ItemType.Usable
-                          && _itemSystem.HasItem(item.Name))
-                         ? "[구매완료]" : string.Empty;
+    int maxWidth = 0;
+    List<string> displayLines = new();
 
-            // 한 줄로 아이템 정보를 포맷하여 출력
-            strings.Add($"{i + 1}    |{item.Name}    |{_itemTypeNames[item.Type]}    |" +
-                $"공격:{item.Attack}    |방어:{item.Defense}   |" +
-                $"치명타:{item.CriticalRate:P0}    |치명타배율:{item.CriticalDamage}    |회피:{item.DodgeRate:P0}  |{item.Description}  |가격:{item.Price}  {status} ");
+    for (var i = 0; i < _shopItems.Count; i++)
+    {
+        var item = _shopItems[i];
+        var status = (item.Type != Item.ItemType.Usable && _itemSystem.HasItem(item.Name)) ? "[구매완료]" : "";
 
-        }
+        string line = string.Format(
+            "{0,2} | {1} | {2} | {3} | {4} | {5} | {6} | {7} | {8} | {9}",
+            i + 1,
+            PadToWidth(item.Name, 10),
+            PadToWidth(_itemTypeNames[item.Type], 6),
+            PadToWidth(item.Attack > 0 ? $"공격:{item.Attack}" : "", 8),
+            PadToWidth(item.Defense > 0 ? $"방어:{item.Defense}" : "", 8),
+            PadToWidth(item.CriticalRate > 0 ? $"치명타:{item.CriticalRate:P0}" : "", 10),
+            PadToWidth(item.CriticalDamage > 1 ? $"배율:{item.CriticalDamage:F1}" : "", 10),
+            PadToWidth(item.DodgeRate > 0 ? $"회피:{item.DodgeRate:P0}" : "", 10),
+            PadToWidth($"가격:{item.Description}", 20),
+            PadToWidth(item.Price.ToString(), 5) + " " + status
+        );
+
+        displayLines.Add(line);
+        maxWidth = Math.Max(maxWidth, line.Length); // 가장 긴 줄 길이 기록
+    }
+
+    // 이후 줄과 줄 사이에 고정 너비 구분선 추가
+    for (int i = 0; i < displayLines.Count; i++)
+    {
+        strings.Add(displayLines[i]);
+
+        if (i < displayLines.Count - 1)
+            strings.Add(new string('─', maxWidth)); // 고정 너비의 선 추가
+    }
+
 
         UI.DrawLeftAlignedBox(strings);
     }
+    // 출력될 실제 너비를 계산 (한글은 2칸)
+    public static int GetDisplayWidth(string s)
+    {
+        int width = 0;
+        foreach (char c in s)
+        {
+            width += (c >= 0xAC00 && c <= 0xD7A3) ? 2 : 1;
+        }
+        return width;
+    }
+
+    // 지정된 출력 너비까지 패딩 (오른쪽 정렬 가능)
+    public static string PadToWidth(string s, int totalWidth)
+    {
+        int displayWidth = GetDisplayWidth(s);
+        int padding = Math.Max(0, totalWidth - displayWidth);
+        return s + new string(' ', padding);
+    }
+
+
     // 메뉴 옵션(구매/판매/돌아가기) 출력
     private void DisplayMenu()
     {
@@ -105,7 +147,7 @@ public class ShopScene : GameScene
         strings.Add("2 : 아이템 판매");
         strings.Add("0 : 돌아가기");
         UI.DrawBox(strings);
-        Console.Write(">> "); 
+        Console.Write(">> ");
 
     }
     // 아이템 구매 처리: 번호 입력 → BuyItem 호출 → 결과 메시지
@@ -218,7 +260,8 @@ public class ShopScene : GameScene
             if (!ConfirmSell(itemName, qty)) return;
 
             target.ItemCount -= qty;
-            GameManager.player.Gold += target.Price * qty;
+            int sellPricePer = (int)Math.Round(target.Price * 0.85);
+            GameManager.player.Gold += sellPricePer;
 
             if (target.ItemCount <= 0)
                 inv.Remove(target);
@@ -231,7 +274,8 @@ public class ShopScene : GameScene
 
             GameManager.player.EquippedItems.RemoveAll(i => i.Name == itemName);
             inv.Remove(target);
-            GameManager.player.Gold += target.Price;
+            int sellPricePer = (int)Math.Round(target.Price * 0.85);
+            GameManager.player.Gold += sellPricePer;
 
             Console.WriteLine($"{itemName} 판매 완료! 현재 골드: {GameManager.player.Gold}");
         }

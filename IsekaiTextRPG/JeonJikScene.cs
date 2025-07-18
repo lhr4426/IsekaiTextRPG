@@ -159,6 +159,10 @@ public class JeonJikScene : GameScene
         // 현재 직업과 동일하면 false
         if (GameManager.player.Job == job) return false;
 
+        // 플레이 해 주셔서 감사합니다 << 아이템 있으면 true
+        if (GameManager.player.Inventory.Any(x => x.Name == "플레이 해 주셔서 감사합니다")) return true;
+
+
         // 전직에 필요한 아이템이 존재할 경우 인벤토리에 있는지 확인
         string? needItemName = Player.JobItemName(job);
         if (needItemName != null)

@@ -32,7 +32,6 @@ public abstract class GameScene
         options.Add(prevScene != null
                     ? $" 0: {prevScene.SceneName}"
                     : " 0: 게임 종료");
-        options.Add("");
 
         UI.DrawLeftAlignedBox(options);
 

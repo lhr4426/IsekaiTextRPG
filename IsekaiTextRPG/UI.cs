@@ -171,7 +171,8 @@ public static class UI
             (c >= 0xF900 && c <= 0xFAFF) ||
             (c >= 0xFE10 && c <= 0xFE19) ||
             (c >= 0xFF01 && c <= 0xFF60) ||
-            (c >= 0xFFE0 && c <= 0xFFE6)
+            (c >= 0xFFE0 && c <= 0xFFE6) ||
+            (c >= 0x2600 && c <= 0x26FF) // 특수기호
         );
     }
 
