@@ -111,26 +111,28 @@ public class ItemSystem
         };
 
         int index = 1;
+
         // 장착 가능한 아이템은 공격력/방어력으로 구분
         foreach (var eq in GameManager.player.Inventory.Where(i => i.Type != Item.ItemType.Usable))
         {
             lines.Add($"- {index} {eq.Name} | 판매가 {(int)(eq.Price * 0.85)} | 공격력 +{eq.Attack} | 방어력 +{eq.Defense} | " +
-                  $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
+                $"치명타율 {eq.CriticalRate:P0} | 치명타배율 {eq.CriticalDamage} | 회피율 {eq.DodgeRate:P0} | {eq.Description}");
             index++;
-
         }
-        // 소비 아이템은 이름으로 그룹화하여 출력
-        foreach (var grp in GameManager.player.Inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name)) 
+
+        // 소비 아이템은 이름으로 그룹화하여 수량 합산
+        foreach (var grp in GameManager.player.Inventory.Where(i => i.Type == Item.ItemType.Usable).GroupBy(i => i.Name))
         {
             var sample = grp.First();
-            lines.Add($"- {index} {sample.Name} x{grp.Count()} | {sample.Description}");
+            int totalCount = grp.Sum(i => i.ItemCount); // 여기를 수정!
+            lines.Add($"- {index} {sample.Name} x{totalCount} | {sample.Description}");
             index++;
-        } 
+        }
 
         UI.DrawTitledBox("인벤토리", null);
         UI.DrawLeftAlignedBox(lines);
-
     }
+
 
 
     // 아이템 정보 가져오기

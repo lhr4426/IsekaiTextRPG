@@ -116,53 +116,59 @@ public class ShopScene : GameScene
 
         if (int.TryParse(input, out var idx))
         {
-            if (idx == 0) { return; }
+            if (idx == 0) return;
             if (idx >= 1 && idx <= _shopItems.Count)
             {
                 var item = _shopItems[idx - 1];
                 int quantity = 1;
+
+                // 소모품일 경우 수량 입력 받기
                 if (item.Type == Item.ItemType.Usable)
                 {
-                    Console.WriteLine("구매할 개수:");
-                    if (!int.TryParse(Console.ReadLine(), out quantity) || quantity <= 1)
-                    {
+                    Console.Write("구매할 개수: ");
+                    if (!int.TryParse(Console.ReadLine(), out quantity) || quantity < 1)
                         quantity = 1;
-                    }
                 }
-                int purchased = 0;
-                // 아이템이 장착 가능한 타입이고 이미 구매한 경우
-                if (item.Type != Item.ItemType.Usable && _itemSystem.HasItem(item.Name))
+
+                int totalPrice = item.Price * quantity;
+                if (GameManager.player.Gold < totalPrice)
                 {
-                    Console.WriteLine("이미 구매한 아이템입니다.");
+                    Console.WriteLine("골드가 부족합니다.");
+                    return;
+                }
+
+                var inventory = GameManager.player.Inventory;
+
+                if (item.Type == Item.ItemType.Usable)
+                {
+                    var existing = inventory.FirstOrDefault(i => i.Name == item.Name);
+                    if (existing != null)
+                    {
+                        existing.ItemCount += quantity;
+                    }
+                    else
+                    {
+                        var newItem = new Item(item.Name, item.Description, item.Attack, item.Defense, item.Hp, item.Mp,
+                                            item.Price, item.IsEquip, item.Type, item.CriticalRate, item.CriticalDamage, item.DodgeRate);
+                        newItem.ItemCount = quantity;
+                        inventory.Add(newItem);
+                    }
                 }
                 else
-                {       // 아이템 구매 반복
-                    for (int i = 0; i < quantity; i++)
+                {
+                    if (_itemSystem.HasItem(item.Name))
                     {
-                        if (!_itemSystem.BuyItem(
-                          item.Name,
-                          item.Description,
-                          item.Attack,
-                          item.Defense,
-                          item.Hp,
-                          item.Mp,
-                          item.Price,
-                          item.IsEquip,
-                          item.Type,
-                          item.CriticalRate,
-                          item.CriticalDamage,
-                          item.DodgeRate,
-                          suppressMessage: true))
-                        {
-                            break; // 골드 부족 시 반복 중단
-                        }
-                        purchased++; // 구매한 개수 증가
+                        Console.WriteLine("이미 구매한 아이템입니다.");
+                        return;
                     }
-                    if (purchased > 0)
-                        Console.WriteLine($"{item.Name} x{purchased} 구매 완료! 남은 골드: {GameManager.player.Gold}");
-                    else
-                        Console.WriteLine("골드가 부족하여 구매할 수 없습니다.");
+
+                    var newItem = new Item(item.Name, item.Description, item.Attack, item.Defense, item.Hp, item.Mp,
+                                        item.Price, item.IsEquip, item.Type, item.CriticalRate, item.CriticalDamage, item.DodgeRate);
+                    inventory.Add(newItem);
                 }
+
+                GameManager.player.Gold -= totalPrice;
+                Console.WriteLine($"{item.Name} x{quantity} 구매 완료! 남은 골드: {GameManager.player.Gold}");
             }
             else
             {
@@ -170,7 +176,6 @@ public class ShopScene : GameScene
             }
         }
 
-        // 구매 후 대기
         Console.WriteLine("\n아무 키나 눌러 계속...");
         Console.ReadKey();
     }
@@ -178,95 +183,59 @@ public class ShopScene : GameScene
     private void HandleSell()
     {
         Console.Clear();
-
-        // 1) 인벤토리와 골드를 출력
         _itemSystem.ShowInventoryForSell();
 
-
-        // 판매할 아이템 이름 입력
         Console.Write("\n판매할 아이템 번호 (0 : 취소) >> ");
-        
         var input = Console.ReadLine()?.Trim() ?? string.Empty;
-        var itemName = input;
-        if (int.TryParse(input, out int sel))
-        {
-            var inv = GameManager.player.Inventory;
-            var names = inv
-            .Where(i => i.Type != Item.ItemType.Usable)
-            .Select(i => i.Name)
-            .ToList();
-
-            names.AddRange(inv
-            .Where(i => i.Type == Item.ItemType.Usable)
-            .GroupBy(i => i.Name)
-            .Select(g => g.Key));
-
-            if (sel == 0) return;
-            if (sel >= 1 && sel <= names.Count)
-            {
-                itemName = names[sel - 1];
-            }   
-            else
-            {
-                Console.WriteLine("유효한 번호를 입력하세요.");
-                Console.ReadKey();
-                return;
-            }
-        }
-        else
+        if (!int.TryParse(input, out int sel))
         {
             Console.WriteLine("번호로만 판매가 가능합니다.");
             Console.ReadKey();
             return;
         }
 
-        // 3) 플레이어가 장착 중인 경우 해제
-        var player = GameManager.player;
-        var equippedItem = player.EquippedItems.FirstOrDefault(i => i.Name == itemName);
-        if (equippedItem != null)
+        var inv = GameManager.player.Inventory;
+        var names = inv.Select(i => i.Name).Distinct().ToList();
+
+        if (sel == 0) return;
+        if (sel < 1 || sel > names.Count)
         {
-            player.EquippedItems.Remove(equippedItem);
-            Console.WriteLine($"{equippedItem.Name}을(를) 장착 해제했습니다.");
+            Console.WriteLine("유효한 번호를 입력하세요.");
+            Console.ReadKey();
+            return;
         }
 
-        // 4) 실제 판매 호출
-        if (!_itemSystem.HasItem(itemName))
+        var itemName = names[sel - 1];
+        var target = inv.First(i => i.Name == itemName);
+
+        if (target.Type == Item.ItemType.Usable)
         {
-            Console.WriteLine("판매할 아이템이 없습니다.");
+            Console.Write("판매할 개수: ");
+            if (!int.TryParse(Console.ReadLine(), out int qty) || qty < 1)
+                qty = 1;
+
+            qty = Math.Min(qty, target.ItemCount);
+            if (!ConfirmSell(itemName, qty)) return;
+
+            target.ItemCount -= qty;
+            GameManager.player.Gold += target.Price * qty;
+
+            if (target.ItemCount <= 0)
+                inv.Remove(target);
+
+            Console.WriteLine($"{itemName} x{qty} 판매 완료! 현재 골드: {GameManager.player.Gold}");
         }
         else
         {
-            var invItems = player.Inventory.Where(i => i.Name == itemName).ToList();
-            if (invItems.First().Type == Item.ItemType.Usable)
-            {
-                Console.Write("판매할 개수: ");
-                var qtyInput = Console.ReadLine()?.Trim() ?? string.Empty;
-                if (!int.TryParse(qtyInput, out int qty) || qty < 1)
-                    qty = 1;
-                qty = Math.Min(qty, invItems.Count);
+            if (!ConfirmSell(itemName)) return;
 
-                if (!ConfirmSell(itemName, qty))  
-                    return;
+            GameManager.player.EquippedItems.RemoveAll(i => i.Name == itemName);
+            inv.Remove(target);
+            GameManager.player.Gold += target.Price;
 
-                int sold = 0;
-                for (int i = 0; i < qty; i++)
-                {
-                    if (_itemSystem.SellItem(itemName))
-                    {
-                        sold++;
-                    }
-                    else break;
-                }
-                Console.WriteLine($"{itemName} x{sold} 판매 완료! 현재 골드: {GameManager.player.Gold}");
-            }
-            else
-            {
-                if (!ConfirmSell(itemName))
-                    return;
-                bool success = _itemSystem.SellItem(itemName);
-            }
+            Console.WriteLine($"{itemName} 판매 완료! 현재 골드: {GameManager.player.Gold}");
         }
-        // 5) 판매 후 대기
+
         Console.WriteLine("\n아무 키나 눌러 계속...");
         Console.ReadKey();
     }

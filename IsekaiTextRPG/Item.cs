@@ -41,10 +41,11 @@ public class Item
     public float CriticalRate { get; set; }      // 치명타 확률 
     public float CriticalDamage { get; set; }    // 치명타 데미지 배율 1.6 
     public float DodgeRate { get; set; }       // 회피율 (
-
-    public Item(string name, string description, int attack, int defense,int hp, int mp, int price,
+    public int ItemCount { get; set; }
+    public Item() { }
+    public Item(string name, string description, int attack, int defense, int hp, int mp, int price,
                bool isEquip, ItemType type, float criticalRate = 0,
-               float criticalDamage = 1.6f, float dodgeRate = 0)
+               float criticalDamage = 1.6f, float dodgeRate = 0, int itemCount = 1)
     {
         Name = name;
         Description = description;
@@ -58,6 +59,7 @@ public class Item
         CriticalRate = criticalRate;
         CriticalDamage = criticalDamage;
         DodgeRate = dodgeRate;
+        ItemCount = itemCount;
     }
 
     public override bool Equals(object obj)
