@@ -60,9 +60,9 @@ public class BattleBase : GameScene
             finalDamage = (int)(finalDamage * player.CriticalDamage);
         }
 
-        if(heros.Count>0)
+        if (heros.Count > 0)
         {
-            foreach(var hero in heros)
+            foreach (var hero in heros)
             {
                 logs.Add($"{hero.Name}의 합공! (추가 공격력 : {hero.TotalAttack})");
                 finalDamage += hero.TotalAttack;
@@ -199,7 +199,8 @@ public class BattleBase : GameScene
         Console.ReadKey();
         Console.ForegroundColor = color;
     }
-    public void DrawBattleResult(Enemy boss, Player player)//보스용 결과출력
+
+    public void DrawBattleResult(Enemy boss, Player player)
     {
         if (boss.CurrentHP <= 0)
         {
@@ -209,6 +210,8 @@ public class BattleBase : GameScene
             Console.WriteLine("Victory!");
             Console.ResetColor();
             QuestManager.UpdateKillQuestProgress(boss.Name);
+
+            int previousLevel = player.Level;
 
             player.Gold += boss.RewardGold;
             player.GainExp(boss.RewardExp);
@@ -221,9 +224,21 @@ public class BattleBase : GameScene
                 $"획득 경험치 : {boss.RewardExp} EXP"
             };
 
+            if (player.Level > previousLevel)
+            {
+                rewardLines.Add($"[레벨 업!] {player.Level} 레벨이 되었습니다!");
+            }
+
+            rewardLines.Add("");
+            rewardLines.Add($"레벨: {player.Level}");
+            rewardLines.Add($"경험치: {player.Exp} / {player.MaxExp}");
+            rewardLines.Add("");
+
+
             BattleLogger.Log(rewardLines[0]);
             BattleLogger.Log(rewardLines[1]);
             BattleLogger.Log(rewardLines[2]);
+
 
             if (boss.RewardItems is { Count: > 0 })
             {
@@ -236,11 +251,13 @@ public class BattleBase : GameScene
             }
 
             UI.DrawTitledBox("보상 획득", rewardLines);
+            Console.WriteLine("0. 다음");
+            Console.ReadKey();
             BattleLogger.CloseLogger();
         }
     }
 
-    public void DrawBattleResult(List<Enemy> enemies, Player player)//일반몹용 결과 출력
+    public void DrawBattleResult(List<Enemy> enemies, Player player)
     {
         Console.Clear();
         bool allDefeated = enemies.All(e => e.CurrentHP <= 0);
@@ -258,6 +275,8 @@ public class BattleBase : GameScene
                 .SelectMany(e => e.RewardItems!)
                 .ToList();
 
+            int previousLevel = player.Level;
+
             player.Gold += totalGold;
             player.GainExp(totalExp);
             totalItems.ForEach(i => player.Inventory.Add(i));
@@ -268,6 +287,16 @@ public class BattleBase : GameScene
                 $"획득 골드 : {totalGold} G",
                 $"획득 경험치 : {totalExp} EXP"
             };
+
+            if (player.Level > previousLevel)
+            {
+                rewards.Add($"[레벨 업!] {player.Level} 레벨이 되었습니다!");
+            }
+
+            rewards.Add("");
+            rewards.Add($"레벨: {player.Level}");
+            rewards.Add($"경험치: {player.Exp} / {player.MaxExp}");
+            rewards.Add("");
 
             BattleLogger.Log(rewards[0]);
             BattleLogger.Log(rewards[1]);
@@ -284,9 +313,12 @@ public class BattleBase : GameScene
             }
 
             UI.DrawTitledBox("보상 획득", rewards);
+            Console.WriteLine("0. 다음");
+            Console.ReadKey();
             BattleLogger.CloseLogger();
         }
     }
+
     public void DefeatMsg(string name = "적")
     {
         BattleLogger.Log($"{name}에게 패배하였습니다.");
@@ -298,6 +330,7 @@ public class BattleBase : GameScene
         Console.ReadKey();
         BattleLogger.CloseLogger();
     }
+
     public void ShowNormalBattleUI(Player player, List<Enemy> enemies)
     {
         int bonusAtk = player.EquippedItems.Where(i => i.IsEquip && i.Attack != 0).Sum(i => i.Attack);
@@ -332,14 +365,15 @@ public class BattleBase : GameScene
     public void SummonHeros()
     {
         List<int> slots = new List<int>() { 1, 2, 3, 4 };
-        foreach(int slot in slots)
+        foreach (int slot in slots)
         {
             if (slot == GameManager.instance.selectedSlot) continue;
             Player hero = GameManager.instance.GetPlayerData(slot);
-            if(hero == null) continue;
+            if (hero == null) continue;
             heros.Add(hero);
         }
     }
+
     public bool PlayerPhase(Player player, List<Enemy> enemies, bool isBossBattle, bool isHidden)
     {
         while (true)
@@ -472,13 +506,12 @@ public class BattleBase : GameScene
 
                 case 5:
                     if (!isHidden) break;
-                    else 
+                    else
                     {
                         Console.WriteLine("당신은 혼자가 아님을 직감했습니다. 누군가의 도움을 간절히 빌어봅니다.");
                         SummonHeros();
                         return true;
                     }
-
 
                 case 0:
                     Console.Write("정말 도망가시겠습니까? (Y/N): ");
