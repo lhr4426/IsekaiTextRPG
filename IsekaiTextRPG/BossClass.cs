@@ -37,8 +37,9 @@ namespace IsekaiTextRPG
                 int rewardGold, int rewardExp,
                 float dodgeRate, float criticalRate, float criticalMultiplier,
                 IEnumerable<Skill> skills,
+                List<Item>? rewardItems = null
                 string? asciiArt = null
-            ) : base(level, name, hp, attack, defense, dodgeRate, rewardGold, rewardExp)
+            ) : base(level, name, hp, attack, defense, dodgeRate, rewardGold, rewardExp, rewardItems)
 
             {
                 DodgeRate = dodgeRate;
@@ -141,6 +142,7 @@ namespace IsekaiTextRPG
                 criticalRate: 0.05f,
                 criticalMultiplier: 1.40f,
                 skills: PinkBeanSkills,
+                rewardItems: new List<Item> { ItemSystem.CreateJobChangeItem("전직의 증표 I")},
                 asciiArt: @"+++++++++++++++++++==============================++++++++++++*********
 +++++++=++++++====================+++++++++++++++++++=====++++++******
 ++++++++====================+++++=-::::----------::--==++**++++++++***
@@ -194,6 +196,7 @@ namespace IsekaiTextRPG
                     criticalRate: 0.01f,
                     criticalMultiplier: 1.10f,
                     skills: KuxseitanSkills,
+                    rewardItems: new List<Item> { ItemSystem.CreateJobChangeItem("전직의 증표 II")},
                     asciiArt: @"%%@@@@@@@@@@@@@@@@@@@@@@@@#**++++#@@@@@@@@@@@@@%#*=----------------=+#
 @@@@@@@@@@@@@@@@@@@@@@@@@#=-----=+%@@@@@@@@@@@%#**+---------------=+##
 @@@@@@@@@@@@@@@@@%%##@@@%=::::::-=*@@@@@@@@@@%%#**+---------=-----=*@#
@@ -246,6 +249,7 @@ namespace IsekaiTextRPG
                     criticalRate: 0.30f,
                     criticalMultiplier: 1.60f,
                     skills: AntonSkills,
+                    rewardItems: new List<Item> { ItemSystem.CreateJobChangeItem("전직의 증표 I")},
                     asciiArt: @"%%%%%%%%%%%%%%@@%%%%%%%%%%%%%%%%%%%%%%%%%%%#%%####****#####%%%%%%%%%%%
 %%@@@%%%@%%%%%@@%%%%%%%%%%%%%%%%%%%%%%%%%%%##**#**+++++**#####%%%%%%%%
 @@@@@@@@@%%%%%%%%%%%%%%%%%%%%%%%%%%%%%####%##*+++===-==++****####%%%%%
@@ -291,51 +295,51 @@ namespace IsekaiTextRPG
         private static readonly List<Skill> PinkBeanSkills = new List<Skill> //핑크빈 보스 스킬 리스트
         {
                 new Skill(
-                    name: "스킬이름",
+                    name: "미니빈의 도움",
                     multiplicativeFactor: 1.2f, // 공격력 20% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가    
-                    chance: 0.25f, // 25% 확률로 발동
+                    chance: 0.50f, // 50% 확률로 발동
                     cooldownTurns: 3 // 3턴 쿨다운
                 ),
                 new Skill(
                     name: "죽은척하기",
                     multiplicativeFactor: 1.5f, // 공격력 50% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.15f, // 15% 확률로 발동
-                    cooldownTurns: 5 // 5턴 쿨다운
+                    chance: 0.50f, // 50% 확률로 발동
+                    cooldownTurns: 7 // 7턴 쿨다운
                 ),
         };
         private static readonly List<Skill> KuxseitanSkills = new List<Skill> //쿠크세이튼 보스 스킬 리스트
         {
                 new Skill(
-                    name: "스킬이름3",
+                    name: "광대 변이",
                     multiplicativeFactor: 1.3f, // 공격력 30% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.20f, // 20% 확률로 발동
-                    cooldownTurns: 4 // 4턴 쿨다운
+                    chance: 0.50f, // 50% 확률로 발동
+                    cooldownTurns: 3 // 3턴 쿨다운
                 ),
                 new Skill(
-                    name: "스킬이름4",
+                    name: "쇼 타임",
                     multiplicativeFactor: 1.6f, // 공격력 60% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.10f, // 10% 확률로 발동
-                    cooldownTurns: 6 // 6턴 쿨다운
+                    chance: 0.50f, // 50% 확률로 발동
+                    cooldownTurns: 7 // 7턴 쿨다운
                 )
         };
         private static readonly List<Skill> AntonSkills = new List<Skill> // 안톤 보스 스킬 리스트
         {
                 new Skill(
-                    name: "스킬이름5",
+                    name: "네르베: 구슬 폭발",
                     multiplicativeFactor: 1.4f, // 공격력 40% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.30f, // 30% 확률로 발동
-                    cooldownTurns: 5 // 2턴 쿨다운
+                    chance: 0.50f, // 50% 확률로 발동
+                    cooldownTurns: 3 // 3턴 쿨다운
                 ),
                 new Skill(
-                    name: "스킬이름6",
+                    name: "마테카: 혈",
                     multiplicativeFactor: 1.7f, // 공격력 70% 증가
                     additiveBonus: 0, // 공격연산이 끝난뒤 피해량에 추가
-                    chance: 0.05f, // 5% 확률로 발동
+                    chance: 0.50f, // 50% 확률로 발동
                     cooldownTurns: 7 // 7턴 쿨다운
                 )
         };
