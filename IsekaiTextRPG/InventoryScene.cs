@@ -30,15 +30,23 @@ public class InventoryScene : GameScene
             // 장착 가능한 아이템(무기, 방어구)을 먼저 표시
             foreach (var item in sortedInventory.Where(i => i.Type != Item.ItemType.Usable))
             {
-                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부 표시
+                string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
+
+                List<string> statParts = new();
+                if (item.Attack > 0) statParts.Add($"공격력 +{item.Attack}");
+                if (item.Defense > 0) statParts.Add($"방어력 +{item.Defense}");
+                if (item.CriticalRate > 0) statParts.Add($"치명타율 {item.CriticalRate:P0}");
+                if (item.CriticalDamage > 1f) statParts.Add($"치명타배율 {item.CriticalDamage:F1}");
+                if (item.DodgeRate > 0) statParts.Add($"회피율 {item.DodgeRate:P0}");
+
+                string statText = statParts.Count > 0 ? string.Join(" | ", statParts) + " | " : "";
+
                 strings.Add(
-                    $" - {index} {equippedMark}{item.Name,-15} | " +
-                    $"공격력 +{item.Attack} | 방어력 +{item.Defense} | " +
-                    $"치명타율 {item.CriticalRate:P0} | 치명타배율 {item.CriticalDamage:F1} | " + // 치명타배율 소수점 1자리까지 표시
-                    $"회피율 {item.DodgeRate:P0} | {item.Description}"
+                    $" - {index} {equippedMark}{item.Name,-15} | {statText}{item.Description}"
                 );
                 index++;
             }
+
 
             // 소비 아이템을 이름으로 그룹화하여 표시
             foreach (var item in sortedInventory.Where(i => i.Type == Item.ItemType.Usable))
@@ -50,13 +58,13 @@ public class InventoryScene : GameScene
                 index++;
             }
         }
-
-        strings.Add(" 1. 장착/해제 관리"); // 장착/해제 선택 메뉴
-        strings.Add(" 0. 나가기"); // 나가기 메뉴
+        List<string> menu = new List<string>();
+        menu.Add(" 1. 장착/해제 관리"); // 장착/해제 선택 메뉴
+        menu.Add(" 0. 나가기"); // 나가기 메뉴
 
         UI.DrawTitledBox(SceneName, null); // UI 박스 그리기
         UI.DrawLeftAlignedBox(strings); // UI 박스 그리기
-
+        UI.DrawLeftAlignedBox(menu);
         Console.Write(">> ");
 
         // 사용자 입력 받기 (0 또는 1)
@@ -149,19 +157,28 @@ public class InventoryScene : GameScene
                 for (int i = 0; i < equippableItems.Count; i++)
                 {
                     var item = equippableItems[i];
-                    string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   "; // 장착 여부 표시
-                    // 아이템의 모든 스탯을 표시하도록 수정
-                    string stats = $"공격력 +{item.Attack} | 방어력 +{item.Defense} | HP +{item.Hp} | MP +{item.Mp}";
-                    strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} | {item.Description}");
-                }
-            }
+                    string equippedMark = player.EquippedItems.Contains(item) ? "[E]" : "   ";
 
-            strings.Add("");
-            strings.Add("0. 나가기"); // 나가기 메뉴
+                    List<string> statParts = new();
+                    if (item.Attack > 0) statParts.Add($"공격력 +{item.Attack}");
+                    if (item.Defense > 0) statParts.Add($"방어력 +{item.Defense}");
+                    if (item.Hp > 0) statParts.Add($"HP +{item.Hp}");
+                    if (item.Mp > 0) statParts.Add($"MP +{item.Mp}");
+                    if (item.CriticalRate > 0) statParts.Add($"치명타율 {item.CriticalRate:P0}");
+                    if (item.CriticalDamage > 1f) statParts.Add($"치명타배율 {item.CriticalDamage:F1}");
+                    if (item.DodgeRate > 0) statParts.Add($"회피율 {item.DodgeRate:P0}");
+
+                    string stats = statParts.Count > 0 ? string.Join(" | ", statParts) : "";
+                    strings.Add($"- {i + 1} {equippedMark}{item.Name,-15} | {stats} {(stats != "" ? "| " : "")}{item.Description}");
+                }
+
+            }
+            List<string> menu = new List<string>();
+            menu.Add("0. 나가기"); // 나가기 메뉴
 
             UI.DrawTitledBox("인벤토리 - 장착 관리", null);// UI 박스 그리기
             UI.DrawLeftAlignedBox(strings);
-
+            UI.DrawLeftAlignedBox(menu);
 
             Console.Write(">> ");
 
