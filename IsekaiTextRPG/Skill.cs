@@ -28,7 +28,10 @@ public enum SkillId
     BladeArts = 13,
     NovaRemnant = 14,
     QuadrupleThrow = 15,
-    ReadytoDie = 16
+    ReadytoDie = 16,
+    AuraWeapon = 17,
+    OverloadedMana = 18
+
 }
 
 public class Skill
