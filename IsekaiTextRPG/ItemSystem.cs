@@ -10,9 +10,9 @@ public class ItemSystem
         // Item(name, description, attack, defense, hp, mp, price, isEquip, type, criticalRate, criticalDamage, dodgeRate)
         return jobChangeItemName switch
         {
-            "전직의 증표 I" => new Item("전직의 증표 I", "메이플 세계의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.Usable, 0f, 1.6f, 0f),
-            "전직의 증표 II" => new Item("전직의 증표 II", "라크라시아 대륙의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.Usable, 0f, 1.6f, 0f),
-            "전직의 증표 III" => new Item("전직의 증표 III", "아라드 세계의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.Usable, 0f, 1.6f, 0f),
+            "전직의 증표 I" => new Item("전직의 증표 I", "메이플 세계의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.ClassChange, 0f, 1.6f, 0f),
+            "전직의 증표 II" => new Item("전직의 증표 II", "라크라시아 대륙의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.ClassChange, 0f, 1.6f, 0f),
+            "전직의 증표 III" => new Item("전직의 증표 III", "아라드 세계의 직업군으로 전직할 수 있는 증표입니다.", 0, 0, 0, 0, 0, false, Item.ItemType.ClassChange, 0f, 1.6f, 0f),
             _ => throw new ArgumentException($"알 수 없는 전직 아이템 이름: {jobChangeItemName}") // 정의되지 않은 아이템 요청 시 예외 발생
         };
     }

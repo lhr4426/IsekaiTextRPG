@@ -11,7 +11,8 @@ public class Item
         HeadArmor,
         BodyArmor,
         LegArmor,
-        Usable // 사용 가능한 아이템 (ex. 포션)
+        Usable, // 사용 가능한 아이템 (ex. 포션)
+        ClassChange,
     }
 
     private string TypeKorean(ItemType type)
@@ -23,6 +24,7 @@ public class Item
             ItemType.BodyArmor => "몸통 방어구",
             ItemType.LegArmor => "다리 방어구",
             ItemType.Usable => "소비 아이템",
+            ItemType.ClassChange => "전직 아이템",
             _ => type.ToString()
         };
     }
