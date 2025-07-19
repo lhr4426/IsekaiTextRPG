@@ -138,8 +138,8 @@ direction TB
 
 <!-- Stack Icon Refernces -->
 
-[csharp]: /images/Csharp.png
-[dotnet]: /images/Dotnet.png
+[csharp]: /media/Csharp.png
+[dotnet]: /media/Dotnet.png
 
 
 
