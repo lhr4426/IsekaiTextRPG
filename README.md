@@ -1,13 +1,79 @@
-# IsekaiTextRPG
-
 
 # 스파르타 내일배움캠프 유니티 게임개발 11기 3주차 7조 팀프로젝트
+
+<p align="center">
+<br>
+  <img src="./media/team.png">
+  <br>
+</p>
+
+# Isekai - RPG
 
 ## 프로젝트 소개
 
 <p align="center">
 <br>
-  <img src="./images/GamePlay.gif">
+  <img src="./media/s1.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s2.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s3.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s4.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s5.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s6.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s7.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s8.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s9.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s10.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s11.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s12.JPG">
+  <br>
+</p>
+<p align="center">
+<br>
+  <img src="./media/s13.JPG">
   <br>
 </p>
 
