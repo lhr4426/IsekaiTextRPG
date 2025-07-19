@@ -9,6 +9,14 @@
 
 # Isekai - RPG
 
+## 프로젝트 영상
+
+<p align="center">
+<br>
+  <img src="./media/game.gif">
+  <br>
+</p>
+
 ## 프로젝트 소개
 
 <p align="center">
